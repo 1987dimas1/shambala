@@ -4,21 +4,28 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Анимационная кнопка</title>
+    <title>Объемная анимационная кнопка</title>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@700&display=swap');
+
         .button {
             display: inline-block;
             background-color: #000;
             color: #ff0000;
-            font-size: 20px;
-            font-family: 'Arial', sans-serif;
-            padding: 15px 30px;
+            font-size: 22px;
+            font-family: 'Roboto Slab', serif;
+            padding: 15px 40px;
             border: none;
             border-radius: 50px;
             cursor: pointer;
             text-decoration: none;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4);
             transition: box-shadow 0.3s, transform 0.3s;
             text-align: center;
+        }
+
+        .button:hover {
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.6);
         }
 
         .button:active {
