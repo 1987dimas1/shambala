@@ -2,9 +2,9 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta http-equiv="X-UA-Compatible="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>как купить карты</title>
+    <title>3D Кнопка</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@700&display=swap');
 
@@ -19,30 +19,15 @@
             border-radius: 15px;
             cursor: pointer;
             text-decoration: none;
-            box-shadow: 5px 5px 15px #121212, -5px -5px 15px #2e2e2e;
-            transition: box-shadow 0.3s, transform 0.3s;
+            transition: transform 0.3s;
             text-align: center;
         }
 
-        .button::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            border-radius: 15px;
-            box-shadow: inset 5px 5px 10px #0f0f0f, inset -5px -5px 10px #484848;
-            z-index: -1;
-        }
-
         .button:hover {
-            box-shadow: 5px 5px 20px #0f0f0f, -5px -5px 20px #3b3b3b;
             background: linear-gradient(145deg, #333333, #1c1c1c);
         }
 
         .button:active {
-            box-shadow: 0 0 20px 10px rgba(255, 77, 77, 0.6);
             transform: scale(0.98);
         }
     </style>
