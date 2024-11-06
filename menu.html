@@ -1,40 +1,33 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Анимационное Меню</title>
+    <title>Анимационная кнопка</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f0f0f0;
-        }
-        nav {
-            background-color: #333;
-            padding: 10px;
-            display: flex;
-            justify-content: space-around;
-        }
-        nav a {
-            color: #fff;
+        .button {
+            display: inline-block;
+            background-color: #000;
+            color: #ff0000;
+            font-size: 20px;
+            font-family: 'Arial', sans-serif;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
             text-decoration: none;
-            padding: 10px 20px;
-            transition: background-color 0.3s, transform 0.3s;
+            transition: box-shadow 0.3s, transform 0.3s;
+            text-align: center;
         }
-        nav a:hover {
-            background-color: #ff6600;
-            transform: scale(1.1);
+
+        .button:active {
+            box-shadow: 0 0 20px 10px rgba(255, 0, 0, 0.5);
+            transform: scale(0.95);
         }
     </style>
 </head>
 <body>
-    <nav>
-        <a href="#main">Главное меню</a>
-        <a href="#news">Новости</a>
-        <a href="#about-cards">О картах</a>
-        <a href="#masters">Мастера</a>
-        <a href="#important-info">Важная информация</a>
-    </nav>
+    <a href="https://www.notion.so/c3f0ff001d184e1d9d59639fc02bafeb" class="button">Как купить карты</a>
 </body>
 </html>
