@@ -1,1 +1,71 @@
-<a href="" class="gradient-button">Button</a>
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
+    
+    body {
+      font-family: 'Roboto', sans-serif;
+    }
+
+    .button-container {
+      position: relative;
+      display: inline-block;
+      overflow: hidden;
+      border-radius: 20px;
+    }
+
+    .btn {
+      position: relative;
+      display: inline-block;
+      padding: 15px 60px;
+      font-size: 18px;
+      color: #fff;
+      background-color: #34495e;
+      border: none;
+      cursor: pointer;
+      text-transform: uppercase;
+      text-align: center;
+      border-radius: 20px;
+      overflow: hidden;
+    }
+
+    .btn::before {
+      content: '';
+      position: absolute;
+      top: 100%;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(255, 255, 255, 0.3);
+      transform: translateY(0);
+      transition: transform 0.5s ease-in-out;
+    }
+
+    .btn:hover::before {
+      top: 0;
+      transform: translateY(-100%);
+    }
+
+    .btn span {
+      position: relative;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="button-container">
+    <button class="btn" onclick="navigate()"><span>Мои практики</span></button>
+  </div>
+
+  <script>
+    function navigate() {
+      window.open("https://vk.com", '_blank').focus();
+    }
+  </script>
+
+</body>
+
+</html>
