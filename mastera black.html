@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      margin: 0;
+      background: linear-gradient(135deg, #000000, #1a1a1a);
+    }
+
+    .mystic-button {
+      position: relative;
+      padding: 20px 40px;
+      font-family: 'Palatino', serif;
+      font-size: 24px;
+      letter-spacing: 2px;
+      text-decoration: none;
+      background: linear-gradient(45deg, #1e3c72, #2a5298, #4a90e2, #ffffff);
+      border: none;
+      border-radius: 15px;
+      color: white;
+      cursor: pointer;
+      overflow: hidden;
+      transition: all 0.3s ease;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+      box-shadow: 
+        0 5px 15px rgba(0, 0, 0, 0.3),
+        0 10px 20px rgba(0, 0, 0, 0.2);
+    }
+
+    .mystic-button:before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(
+        120deg,
+        transparent,
+        rgba(255, 255, 255, 0.3),
+        transparent
+      );
+      transition: 0.5s;
+    }
+
+    .mystic-button:hover {
+      transform: translateY(-5px);
+      box-shadow: 
+        0 8px 20px rgba(0, 0, 0, 0.4),
+        0 15px 30px rgba(0, 0, 0, 0.3);
+    }
+
+    .mystic-button:hover:before {
+      left: 100%;
+    }
+
+    .mystic-button:active {
+      transform: translateY(0);
+      box-shadow: 
+        0 5px 15px rgba(0, 0, 0, 0.3),
+        0 10px 20px rgba(0, 0, 0, 0.2);
+    }
+  </style>
+</head>
+<body>
+  <a href="https://www.notion.so/11c63e224e2380358c92e501ed4c05c9?v=11c63e224e2381338c0d000c78698530&p=11c63e224e2380958029f80a738f084b&pm=s" target="_blank">
+    <button class="mystic-button">Мастера SHAMBALA</button>
+  </a>
+</body>
+</html>
