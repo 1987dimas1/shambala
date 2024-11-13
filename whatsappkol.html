@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Кнопка WhatsApp</title>
+  <style>
+    .whatsapp-button {
+      background-color: #25D366; /* Зеленый цвет кнопки WhatsApp */
+      color: white;
+      font-size: 16px;
+      font-weight: bold;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+    }
+    
+    .whatsapp-button img {
+      width: 20px;
+      margin-right: 10px;
+    }
+
+    .whatsapp-button:hover {
+      background-color: #128C7E; /* Темно-зеленый при наведении */
+    }
+  </style>
+</head>
+<body>
+
+  <a href="https://api.whatsapp.com/send?phone=7002886678" target="_blank">
+    <button class="whatsapp-button">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WhatsApp Icon">
+      WhatsApp
+    </button>
+  </a>
+
+</body>
+</html>
