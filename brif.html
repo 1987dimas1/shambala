@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    .button-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background: #f0f0f0;
+      perspective: 1000px;
+    }
+
+    .button-3d {
+      position: relative;
+      padding: 20px 40px;
+      font-size: 24px;
+      font-weight: bold;
+      font-family: Arial, sans-serif;
+      color: #333;
+      background: white;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      transform-style: preserve-3d;
+      transition: transform 0.2s ease-out;
+      box-shadow: 
+        0 6px 0 #ddd,
+        0 8px 10px rgba(0,0,0,0.2);
+    }
+
+    .button-3d:hover {
+      transform: translateY(-2px);
+    }
+
+    .button-3d:active {
+      transform: translateY(4px);
+      box-shadow: 
+        0 2px 0 #ddd,
+        0 4px 6px rgba(0,0,0,0.2);
+    }
+
+    @keyframes floatNote {
+      0% {
+        opacity: 1;
+        transform: translate(0, 0) rotate(0deg);
+      }
+      100% {
+        opacity: 0;
+        transform: translate(var(--x), -100px) rotate(var(--rotation));
+      }
+    }
+
+    .music-note {
+      position: absolute;
+      font-size: 24px;
+      pointer-events: none;
+      animation: floatNote 2s ease-out forwards;
+      color: #333;
+    }
+
+    .button-3d::before {
+      content: '';
+      position: absolute;
+      top: -2px;
+      left: -2px;
+      right: -2px;
+      bottom: -2px;
+      background: white;
+      border-radius: 14px;
+      z-index: -1;
+      transform: translateZ(-1px);
+    }
+  </style>
+</head>
+<body>
+  <div class="button-container">
+    <button class="button-3d" onclick="handleClick()">Заполнить бриф</button>
+  </div>
+
+  <script>
+    const notes = ['♪', '♫', '♩', '♬'];
+    
+    function createFloatingNote() {
+      const note = document.createElement('div');
+      note.className = 'music-note';
+      note.textContent = notes[Math.floor(Math.random() * notes.length)];
+      
+      const button = document.querySelector('.button-3d');
+      const buttonRect = button.getBoundingClientRect();
+      
+      // Случайное горизонтальное смещение
+      note.style.setProperty('--x', `${(Math.random() * 100 - 50)}px`);
+      // Случайный поворот
+      note.style.setProperty('--rotation', `${Math.random() * 360}deg`);
+      
+      // Позиционирование относительно кнопки
+      note.style.left = `${buttonRect.left + buttonRect.width / 2}px`;
+      note.style.top = `${buttonRect.top + buttonRect.height / 2}px`;
+      
+      document.body.appendChild(note);
+      
+      // Удаление ноты после завершения анимации
+      note.addEventListener('animationend', () => {
+        note.remove();
+      });
+      
+      // Создание следующей ноты через случайный интервал
+      setTimeout(createFloatingNote, Math.random() * 500 + 500);
+    }
+
+    // Запуск анимации при загрузке страницы
+    window.addEventListener('load', createFloatingNote);
+
+    function handleClick() {
+      const formUrl = 'https://docs.google.com/forms/d/e/1FAIpQLSf_RcJhD8F4cVI5D7JZb0qEc31Ple2POxT9XaXtYImghbKE5A/viewform';
+      window.location.href = formUrl;
+    }
+
+    // Обновление позиций нот при изменении размера окна
+    window.addEventListener('resize', () => {
+      const notes = document.querySelectorAll('.music-note');
+      const button = document.querySelector('.button-3d');
+      const buttonRect = button.getBoundingClientRect();
+      
+      notes.forEach(note => {
+        note.style.left = `${buttonRect.left + buttonRect.width / 2}px`;
+        note.style.top = `${buttonRect.top + buttonRect.height / 2}px`;
+      });
+    });
+  </script>
+</body>
+</html>
