@@ -9,18 +9,20 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      background: #000;
+      background: transparent;
     }
 
     .button-container {
       display: flex;
       justify-content: center;
       align-items: center;
-      padding: 40px;
+      padding: 25px; /* Уменьшенный отступ */
       background: #0a0a0a;
       border-radius: 16px;
       box-shadow: 0 4px 15px rgba(255,192,203,0.1);
       perspective: 1000px;
+      /* Добавляем внешнюю рамку */
+      border: 1px solid rgba(255,192,203,0.05);
     }
 
     @keyframes textGlow {
@@ -138,9 +140,9 @@
       });
       
       canCreateNote = false;
-      setTimeout(() => { canCreateNote = true; }, 2000); // Задержка между появлением нот
+      setTimeout(() => { canCreateNote = true; }, 2000);
       
-      setTimeout(createFloatingNote, Math.random() * 2000 + 2000); // Более редкое появление нот
+      setTimeout(createFloatingNote, Math.random() * 2000 + 2000);
     }
 
     window.addEventListener('load', createFloatingNote);
