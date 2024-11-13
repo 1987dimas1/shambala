@@ -2,12 +2,23 @@
 <html>
 <head>
   <style>
+    body {
+      margin: 0;
+      padding: 20px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: #f0f0f0;
+    }
+
     .button-container {
       display: flex;
       justify-content: center;
       align-items: center;
-      height: 100vh;
-      background: #f0f0f0;
+      padding: 40px;
+      background: white;
+      border-radius: 16px;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
       perspective: 1000px;
     }
 
@@ -52,7 +63,7 @@
     }
 
     .music-note {
-      position: absolute;
+      position: fixed;
       font-size: 24px;
       pointer-events: none;
       animation: floatNote 2s ease-out forwards;
@@ -89,27 +100,21 @@
       const button = document.querySelector('.button-3d');
       const buttonRect = button.getBoundingClientRect();
       
-      // Случайное горизонтальное смещение
-      note.style.setProperty('--x', `${(Math.random() * 100 - 50)}px`);
-      // Случайный поворот
+      note.style.setProperty('--x', `${(Math.random() * 60 - 30)}px`); // Уменьшил разброс
       note.style.setProperty('--rotation', `${Math.random() * 360}deg`);
       
-      // Позиционирование относительно кнопки
       note.style.left = `${buttonRect.left + buttonRect.width / 2}px`;
       note.style.top = `${buttonRect.top + buttonRect.height / 2}px`;
       
       document.body.appendChild(note);
       
-      // Удаление ноты после завершения анимации
       note.addEventListener('animationend', () => {
         note.remove();
       });
       
-      // Создание следующей ноты через случайный интервал
       setTimeout(createFloatingNote, Math.random() * 500 + 500);
     }
 
-    // Запуск анимации при загрузке страницы
     window.addEventListener('load', createFloatingNote);
 
     function handleClick() {
@@ -117,7 +122,6 @@
       window.location.href = formUrl;
     }
 
-    // Обновление позиций нот при изменении размера окна
     window.addEventListener('resize', () => {
       const notes = document.querySelectorAll('.music-note');
       const button = document.querySelector('.button-3d');
