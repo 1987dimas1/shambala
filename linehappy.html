@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Анимация с нотами</title>
+  <link href="https://fonts.googleapis.com/css2?family=Caveat&display=swap" rel="stylesheet">
+  <style>
+    /* Основные стили */
+    body {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      font-family: 'Caveat', cursive;
+      background-color: #f7f7f7;
+    }
+
+    /* Розовая разделительная линия */
+    .divider {
+      width: 80%;
+      height: 2px;
+      background-color: pink;
+      margin: 20px 0;
+    }
+
+    /* Стиль для надписи */
+    .text {
+      font-size: 36px;
+      color: #ff69b4;
+      position: relative;
+      animation: flicker 1.5s infinite alternate;
+    }
+
+    /* Мерцание текста */
+    @keyframes flicker {
+      0% { opacity: 1; color: #ff69b4; }
+      50% { opacity: 0.8; color: #ff85d4; }
+      100% { opacity: 1; color: #ff69b4; }
+    }
+
+    /* Ноты */
+    .note {
+      position: absolute;
+      font-size: 24px;
+      animation: fly 3s ease-in-out infinite;
+      color: #ff69b4;
+      opacity: 0.8;
+    }
+
+    /* Анимация вылетающих нот */
+    @keyframes fly {
+      0% {
+        transform: translate(0, 0) scale(0.5);
+        opacity: 1;
+      }
+      50% {
+        transform: translate(-50px, -100px) scale(1);
+        opacity: 0.5;
+      }
+      100% {
+        transform: translate(-80px, -150px) scale(0.8);
+        opacity: 0;
+      }
+    }
+
+    /* Позиционирование нот */
+    .note1 { left: 10px; animation-delay: 0s; }
+    .note2 { left: 30px; animation-delay: 0.5s; }
+    .note3 { left: 50px; animation-delay: 1s; }
+    .note4 { left: 70px; animation-delay: 1.5s; }
+
+  </style>
+</head>
+<body>
+  <!-- Розовая разделительная линия -->
+  <div class="divider"></div>
+
+  <!-- Надпись с анимацией -->
+  <div class="text">
+    HAPPY TRACK
+    <span class="note note1">♪</span>
+    <span class="note note2">♫</span>
+    <span class="note note3">♪</span>
+    <span class="note note4">♫</span>
+  </div>
+</body>
+</html>
