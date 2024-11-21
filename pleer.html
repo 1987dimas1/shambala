@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Аудио Плейлист</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap');
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #000000;
+            color: #ffffff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .playlist-wrapper {
+            width: 100%;
+            max-width: 700px;
+            padding: 20px;
+            position: relative;
+        }
+
+        .playlist-header {
+            text-align: center;
+            padding: 30px 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .playlist-header h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #ffffff;
+            position: relative;
+            z-index: 2;
+        }
+
+        .playlist-container {
+            background-color: #0a0a0a;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 15px 50px rgba(255, 0, 0, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .playlist-container::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, #FFFFFF, transparent);
+            animation: pulse-border 7s ease-in-out infinite; /* Медленная анимация */
+            opacity: 0.3;
+        }
+
+        .playlist {
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+            position: relative;
+            z-index: 3;
+        }
+
+        .card {
+            background-color: #111111;
+            border-radius: 15px;
+            padding: 25px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card:hover {
+            border-color: rgba(255, 71, 71, 0.5);
+            transform: scale(1.02);
+        }
+
+        .card::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(to right, transparent, #ff4747, transparent);
+            animation: wave 15s infinite; /* Медленная анимация */
+            opacity: 0.7;
+        }
+
+        .card h2 {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+            color: #ff4747;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .card .details {
+            color: #888888;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        iframe {
+            width: 100%;
+            height: 80px;
+            border: none;
+            border-radius: 10px;
+            background-color: #1a1a1a;
+        }
+
+        footer {
+            width: 100%;
+            text-align: center;
+            padding: 20px;
+            background-color: #0a0a0a;
+            margin-top: 30px;
+            color: #666666;
+        }
+
+        @keyframes pulse-border {
+            0%, 100% {
+                transform: rotate(0deg);
+            }
+            50% {
+                transform: rotate(180deg);
+            }
+        }
+
+        @keyframes wave {
+            0%, 100% {
+                transform: translateX(-100%);
+            }
+            50% {
+                transform: translateX(100%);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .playlist-wrapper {
+                padding: 10px;
+            }
+
+            .playlist-header h1 {
+                font-size: 2rem;
+            }
+
+            .playlist-container {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="playlist-wrapper">
+        <div class="playlist-header">
+            <h1>🎶 Алексей Капранов - Плейлист</h1>
+        </div>
+
+        <div class="playlist-container">
+            <div class="playlist">
+                <div class="card">
+                    <h2>Карта реальности</h2>
+                    <div class="details">День 1</div>
+                    <iframe src="https://drive.google.com/file/d/1TXQ-Go3PYAMTbz3-OkDUG29VrOZzDeyb/preview" allow="autoplay"></iframe>
+                </div>
+                <div class="card">
+                    <h2>День 2</h2>
+                    <div class="details">Академия глубокой релаксации</div>
+                    <iframe src="https://drive.google.com/file/d/1pldGN8v7b4MR8oO3p4ohX8s9LqDPd6tk/preview" allow="autoplay"></iframe>
+                </div>
+                <h2>Карта реальности</h2>
+                    <div class="details">День 3</div>
+                    <iframe src="https://drive.google.com/file/d/1TXQ-Go3PYAMTbz3-OkDUG29VrOZzDeyb/preview" allow="autoplay"></iframe>
+            </div>
+        </div>
+
+        <footer>Ознакомительный курс. Приобретайте полный курс</footer>
+    </div>
+</body>
+</html>
