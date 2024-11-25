@@ -1,0 +1,472 @@
+<html><head><base href="https://proxy.example.com/">
+<meta charset="UTF-8">
+<title>ОРАКУЛ SHAMBALA</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&display=swap" rel="stylesheet">
+<style>
+    body {
+        font-family: 'Arial', sans-serif;
+        background-color: #1a1a1a;
+        color: #ffffff;
+        margin: 0;
+        padding: 20px;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .container {
+        max-width: 800px;
+        width: 100%;
+        background-color: #2d2d2d;
+        padding: 30px;
+        border-radius: 15px;
+        box-shadow: 0 0 20px rgba(0,0,0,0.5);
+    }
+
+    h1 {
+        text-align: center;
+        color: #9f86ff;
+        margin-bottom: 30px;
+        font-family: 'Cinzel', serif;
+        font-size: 2.5em;
+        text-shadow: 0 0 10px rgba(159, 134, 255, 0.5);
+        animation: titleGlow 2s ease-in-out infinite;
+    }
+
+    @keyframes titleGlow {
+        0% { text-shadow: 0 0 10px rgba(159, 134, 255, 0.5); }
+        50% { text-shadow: 0 0 20px rgba(159, 134, 255, 0.8); }
+        100% { text-shadow: 0 0 10px rgba(159, 134, 255, 0.5); }
+    }
+
+    .setup-form {
+        text-align: center;
+        margin-bottom: 30px;
+    }
+
+    .position-input {
+        padding: 10px;
+        font-size: 16px;
+        width: 80px;
+        background-color: #363636;
+        border: 2px solid #9f86ff;
+        color: white;
+        border-radius: 5px;
+        margin-right: 10px;
+    }
+
+    .result {
+        margin: 20px 0;
+        padding: 20px;
+        background-color: #363636;
+        border-radius: 10px;
+        display: none;
+    }
+
+    .position {
+        margin: 15px 0;
+        padding: 15px;
+        background-color: #404040;
+        border-radius: 8px;
+        border-left: 4px solid #9f86ff;
+        position: relative;
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    .position-hidden {
+        opacity: 0;
+        transform: translateY(20px);
+        transition: all 0.5s ease;
+    }
+
+    .card-hidden {
+        opacity: 0;
+        transform: translateX(-20px);
+    }
+
+    .card-searching {
+        animation: searchingAnimation 0.5s ease infinite;
+    }
+
+    .card-revealed {
+        opacity: 1;
+        transform: translateX(0);
+        transition: all 0.5s ease;
+    }
+
+    @keyframes searchingAnimation {
+        0% { transform: translateX(-5px); }
+        50% { transform: translateX(5px); }
+        100% { transform: translateX(-5px); }
+    }
+
+    .generate-btn {
+        position: relative;
+        padding: 15px 30px;
+        font-size: 20px;
+        background: linear-gradient(45deg, #9f86ff, #7c5cff);
+        color: white;
+        border: none;
+        border-radius: 25px;
+        cursor: pointer;
+        transition: transform 0.2s;
+        overflow: hidden;
+        margin: 40px auto;
+        display: block;
+        font-family: 'Cinzel', serif;
+        font-weight: 700;
+        letter-spacing: 2px;
+        text-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
+        animation: buttonPulse 2s infinite;
+    }
+
+    @keyframes buttonPulse {
+        0% { transform: scale(1); text-shadow: 0 0 5px rgba(255, 255, 255, 0.5); }
+        50% { transform: scale(1.05); text-shadow: 0 0 15px rgba(255, 255, 255, 0.8); }
+        100% { transform: scale(1); text-shadow: 0 0 5px rgba(255, 255, 255, 0.5); }
+    }
+
+    .category {
+        display: inline-block;
+        padding: 5px 10px;
+        margin: 3px;
+        border-radius: 15px;
+        font-size: 14px;
+    }
+
+    .direction {
+        background-color: #ff7676;
+        animation: pulsateRed 2s infinite;
+    }
+
+    .state {
+        background-color: #76ff76;
+        animation: pulsateGreen 2s infinite;
+    }
+
+    .message {
+        background-color: #7676ff;
+        animation: pulsateBlue 2s infinite;
+    }
+
+    .card-number {
+        font-weight: bold;
+        margin-left: 5px;
+    }
+
+    .card-type {
+        margin-left: 5px;
+        padding: 2px 6px;
+        border-radius: 10px;
+        font-size: 12px;
+    }
+
+    .positive {
+        background-color: #006400;
+        color: white;
+    }
+
+    .negative {
+        background-color: #ff0000;
+        color: white;
+    }
+
+    @keyframes pulsateRed {
+        0% { box-shadow: 0 0 5px #ff7676; }
+        50% { box-shadow: 0 0 15px #ff7676; }
+        100% { box-shadow: 0 0 5px #ff7676; }
+    }
+
+    @keyframes pulsateGreen {
+        0% { box-shadow: 0 0 5px #76ff76; }
+        50% { box-shadow: 0 0 15px #76ff76; }
+        100% { box-shadow: 0 0 5px #76ff76; }
+    }
+
+    @keyframes pulsateBlue {
+        0% { box-shadow: 0 0 5px #7676ff; }
+        50% { box-shadow: 0 0 15px #7676ff; }
+        100% { box-shadow: 0 0 5px #7676ff; }
+    }
+
+    .error {
+        color: #ff7676;
+        margin-top: 10px;
+        display: none;
+    }
+
+    .flash {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: white;
+        opacity: 0;
+        pointer-events: none;
+        animation: flashAnimation 1s ease-out;
+    }
+
+    @keyframes flashAnimation {
+        0% { opacity: 0; }
+        50% { opacity: 0.5; }
+        100% { opacity: 0; }
+    }
+
+    .position-title {
+        display: inline-block;
+        animation: titleReveal 0.5s ease;
+    }
+
+    @keyframes titleReveal {
+        from {
+            opacity: 0;
+            transform: translateY(-10px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @media (max-width: 600px) {
+        .container {
+            padding: 15px;
+        }
+        
+        .position {
+            padding: 10px;
+            margin: 10px 0;
+        }
+        
+        .category {
+            font-size: 12px;
+            padding: 4px 8px;
+        }
+
+        h1 {
+            font-size: 2em;
+        }
+    }
+</style>
+</head>
+<body>
+    <div class="container">
+        <h1>ОРАКУЛ SHAMBALA</h1>
+        
+        <div class="setup-form">
+            <label for="positionCount">Количество позиций (1-12):</label>
+            <input type="number" id="positionCount" class="position-input" min="1" max="12" value="4">
+            <div id="error" class="error">Пожалуйста, введите число от 1 до 12</div>
+        </div>
+
+        <div id="result" class="result"></div>
+        <button id="generateBtn" class="generate-btn">ВЫДАТЬ РАСКЛАД</button>
+    </div>
+
+    <script>
+        const directionCardNames = [
+            "Оракул", "Маяк", "Стражник", "Разрушенная башня", "Сновидец", 
+            "Пегас", "Учитель", "Алхимик", "Феникс", "Зеркало", 
+            "Огонь", "Ключ", "Путеводная звезда", "Мост", "Черный ворон", 
+            "Часы", "Сокровище", "Шаман", "Шамбала", "Карта Зверя", 
+            "Маска", "Шторм", "Хамелеон", "Ангел Хранитель", "Новорожденный", 
+            "Якорь", "Хаос", "Змея", "Закрытая дверь", "Фараон", 
+            "Догорающая Свеча", "Меч", "Глаза", "Книга", "Гора Кайлас", 
+            "Дракон", "Шахматная доска", "Монах", "Древо мудрости", "Луна", 
+            "Трон", "Инь-Янь", "Папоротник", "Затмение", "Ом", 
+            "Лабиринт", "Компас", "Весы"
+        ];
+
+        const stateCardNames = [
+            "вина", "осознанность", "счастье", "доверие", "скука",
+            "перемена", "неуверенность", "терпение", "разочарование", "ожидание",
+            "страх", "надежда", "скупость", "достижение", "гнев",
+            "забота", "храбрость", "благодарность", "гордость", "обида",
+            "одиночество", "пленник воспоминаний", "живущий в будущем", "фанатизм", "неопределенность",
+            "вдохновение", "ревность", "гармония", "зависть", "признание",
+            "сила духа", "любовь", "созерцание", "апатия", "успех",
+            "тревога", "тоска", "эгоизм", "страдание"
+        ];
+
+        const messageCardNames = [
+            "судьбоносный день", "темная ночь души", "интуиция", "оковы зависимости", 
+            "сбитый с толку", "в потоке развития", "разбитое зеркало", "тишина перед бурей", 
+            "ловушка времени", "восходящее солнце", "перепутье", "затонувший корабль", 
+            "невидимый воин", "проводник магии", "крик души", "пламя жизни", 
+            "между тьмой и светом", "великий дар", "прикосновение святого", "портал трансформации", 
+            "параллельная реальность", "видящий изнанку", "зов света", "любовная интрига", 
+            "эхо прошлого", "взгляд со стороны", "преодоление преграды", "чистый разум", 
+            "благословение рода", "ссудный день", "паутина сомнений", "внутренний ребенок", 
+            "переворот сознания", "принятие себя", "освобождение", "перезагрузка", 
+            "лучшая версия себя", "поиск истины", "внутренний судья"
+        ];
+
+        const categories = {
+            НАПРАВЛЕНИЕ: {
+                class: "direction",
+                maxNumber: 48
+            },
+            СОСТОЯНИЕ: {
+                class: "state",
+                maxNumber: 40
+            },
+            ПОСЛАНИЕ: {
+                class: "message",
+                maxNumber: 40
+            }
+        };
+
+        function getRandomNumber(max) {
+            return Math.floor(Math.random() * max) + 1;
+        }
+
+        function isPositive() {
+            return Math.random() >= 0.5;
+        }
+
+        function getCardName(category, number) {
+            if (category === "НАПРАВЛЕНИЕ") {
+                return directionCardNames[number - 1] || `#${number}`;
+            }
+            if (category === "СОСТОЯНИЕ") {
+                return stateCardNames[number - 1] || `#${number}`;
+            }
+            if (category === "ПОСЛАНИЕ") {
+                return messageCardNames[number - 1] || `#${number}`;
+            }
+            return `#${number}`;
+        }
+
+        function getRandomCards() {
+            const numCards = Math.floor(Math.random() * 3) + 1;
+            const availableCategories = Object.entries(categories);
+            const selectedCategories = [];
+            
+            for(let i = 0; i < numCards; i++) {
+                if (availableCategories.length === 0) break;
+                const randomIndex = Math.floor(Math.random() * availableCategories.length);
+                const [categoryName, categoryInfo] = availableCategories.splice(randomIndex, 1)[0];
+                const cardNumber = getRandomNumber(categoryInfo.maxNumber);
+                selectedCategories.push({
+                    name: categoryName,
+                    class: categoryInfo.class,
+                    number: cardNumber,
+                    displayName: getCardName(categoryName, cardNumber),
+                    isPositive: isPositive()
+                });
+            }
+            
+            return selectedCategories;
+        }
+
+        function createSymbol() {
+            const symbols = ['✨', '🌟', '⭐', '💫', '⚡', '🔮'];
+            const symbol = document.createElement('span');
+            symbol.textContent = symbols[Math.floor(Math.random() * symbols.length)];
+            symbol.className = 'symbol';
+            symbol.style.left = Math.random() * 100 + '%';
+            return symbol;
+        }
+
+        function animateButton() {
+            for(let i = 0; i < 6; i++) {
+                setTimeout(() => {
+                    const symbol = createSymbol();
+                    generateBtn.appendChild(symbol);
+                    setTimeout(() => symbol.remove(), 1000);
+                }, i * 100);
+            }
+        }
+
+        async function generateReading() {
+            const positionCount = parseInt(document.getElementById('positionCount').value);
+            const error = document.getElementById('error');
+            
+            if (positionCount < 1 || positionCount > 12 || isNaN(positionCount)) {
+                error.style.display = 'block';
+                return;
+            }
+            
+            error.style.display = 'none';
+            const result = document.getElementById('result');
+            result.style.display = 'block';
+            result.innerHTML = '';
+
+            for(let i = 0; i < positionCount; i++) {
+                // Create position container
+                const positionDiv = document.createElement('div');
+                positionDiv.className = 'position position-hidden';
+                
+                const cards = getRandomCards();
+                let html = `<strong class="position-title">Позиция ${i + 1}:</strong><br>`;
+                
+                // Add cards with hidden class
+                cards.forEach(card => {
+                    html += `
+                        <span class="category ${card.class} card-hidden">${card.name}
+                            <span class="card-number">${card.displayName}</span>
+                            <span class="card-type ${card.isPositive ? 'positive' : 'negative'}">
+                                ${card.isPositive ? 'позитив' : 'негатив'}
+                            </span>
+                        </span> `;
+                });
+                
+                positionDiv.innerHTML = html;
+                result.appendChild(positionDiv);
+                
+                // Animate position reveal
+                await new Promise(resolve => setTimeout(resolve, 500));
+                positionDiv.classList.remove('position-hidden');
+                
+                // Flash effect
+                const flash = document.createElement('div');
+                flash.className = 'flash';
+                positionDiv.appendChild(flash);
+                
+                // Animate cards sequentially
+                const cardElements = positionDiv.querySelectorAll('.category');
+                for(let card of cardElements) {
+                    await new Promise(resolve => {
+                        setTimeout(() => {
+                            card.classList.add('card-searching');
+                            setTimeout(() => {
+                                card.classList.remove('card-searching');
+                                card.classList.remove('card-hidden');
+                                card.classList.add('card-revealed');
+                                resolve();
+                            }, 2000);
+                        }, 100);
+                    });
+                }
+                
+                // Remove flash effect
+                setTimeout(() => flash.remove(), 1000);
+                
+                // Wait before showing next position
+                await new Promise(resolve => setTimeout(resolve, 500));
+            }
+        }
+
+        const generateBtn = document.getElementById('generateBtn');
+        const positionInput = document.getElementById('positionCount');
+
+        generateBtn.addEventListener('click', () => {
+            animateButton();
+            generateReading();
+        });
+
+        positionInput.addEventListener('input', () => {
+            const value = parseInt(positionInput.value);
+            if (value < 1 || value > 12 || isNaN(value)) {
+                document.getElementById('error').style.display = 'block';
+                generateBtn.disabled = true;
+            } else {
+                document.getElementById('error').style.display = 'none';
+                generateBtn.disabled = false;
+            }
+        });
+    </script>
+</body></html>
