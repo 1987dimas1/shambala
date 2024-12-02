@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Цифровые Часы</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            background-color: #121212;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            font-family: 'Orbitron', sans-serif;
+            color: #ffffff;
+            gap: 20px;
+        }
+        .clock-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            border: 2px solid #00a0a0;
+            border-radius: 10px;
+            padding: 10px 20px;
+            text-align: center;
+            box-shadow: 0 0 15px rgba(0, 255, 255, 0.3);
+            width: 200px; /* Уменьшенная ширина */
+        }
+        .clock {
+            font-size: 3rem;
+            font-weight: bold;
+            text-shadow: 
+                2px 2px 4px rgba(0,0,0,0.3),
+                -2px -2px 4px rgba(255,255,255,0.1);
+            color: #00ffff;
+            height: 3rem; /* Уменьшенная высота */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+        .city-label {
+            font-size: 1rem;
+            margin-bottom: 6px;
+            opacity: 0.7;
+            letter-spacing: 1px;
+        }
+    </style>
+</head>
+<body>
+    <div class="clock-container">
+        <div class="city-label">Алматы</div>
+        <div id="almaty-clock" class="clock"></div>
+    </div>
+    <div class="clock-container">
+        <div class="city-label">Москва</div>
+        <div id="moscow-clock" class="clock"></div>
+    </div>
+    <script>
+        function updateClocks() {
+            const almatyTime = new Date().toLocaleString('ru-RU', { 
+                timeZone: 'Asia/Almaty', 
+                hour: '2-digit', 
+                minute: '2-digit', 
+                second: '2-digit' 
+            });
+            const moscowTime = new Date().toLocaleString('ru-RU', { 
+                timeZone: 'Europe/Moscow', 
+                hour: '2-digit', 
+                minute: '2-digit', 
+                second: '2-digit' 
+            });
+            document.getElementById('almaty-clock').textContent = almatyTime;
+            document.getElementById('moscow-clock').textContent = moscowTime;
+        }
+        updateClocks();
+        setInterval(updateClocks, 1000);
+    </script>
+</body>
+</html>
