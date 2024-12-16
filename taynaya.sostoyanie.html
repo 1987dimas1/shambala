@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ОРАКУЛ SHAMBALA</title>
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+            perspective: 1000px;
+        }
+        body {
+            font-family: 'Oswald', sans-serif;
+            background: linear-gradient(135deg, #0a0a1a, #1a1a2a);
+            color: #ffffff;
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            perspective: 1000px;
+        }
+        .container {
+            width: 80%;
+            max-width: 600px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 0px;
+            text-align: center;
+        }
+        h1 {
+            text-align: center;
+            color: #8264ff;
+            margin-bottom: 30px;
+            font-family: 'Oswald', serif;
+            font-size: 3em;
+            text-shadow: 0 0 30px rgba(130, 100, 255, 0.7);
+            letter-spacing: 4px;
+            animation: mystical-shimmer 3s infinite alternate;
+        }
+        .result {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            margin-bottom: 15px;
+        }
+        .card {
+            width: 80%;
+            max-width: 350px;
+            height: 450px;
+            background: linear-gradient(145deg, #2a2a4a, #1a1a2a);
+            border-radius: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 40px;
+            box-shadow: 
+                0 30px 60px rgba(59, 43, 133, 0.5),
+                inset 0 0 30px rgba(130, 100, 255, 0.2);
+            transform: rotateY(90deg);
+            opacity: 0;
+            transition: all 1.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            position: relative;
+            overflow: hidden;
+            border: 3px solid transparent;
+            background-clip: padding-box;
+            cursor: pointer;
+        }
+        .card::before {
+            content: '';
+            position: absolute;
+            top: -10px;
+            left: -10px;
+            right: -10px;
+            bottom: -10px;
+            background: linear-gradient(
+                135deg, 
+                rgba(130, 100, 255, 0.5), 
+                rgba(130, 100, 255, 0.2),
+                transparent 60%
+            );
+            border-radius: 25px;
+            z-index: -1;
+            filter: blur(10px);
+        }
+        .card.active {
+            transform: rotateY(0);
+            opacity: 1;
+            border: 3px solid rgba(130, 100, 255, 0.5);
+        }
+        .card-name {
+            font-size: 2.2em;
+            color: #8264ff;
+            margin-bottom: 15px;
+            font-family: 'Oswald', serif;
+            font-weight: bold;
+        }
+        .card-type {
+            font-size: 1.5em;
+            padding: 12px 20px;
+            border-radius: 30px;
+            margin-top: 15px;
+            font-family: 'Oswald', serif;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            display: inline-block;
+        }
+        .positive { 
+            background-color: rgba(0, 255, 127, 0.1); 
+            color: #00ff7f;
+            border: 2px solid #00ff7f;
+            animation: pulse-positive 2s infinite alternate;
+        }
+        .negative { 
+            background-color: rgba(255, 69, 0, 0.1); 
+            color: #ff4500;
+            border: 2px solid #ff4500;
+            animation: pulse-negative 2s infinite alternate;
+        }
+        @keyframes pulse-positive {
+            0% {
+                transform: scale(1);
+                box-shadow: 0 0 10px rgba(0, 255, 127, 0.3);
+            }
+            100% {
+                transform: scale(1.05);
+                box-shadow: 0 0 20px rgba(0, 255, 127, 0.6);
+            }
+        }
+        @keyframes pulse-negative {
+            0% {
+                transform: scale(1);
+                box-shadow: 0 0 10px rgba(255, 69, 0, 0.3);
+            }
+            100% {
+                transform: scale(1.05);
+                box-shadow: 0 0 20px rgba(255, 69, 0, 0.6);
+            }
+        }
+        .generate-btn {
+            padding: 15px 40px;
+            font-size: 1.6em;
+            background: linear-gradient(45deg, #8264ff, #6a42ff);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            font-family: 'Oswald', cursive;
+            transition: all 0.3s ease;
+            transform: translateZ(50px);
+            box-shadow: 
+                0 15px 30px rgba(59, 43, 133, 0.5),
+                0 0 20px rgba(130, 100, 255, 0.3);
+        }
+        @keyframes mystical-shimmer {
+            0% { 
+                text-shadow: 0 0 10px rgba(130, 100, 255, 0.5);
+                color: #8264ff;
+            }
+            100% { 
+                text-shadow: 0 0 40px rgba(130, 100, 255, 1);
+                color: #a38cff;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>Тайная Карта</h1>
+    <div id="result" class="result"></div>
+    <button id="generateBtn" class="generate-btn">Получить "Тайную карту"</button>
+</div>
+
+<script>
+    const directionCardLinks = {
+         "Раздражение": "https://granite-blanket-efe.notion.site/15d52e7c285e80e988f0e746aada5ad6?pvs=4",
+        "Усталость": "https://granite-blanket-efe.notion.site/15d52e7c285e807c88cbd65f5078f6a8?pvs=4", 
+        "Наглость": "https://granite-blanket-efe.notion.site/15d52e7c285e80fb8fa1c8dcadf1bd87?pvs=4",
+ "Растерянность": "https://granite-blanket-efe.notion.site/15b52e7c285e80e58cfbc245e2dd954b?pvs=4",
+ "Стеснительность": "https://granite-blanket-efe.notion.site/15b52e7c285e80869e39e05210c46b8e?pvs=4",
+
+
+    };
+
+    function getRandomCard(category) {
+        const keys = Object.keys(category);
+        const randomKey = keys[Math.floor(Math.random() * keys.length)];
+        return { name: randomKey, link: category[randomKey] };
+    }
+
+    function generateReading() {
+        const result = document.getElementById('result');
+        result.innerHTML = ''; 
+
+        const cardDiv = document.createElement('div');
+        cardDiv.className = 'card';
+
+        const card = getRandomCard(directionCardLinks);
+        const isPositive = Math.random() >= 0.5;
+
+        cardDiv.innerHTML = `
+            <div class="card-name">${card.name}</div>
+            <a href="${card.link}" target="_blank" class="card-type ${isPositive ? 'positive' : 'negative'}">
+                ${isPositive ? 'Позитив' : 'Негатив'}
+            </a>
+        `;
+
+        result.appendChild(cardDiv);
+        
+        setTimeout(() => {
+            cardDiv.classList.add('active');
+        }, 100);
+
+        cardDiv.addEventListener('click', () => {
+            window.open(card.link, '_blank');
+        });
+    }
+
+    document.getElementById('generateBtn').addEventListener('click', generateReading);
+</script>
+</body>
+</html>
