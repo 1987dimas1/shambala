@@ -1,0 +1,317 @@
+<html>
+<head>
+<base href="https://example.com/">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Система учета рабочего времени</title>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+<style>
+  body {
+    font-family: 'Roboto', sans-serif;
+    line-height: 1.6;
+    margin: 0;
+    padding: 20px;
+    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    color: #333;
+  }
+  h1, h2 {
+    color: #2c3e50;
+    text-align: center;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+  }
+  table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    margin-bottom: 20px;
+    background-color: #fff;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  th, td {
+    border: none;
+    padding: 12px;
+    text-align: left;
+    font-size: 14px;
+  }
+  th {
+    background-color: #3498db;
+    color: #fff;
+    font-weight: bold;
+    text-transform: uppercase;
+  }
+  tr:nth-child(even) {
+    background-color: #f2f2f2;
+  }
+  input[type="text"], input[type="time"], textarea {
+    width: 100%;
+    padding: 10px;
+    margin: 5px 0;
+    display: inline-block;
+    border: 1px solid #bdc3c7;
+    border-radius: 4px;
+    box-sizing: border-box;
+    transition: border-color 0.3s ease;
+  }
+  input[type="text"]:focus, input[type="time"]:focus, textarea:focus {
+    border-color: #3498db;
+    outline: none;
+  }
+  input[type="submit"], button {
+    background: linear-gradient(to bottom, #3498db, #2980b9);
+    color: white;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-top: 10px;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  }
+  input[type="submit"]:hover, button:hover {
+    background: linear-gradient(to bottom, #2980b9, #3498db);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 8px rgba(0,0,0,0.15);
+  }
+  .result {
+    background-color: #fff;
+    border-left: 6px solid #3498db;
+    margin-bottom: 15px;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  }
+  .settings {
+    background-color: #ecf0f1;
+    border: 1px solid #bdc3c7;
+    padding: 20px;
+    margin-bottom: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  }
+  .late { color: #e74c3c; }
+  .early { color: #f39c12; }
+  #bulkInput {
+    width: 100%;
+    height: 150px;
+    margin-bottom: 10px;
+    resize: vertical;
+    font-family: monospace;
+  }
+  .input-template {
+    background-color: #f8f9fa;
+    padding: 15px;
+    border-radius: 4px;
+    margin-bottom: 10px;
+    font-family: monospace;
+  }
+  .helper-buttons {
+    margin-bottom: 15px;
+  }
+  .helper-buttons button {
+    margin-right: 10px;
+  }
+</style>
+</head>
+<body>
+<h1>Система учета рабочего времени</h1>
+
+<div class="settings">
+  <form id="settingsForm">
+    <label for="workdayStart">Начало рабочего дня:</label>
+    <input type="time" id="workdayStart" name="workdayStart" value="08:40" required>
+    
+    <label for="workdayEnd">Конец рабочего дня:</label>
+    <input type="time" id="workdayEnd" name="workdayEnd" value="17:40" required>
+    
+    <input type="submit" value="Сохранить настройки">
+  </form>
+</div>
+
+<div>
+  <h2>Ввод данных</h2>
+  <div class="input-template">
+    <strong>Формат ввода данных:</strong><br>
+    Иванов Иван Иванович&#9;ИТ-отдел&#9;23.12.2024&#9;08:45&#9;17:30<br>
+    Кудышева Малика Толегеновна&#9;Отдел бух учета&#9;17.12.2024&#9;00:00&#9;00:00&#9;08:38&#9;17:45
+  </div>
+  <div class="helper-buttons">
+    <button onclick="insertTemplate()">Вставить шаблон</button>
+    <button onclick="clearInput()">Очистить</button>
+  </div>
+  <textarea id="bulkInput" placeholder="Вставьте данные по формату выше. Дополнительные значения времени (00:00) будут автоматически пропущены."></textarea>
+  <button onclick="processBulkInput()">Сформировать отчет</button>
+</div>
+
+<div id="result" class="result"></div>
+
+<script>
+let workdayStart = '08:40';
+let workdayEnd = '17:40';
+
+document.getElementById('settingsForm').addEventListener('submit', function(e) {
+  e.preventDefault();
+  workdayStart = this.workdayStart.value;
+  workdayEnd = this.workdayEnd.value;
+  alert('Настройки сохранены!');
+});
+
+function processLine(line) {
+  const parts = line.split('\t');
+  if (parts.length < 5) return null;
+  
+  const timeValues = parts.slice(3).filter(time => /^([01]?[0-9]|2[0-3]):[0-5][0-9]$/.test(time));
+  
+  if (timeValues.length < 2) return null;
+  
+  const startTime = timeValues[timeValues.length - 2];
+  const endTime = timeValues[timeValues.length - 1];
+  
+  return {
+    employee: parts[0],
+    department: parts[1],
+    date: parts[2],
+    startTime: startTime,
+    endTime: endTime
+  };
+}
+
+function timeDiffInMinutes(time1, time2) {
+  const [h1, m1] = time1.split(':').map(Number);
+  const [h2, m2] = time2.split(':').map(Number);
+  return (h2 * 60 + m2) - (h1 * 60 + m1);
+}
+
+function formatMinutesToHHMM(minutes) {
+  const hours = Math.floor(Math.abs(minutes) / 60);
+  const mins = Math.abs(minutes) % 60;
+  return `${hours.toString().padStart(2, '0')}:${mins.toString().padStart(2, '0')}`;
+}
+
+function processBulkInput() {
+  const bulkData = document.getElementById('bulkInput').value.trim().split('\n');
+
+  if (bulkData.length < 1) {
+    alert('Недостаточно данных. Пожалуйста, введите хотя бы одну запись.');
+    return;
+  }
+
+  calculateResults(bulkData);
+}
+
+function formatDate(dateString) {
+  const [day, month, year] = dateString.split('.');
+  return `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
+}
+
+function calculateResults(data) {
+  let employee = '';
+  let department = '';
+  let totalWorkedHours = 0;
+  let totalUndertimeMinutes = 0;
+  let totalOvertimeMinutes = 0;
+  let validEntries = 0;
+  let skippedEntries = 0;
+  
+  let resultHTML = `
+    <h2>Результаты расчета:</h2>
+    <table>
+      <tr>
+        <th>Дата</th>
+        <th>Опоздание</th>
+        <th>Ранний уход</th>
+        <th>Начало дня</th>
+        <th>Конец дня</th>
+        <th>Отработанные часы</th>
+        <th>Недоработанные часы</th>
+        <th>Переработка</th>
+      </tr>
+  `;
+
+  data.forEach((line) => {
+    const processedLine = processLine(line);
+    if (!processedLine) {
+      skippedEntries++;
+      return;
+    }
+
+    if (validEntries === 0) {
+      employee = processedLine.employee;
+      department = processedLine.department;
+    }
+    validEntries++;
+
+    const { date, startTime, endTime } = processedLine;
+    const formattedDate = formatDate(date);
+    const start = new Date(`${formattedDate}T${startTime}`);
+    const end = new Date(`${formattedDate}T${endTime}`);
+    const workDuration = (end - start) / 1000 / 60 - 60; // в минутах, вычитаем 60 минут на обед
+
+    const scheduleStart = new Date(`${formattedDate}T${workdayStart}`);
+    const scheduleEnd = new Date(`${formattedDate}T${workdayEnd}`);
+    const standardWorkDay = (scheduleEnd - scheduleStart) / 1000 / 60 - 60;
+
+    const workedHours = Math.round(workDuration / 60 * 100) / 100;
+    const overtime = workDuration - standardWorkDay;
+    
+    totalWorkedHours += workedHours;
+
+    const lateArrival = Math.max(0, timeDiffInMinutes(workdayStart, startTime));
+    const earlyDeparture = Math.max(0, timeDiffInMinutes(endTime, workdayEnd));
+
+    let lateInfo = formatMinutesToHHMM(lateArrival);
+    let earlyInfo = formatMinutesToHHMM(earlyDeparture);
+
+    let undertimeMinutes = Math.max(0, -overtime);
+    let overtimeMinutes = Math.max(0, overtime);
+
+    totalUndertimeMinutes += undertimeMinutes;
+    totalOvertimeMinutes += overtimeMinutes;
+
+    resultHTML += `
+      <tr>
+        <td>${date}</td>
+        <td>${lateInfo}</td>
+        <td>${earlyInfo}</td>
+        <td>${startTime}</td>
+        <td>${endTime}</td>
+        <td>${workedHours.toFixed(2)} ч</td>
+        <td>${formatMinutesToHHMM(undertimeMinutes)}</td>
+        <td>${formatMinutesToHHMM(overtimeMinutes)}</td>
+      </tr>
+    `;
+  });
+
+  resultHTML = `
+    <p><strong>Сотрудник:</strong> ${employee}</p>
+    <p><strong>Подразделение:</strong> ${department}</p>
+    <p><strong>Обработано записей:</strong> ${validEntries}</p>
+    ${skippedEntries > 0 ? `<p><strong>Пропущено записей:</strong> ${skippedEntries}</p>` : ''}
+  ` + resultHTML;
+
+  resultHTML += `
+    </table>
+    <p><strong>Всего отработано за период:</strong> ${Math.round(totalWorkedHours * 100) / 100} ч</p>
+    <p><strong>Сумма недоработки за период:</strong> ${formatMinutesToHHMM(totalUndertimeMinutes)}</p>
+    <p><strong>Сумма переработки за период:</strong> ${formatMinutesToHHMM(totalOvertimeMinutes)}</p>
+  `;
+
+  document.getElementById('result').innerHTML = resultHTML;
+}
+
+function insertTemplate() {
+  const template = `Иванов Иван Иванович\tИТ-отдел\t23.12.2024\t08:45\t17:30
+Кудышева Малика Толегеновна\tОтдел бух учета\t17.12.2024\t00:00\t00:00\t08:38\t17:45`;
+  document.getElementById('bulkInput').value = template;
+}
+
+function clearInput() {
+  document.getElementById('bulkInput').value = '';
+}
+</script>
+</body>
+</html>
