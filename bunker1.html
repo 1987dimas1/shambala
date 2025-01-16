@@ -1,0 +1,244 @@
+<html><head><base href="https://example.com/main">
+<meta charset="UTF-8">
+<title>Бункер</title>
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;600&display=swap" rel="stylesheet">
+<style>
+body {
+  margin: 0;
+  padding: 20px;
+  min-height: 100vh;
+  background: #1a1a1a;
+  font-family: 'Oswald', sans-serif;
+  color: #ffeb3b;
+  overflow-x: hidden;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.cards-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
+  width: 100%;
+  margin-top: 30px;
+}
+
+.card {
+  background: linear-gradient(145deg, #ffeb3b 0%, #fdd835 100%);
+  border: 3px solid #000;
+  border-radius: 15px;
+  padding: 20px;
+  position: relative;
+  min-height: 300px;
+  color: #000;
+  box-shadow: 0 0 20px rgba(255, 235, 59, 0.3);
+  transform-origin: center;
+  opacity: 0;
+  animation: cardAppear 0.5s ease forwards;
+}
+
+.card::before {
+  content: '';
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  right: 10px;
+  bottom: 10px;
+  border: 2px solid #000;
+  border-radius: 10px;
+  z-index: 1;
+}
+
+.card-content {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+}
+
+.card-title {
+  font-size: 24px;
+  font-weight: 600;
+  margin-bottom: 15px;
+  text-transform: uppercase;
+}
+
+.card-value {
+  font-size: 36px;
+  font-weight: 400;
+  margin: 20px 0;
+}
+
+.hazard-symbol {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0.3);
+  opacity: 0.1;
+}
+
+.draw-button {
+  background: #ffeb3b;
+  border: none;
+  padding: 20px 40px;
+  font-family: 'Oswald', sans-serif;
+  font-size: 24px;
+  color: #000;
+  cursor: pointer;
+  border-radius: 10px;
+  margin: 20px 0;
+  text-transform: uppercase;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.draw-button:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 30px rgba(255, 235, 59, 0.5);
+}
+
+.draw-button::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+  transform: rotate(45deg);
+  animation: buttonGlow 2s linear infinite;
+}
+
+@keyframes buttonGlow {
+  0% { transform: rotate(45deg) translateX(-100%); }
+  100% { transform: rotate(45deg) translateX(100%); }
+}
+
+@keyframes cardAppear {
+  0% {
+    opacity: 0;
+    transform: scale(0.8) translateY(50px);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.hazard-border {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border: 20px solid;
+  border-image: repeating-linear-gradient(45deg, #ffeb3b, #ffeb3b 20px, #000 20px, #000 40px) 20;
+  pointer-events: none;
+  z-index: 1000;
+}
+</style>
+</head>
+<body>
+
+<div class="hazard-border"></div>
+
+<div class="container">
+  <button class="draw-button" onclick="drawCard()">Показать карту</button>
+  <div class="cards-container" id="cardsContainer"></div>
+</div>
+
+<script>
+// База данных карт
+const cardDatabase = {
+  профессии: [
+    'Электрик', 'Врач', 'Программист', 'Повар', 'Инженер'
+    // Добавьте свои профессии здесь
+  ],
+  багаж: [
+    'Аптечка', 'Ноутбук', 'Инструменты', 'Карта местности'
+    // Добавьте свой багаж здесь
+  ],
+  'особые условия': [
+    'Клаустрофобия', 'Лидерские качества', 'Паранойя'
+    // Добавьте свои условия здесь
+  ],
+  биология: [
+    'Группа крови A+', 'Высокий иммунитет', 'Аллергия'
+    // Добавьте свои характеристики здесь
+  ],
+  здоровье: [
+    'Отличное', 'Хроническое заболевание', 'Спортивное телосложение'
+    // Добавьте свои характеристики здесь
+  ],
+  хобби: [
+    'Альпинизм', 'Программирование', 'Медицина'
+    // Добавьте свои хобби здесь
+  ],
+  факты: [
+    'Служил в армии', 'Знает три языка', 'Имеет навыки выживания'
+    // Добавьте свои факты здесь
+  ]
+};
+
+let drawnCards = new Set();
+let isFirstDraw = true;
+
+function getRandomItem(array) {
+  return array[Math.floor(Math.random() * array.length)];
+}
+
+function createHazardSymbol() {
+  return `<svg class="hazard-symbol" width="200" height="200" viewBox="0 0 200 200">
+    <path d="M100 0 L200 173.2 L0 173.2 Z" fill="none" stroke="#000" stroke-width="10"/>
+    <circle cx="100" cy="100" r="20" fill="#000"/>
+  </svg>`;
+}
+
+function createCard(type, value) {
+  const card = document.createElement('div');
+  card.className = 'card';
+  card.innerHTML = `
+    ${createHazardSymbol()}
+    <div class="card-content">
+      <div class="card-title">${type}</div>
+      <div class="card-value">${value}</div>
+    </div>
+  `;
+  return card;
+}
+
+function getNextCardType() {
+  const types = ['багаж', 'особые условия', 'биология', 'здоровье', 'хобби', 'факты'];
+  const availableTypes = types.filter(type => !drawnCards.has(type));
+  return availableTypes.length > 0 ? getRandomItem(availableTypes) : null;
+}
+
+function drawCard() {
+  if (isFirstDraw) {
+    const profession = getRandomItem(cardDatabase.профессии);
+    const card = createCard('профессия', profession);
+    document.getElementById('cardsContainer').appendChild(card);
+    drawnCards.add('профессия');
+    isFirstDraw = false;
+  } else {
+    const nextType = getNextCardType();
+    if (nextType) {
+      const value = getRandomItem(cardDatabase[nextType]);
+      const card = createCard(nextType, value);
+      document.getElementById('cardsContainer').appendChild(card);
+      drawnCards.add(nextType);
+    } else {
+      alert('Все карты уже открыты!');
+    }
+  }
+}
+</script>
+
+</body>
+</html>
