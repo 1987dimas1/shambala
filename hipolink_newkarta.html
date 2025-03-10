@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Карта дня</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 0;
+            padding: 10px;
+            background-color: #f8f8f8;
+        }
+        .header {
+            margin-bottom: 20px;
+            padding: 10px;
+            background-color: #eaeaea;
+            border-radius: 5px;
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 24px;
+            font-weight: normal;
+        }
+        #cardContainer {
+            margin: 20px auto;
+        }
+        #wishImage {
+            max-width: 100%;
+            max-height: 400px;
+            display: none;
+            border-radius: 5px;
+        }
+        #wishButton {
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Получить карту дня</h1>
+    </div>
+    
+    <div id="cardContainer">
+        <img id="wishImage" alt="Карта дня">
+    </div>
+    
+    <button id="wishButton">Получить карту</button>
+    
+    <script>
+        var imageIds = [
+            "1VDQMXTIReGb_eGV5tjsR7waYkc4A_k9F",
+            "1VDQMXTIReGb_eGV5tjsR7waYkc4A_k9F"
+            // Добавьте больше ID изображений Google Drive здесь
+        ];
+        
+        var wishButton = document.getElementById("wishButton");
+        var wishImage = document.getElementById("wishImage");
+        
+        wishButton.onclick = function() {
+            var randomIndex = Math.floor(Math.random() * imageIds.length);
+            var randomImageId = imageIds[randomIndex];
+            wishImage.src = "https://drive.google.com/thumbnail?id=" + randomImageId + "&sz=w1000";
+            wishImage.style.display = "block";
+        };
+    </script>
+</body>
+</html>
