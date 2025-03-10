@@ -18,14 +18,29 @@
         .banner {
             width: 100%;
             height: 100%;
-            background: linear-gradient(135deg, #8a2be2, #4b0082);
+            background: linear-gradient(135deg, #121212, #1e1e1e);
             display: flex;
             flex-direction: column;
             justify-content: space-between;
             align-items: center;
-            color: white;
+            color: gold;
             padding: 20px;
             box-sizing: border-box;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .banner::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 10% 20%, rgba(40, 40, 50, 0.4) 0%, transparent 50%),
+                radial-gradient(circle at 90% 80%, rgba(30, 30, 40, 0.4) 0%, transparent 50%);
+            z-index: 0;
         }
         
         .title {
@@ -33,6 +48,14 @@
             text-align: center;
             margin-top: 30px;
             letter-spacing: 1px;
+            position: relative;
+            z-index: 1;
+            text-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+            background: rgba(30, 30, 30, 0.6);
+            padding: 10px 25px;
+            border-radius: 10px;
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(100, 100, 100, 0.3);
         }
         
         .wish-container {
@@ -44,6 +67,8 @@
             text-align: center;
             padding: 20px;
             box-sizing: border-box;
+            position: relative;
+            z-index: 1;
         }
         
         .wish-text {
@@ -52,15 +77,27 @@
             line-height: 1.5;
             word-spacing: 4px;
             letter-spacing: 1px;
-            word-wrap: break-word;
-            overflow-wrap: break-word;
-            hyphens: auto;
+            background: rgba(20, 20, 20, 0.7);
+            padding: 30px;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(80, 80, 80, 0.2);
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+            max-width: 80%;
         }
         
-        .wish-text span {
+        .word {
+            display: inline-block;
+            margin-right: 0.35em;
+        }
+        
+        .word:last-child {
+            margin-right: 0;
+        }
+        
+        .letter {
             display: inline-block;
             opacity: 0;
-            margin-right: 3px;
         }
         
         .glowing {
@@ -87,23 +124,64 @@
             display: flex;
             justify-content: center;
             margin-bottom: 40px;
+            position: relative;
+            z-index: 1;
         }
         
         .wish-button {
-            background-color: rgba(255, 255, 255, 0.2);
-            border: 2px solid white;
-            color: white;
-            padding: 12px 30px;
+            background-color: rgba(30, 30, 35, 0.7);
+            color: gold;
+            padding: 14px 35px;
             border-radius: 30px;
             font-size: 18px;
             cursor: pointer;
-            transition: background-color 1.5s;
+            transition: all 0.3s;
             letter-spacing: 1px;
             font-family: 'Poiret One', cursive;
+            position: relative;
+            overflow: hidden;
+            border: none;
+            outline: none;
+            box-shadow: 
+                0 0 15px rgba(0, 0, 0, 0.3),
+                0 0 0 1px rgba(100, 100, 100, 0.2);
+            backdrop-filter: blur(5px);
+        }
+        
+        .wish-button::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(45deg, #333, #444, #555, #444, #333);
+            z-index: -1;
+            border-radius: 32px;
+        }
+        
+        .wish-button::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(180deg, 
+                rgba(255, 255, 255, 0.1) 0%, 
+                transparent 50%, 
+                rgba(0, 0, 0, 0.1) 100%);
         }
         
         .wish-button:hover {
-            background-color: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+            box-shadow: 
+                0 5px 20px rgba(0, 0, 0, 0.4),
+                0 0 0 1px rgba(120, 120, 120, 0.3);
+        }
+        
+        .wish-button:active {
+            transform: translateY(1px);
         }
     </style>
 </head>
@@ -123,7 +201,7 @@
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             var wishes = [
-                 "Сегодня перед тобой откроются новые пути, о которых ты даже не думал. Будь внимателен к знакам, они укажут верное направление. Совет: не бойся сделать шаг в неизвестность, ведь именно там скрываются самые ценные дары судьбы.",
+               "Сегодня перед тобой откроются новые пути, о которых ты даже не думал. Будь внимателен к знакам, они укажут верное направление. Совет: не бойся сделать шаг в неизвестность, ведь именно там скрываются самые ценные дары судьбы.",
             "Сегодня перед тобой откроется новая возможность, которая может изменить твою жизнь. Будь внимателен к деталям, ведь в них скрыты подсказки судьбы позволь себе довериться потоку событий.",
 
 "Этот день принесёт неожиданные встречи и тёплые разговоры. Возможно, кто-то вдохновит тебя или напомнит о чём-то важном будь открыт к общению, оно может привести к неожиданным открытиям.",
@@ -266,22 +344,25 @@
                 
                 // Разбиваем текст на слова
                 var words = randomWish.split(' ');
+                var delay = 0;
                 
-                // Добавляем слова по одному с анимацией
-                for (var i = 0; i < words.length; i++) {
+                // Обрабатываем каждое слово
+                words.forEach(function(word) {
                     var wordSpan = document.createElement('span');
-                    wordSpan.textContent = words[i];
-                    wordSpan.style.animationDelay = (i * 0.1) + 's';
-                    wordSpan.className = 'glowing';
-                    wishText.appendChild(wordSpan);
+                    wordSpan.className = 'word';
                     
-                    // Добавляем пробел после слова (кроме последнего слова)
-                    if (i < words.length - 1) {
-                        var spaceSpan = document.createElement('span');
-                        spaceSpan.innerHTML = '&nbsp;';
-                        wishText.appendChild(spaceSpan);
+                    // Добавляем каждую букву с анимацией
+                    for (var i = 0; i < word.length; i++) {
+                        var letterSpan = document.createElement('span');
+                        letterSpan.textContent = word[i];
+                        letterSpan.className = 'letter glowing';
+                        letterSpan.style.animationDelay = delay + 's';
+                        wordSpan.appendChild(letterSpan);
+                        delay += 0.05; // Более плавная анимация
                     }
-                }
+                    
+                    wishText.appendChild(wordSpan);
+                });
             });
         });
     </script>
