@@ -1,0 +1,915 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NeOhm Yoga | From Theory to Practice</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/boxicons@2.1.0/css/boxicons.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --neon-blue: #00f3ff;
+            --neon-purple: #ae00ff;
+            --neon-pink: #ff00d4;
+            --dark-bg: #0d0d14;
+            --darker-bg: #070709;
+            --card-bg: #12121c;
+        }
+
+        body {
+            background-color: var(--dark-bg);
+            background-image:
+                radial-gradient(circle at 20% 30%, rgba(174, 0, 255, 0.05) 0%, transparent 40%),
+                radial-gradient(circle at 80% 70%, rgba(0, 243, 255, 0.05) 0%, transparent 40%);
+            color: white;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .neon-text {
+            color: var(--neon-blue);
+            text-shadow: 0 0 10px rgba(0, 243, 255, 0.7),
+                         0 0 20px rgba(0, 243, 255, 0.5),
+                         0 0 30px rgba(0, 243, 255, 0.3);
+        }
+
+        .neon-purple-text {
+            color: var(--neon-purple);
+            text-shadow: 0 0 10px rgba(174, 0, 255, 0.7),
+                         0 0 20px rgba(174, 0, 255, 0.5),
+                         0 0 30px rgba(174, 0, 255, 0.3);
+        }
+
+        .neon-pink-text {
+            color: var(--neon-pink);
+            text-shadow: 0 0 10px rgba(255, 0, 212, 0.7),
+                         0 0 20px rgba(255, 0, 212, 0.5),
+                         0 0 30px rgba(255, 0, 212, 0.3);
+        }
+
+        .neon-border {
+            border: 1px solid var(--neon-blue);
+            box-shadow: 0 0 5px var(--neon-blue),
+                        inset 0 0 5px var(--neon-blue);
+        }
+
+        .neon-purple-border {
+            border: 1px solid var(--neon-purple);
+            box-shadow: 0 0 5px var(--neon-purple),
+                        inset 0 0 5px var(--neon-purple);
+        }
+
+        .neon-pink-border {
+            border: 1px solid var(--neon-pink);
+            box-shadow: 0 0 5px var(--neon-pink),
+                        inset 0 0 5px var(--neon-pink);
+        }
+
+        .practice-card {
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            transition: all 0.3s ease;
+            overflow: hidden;
+            height: 100px;
+        }
+
+        .practice-card.expanded {
+            height: auto;
+        }
+
+        .practice-card:hover:not(.expanded) {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0, 243, 255, 0.2);
+        }
+
+        .game-practice-container {
+            background-color: var(--darker-bg);
+            border-radius: 16px;
+        }
+
+        .game-button {
+            background: linear-gradient(45deg, var(--neon-purple), var(--neon-blue));
+            color: white;
+            font-weight: bold;
+            padding: 12px 24px;
+            border-radius: 30px;
+            box-shadow: 0 0 15px rgba(174, 0, 255, 0.5),
+                        0 0 30px rgba(0, 243, 255, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .game-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 20px rgba(174, 0, 255, 0.7),
+                        0 0 40px rgba(0, 243, 255, 0.5);
+        }
+
+        .category-pill {
+            border-radius: 20px;
+            padding: 4px 12px;
+            font-size: 0.75rem;
+            font-weight: bold;
+            background-color: rgba(0, 243, 255, 0.1);
+            color: var(--neon-blue);
+            border: 1px solid var(--neon-blue);
+        }
+
+        .category-pill.breathing {
+            background-color: rgba(0, 243, 255, 0.1);
+            color: var(--neon-blue);
+            border: 1px solid var(--neon-blue);
+        }
+
+        .category-pill.bodywork {
+            background-color: rgba(174, 0, 255, 0.1);
+            color: var(--neon-purple);
+            border: 1px solid var(--neon-purple);
+        }
+
+        .category-pill.meditation {
+            background-color: rgba(255, 0, 212, 0.1);
+            color: var(--neon-pink);
+            border: 1px solid var(--neon-pink);
+        }
+
+        .category-pill.flexibility {
+            background-color: rgba(0, 255, 157, 0.1);
+            color: #00ff9d;
+            border: 1px solid #00ff9d;
+        }
+
+        .category-pill.strength {
+            background-color: rgba(255, 166, 0, 0.1);
+            color: #ffa600;
+            border: 1px solid #ffa600;
+        }
+
+        .category-pill.balance {
+            background-color: rgba(255, 0, 98, 0.1);
+            color: #ff0062;
+            border: 1px solid #ff0062;
+        }
+
+        .category-pill.relaxation {
+            background-color: rgba(0, 195, 255, 0.1);
+            color: #00c3ff;
+            border: 1px solid #00c3ff;
+        }
+
+        .nav-link {
+            position: relative;
+            padding: 8px 16px;
+            transition: all 0.3s ease;
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, var(--neon-blue), var(--neon-purple));
+            transition: width 0.3s ease;
+        }
+
+        .nav-link:hover::after,
+        .nav-link.active::after {
+            width: 100%;
+        }
+
+        .nav-link.active {
+            color: var(--neon-blue);
+        }
+
+        .clock-container {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid var(--neon-blue);
+            box-shadow: 0 0 15px rgba(0, 243, 255, 0.5),
+                        inset 0 0 10px rgba(0, 243, 255, 0.3);
+        }
+
+        .search-box {
+            background-color: rgba(13, 13, 20, 0.7);
+            border: 1px solid var(--neon-blue);
+            border-radius: 8px;
+            padding: 12px 16px;
+            color: white;
+        }
+
+        .search-box:focus {
+            outline: none;
+            box-shadow: 0 0 15px rgba(0, 243, 255, 0.3);
+        }
+
+        .pulse-animation {
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% {
+                box-shadow: 0 0 0 0 rgba(0, 243, 255, 0.4);
+            }
+            70% {
+                box-shadow: 0 0 0 15px rgba(0, 243, 255, 0);
+            }
+            100% {
+                box-shadow: 0 0 0 0 rgba(0, 243, 255, 0);
+            }
+        }
+
+        .glow-effect {
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes glow {
+            from {
+                text-shadow: 0 0 10px rgba(0, 243, 255, 0.7),
+                             0 0 20px rgba(0, 243, 255, 0.5),
+                             0 0 30px rgba(0, 243, 255, 0.3);
+            }
+            to {
+                text-shadow: 0 0 15px rgba(0, 243, 255, 0.9),
+                             0 0 25px rgba(0, 243, 255, 0.7),
+                             0 0 35px rgba(0, 243, 255, 0.5);
+            }
+        }
+
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--darker-bg);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--neon-blue);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--neon-purple);
+        }
+
+        /* Mobile optimization */
+        @media (max-width: 768px) {
+            .practice-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .nav-container {
+                overflow-x: auto;
+                white-space: nowrap;
+                -webkit-overflow-scrolling: touch;
+                scrollbar-width: none;
+            }
+
+            .nav-container::-webkit-scrollbar {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body class="min-h-screen pb-16">
+    <header class="py-6 px-4 md:px-8">
+        <div class="container mx-auto">
+            <h1 class="text-4xl font-bold neon-text text-center glow-effect mb-2">NeOhm Yoga</h1>
+            <p class="text-center text-xl opacity-80 mb-8">ОТ ТЕОРИИ К ПРАКТИКЕ</p>
+
+            <div class="max-w-4xl mx-auto bg-opacity-20 bg-black p-4 rounded-xl neon-border mb-8">
+                <div class="flex items-center space-x-4">
+                    <div class="w-16 h-16 bg-gray-800 rounded-full flex items-center justify-center">
+                        <i class="bx bx-user text-3xl text-gray-300"></i>
+                    </div>
+                    <div class="flex-1">
+                        <p class="text-gray-300 italic">"Хватит теории. Лучше один раз увидеть, чем сто раз услышать."</p>
+                        <p class="text-sm text-gray-400 mt-1">Давайте начнем с примера, который пригодится почти каждому – планирование йога-практики.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex flex-col md:flex-row items-center justify-between mb-6">
+                <div class="w-full md:w-auto mb-4 md:mb-0">
+                    <input type="text" placeholder="Поиск практики..." class="search-box w-full md:w-64" id="practiceSearch">
+                </div>
+                <div class="flex items-center space-x-2 neon-text">
+                    <span>От часов к минутам</span>
+                    <div class="clock-container">
+                        <span class="text-2xl font-bold" id="clockDisplay">8:00</span>
+                    </div>
+                </div>
+            </div>
+
+            <nav class="nav-container flex space-x-1 md:space-x-4 justify-center py-4 mb-8 overflow-x-auto">
+                <button class="nav-link active" data-category="all">Все практики</button>
+                <button class="nav-link" data-category="breathing">Дыхание</button>
+                <button class="nav-link" data-category="bodywork">Работа с телом</button>
+                <button class="nav-link" data-category="meditation">Медитация</button>
+                <button class="nav-link" data-category="flexibility">Гибкость</button>
+                <button class="nav-link" data-category="strength">Сила</button>
+                <button class="nav-link" data-category="balance">Баланс</button>
+                <button class="nav-link" data-category="relaxation">Расслабление</button>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container mx-auto px-4 md:px-8">
+        <!-- Game Practice Section -->
+        <section class="game-practice-container p-6 mb-12">
+            <h2 class="text-2xl font-bold neon-purple-text mb-4 text-center">ПРОВЕРИМ!</h2>
+            <p class="text-center mb-6">Сможет ли NeOhm спланировать идеальную практику за пару минут?</p>
+
+            <div class="flex flex-col items-center justify-center">
+                <button id="randomPracticeBtn" class="game-button mb-8">ВЫДАЙ МНЕ ПРАКТИКУ</button>
+
+                <div id="randomPracticeResult" class="hidden w-full max-w-lg p-6 rounded-lg neon-purple-border">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 id="randomPracticeTitle" class="text-xl font-bold neon-purple-text"></h3>
+                        <span id="randomPracticeCategory" class="category-pill"></span>
+                    </div>
+                    <div id="randomPracticeImage" class="h-48 bg-gray-800 rounded-lg mb-4 flex items-center justify-center">
+                        <i class="bx bx-image text-5xl text-gray-600"></i>
+                    </div>
+                    <p id="randomPracticeDescription" class="text-gray-300"></p>
+                    <div class="mt-4 flex justify-end">
+                        <button id="newRandomPracticeBtn" class="bg-transparent border border-purple-500 text-purple-500 px-4 py-2 rounded hover:bg-purple-900 hover:bg-opacity-20 transition-all">
+                            Получить другую
+                        </button>
+                    </div>
+                    <div class="mt-4 flex justify-center">
+                        <a id="moreDetailsBtn" href="#" class="game-button">Подробней о практике</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Practices Grid -->
+        <section>
+            <h2 class="text-2xl font-bold neon-text mb-6">Библиотека практик</h2>
+            <div id="practicesCount" class="mb-4 text-gray-400"></div>
+            <div id="practicesGrid" class="practice-grid grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Practice cards will be inserted here by JavaScript -->
+            </div>
+        </section>
+    </main>
+
+    <footer class="mt-20 py-8 bg-black bg-opacity-30">
+        <div class="container mx-auto px-4 text-center">
+            <p class="neon-text mb-2">NeOhm Yoga | От теории к практике</p>
+            <p class="text-sm text-gray-400">© 2025 Все права защищены</p>
+        </div>
+    </footer>
+
+    <script>
+        // Database of yoga practices
+        const yogaPractices = [
+            // Breathing Practices
+            {
+                id: 1,
+                title: "Уджайи Пранаяма",
+                category: "breathing",
+                description: "Уджайи — это техника дыхания, которая помогает успокоить ум и сосредоточиться. Сделайте глубокий вдох через нос, слегка сжимая заднюю часть горла, создавая мягкий шипящий звук. Выдохните аналогичным образом. Практикуйте 5-10 минут.",
+                video: "https://www.youtube.com/watch?v=JkmWVdAgppY",
+                moreDetailsUrl: "https://example.com/ujjayi-pranayama"
+            },
+            {
+                id: 2,
+                title: "Нади Шодхана",
+                category: "breathing",
+                description: "Техника альтернативного дыхания через ноздри для балансировки энергии. Закройте правую ноздрю большим пальцем, вдохните через левую. Затем закройте левую безымянным пальцем, откройте правую и выдохните. Вдохните через правую, закройте её, выдохните через левую. Повторите 10 циклов.",
+                video: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+                moreDetailsUrl: "https://example.com/nadi-shodhana"
+            },
+            {
+                id: 3,
+                title: "Капалабхати",
+                category: "breathing",
+                description: "Энергетическая техника очищения, известная как «дыхание огня». Сделайте быстрый и интенсивный выдох через нос с сокращением живота, позволяя вдоху произойти пассивно. Выполните 3 раунда по 30-50 дыханий с паузами между ними.",
+                video: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+                moreDetailsUrl: "https://example.com/kapalabhati"
+            },
+            {
+                id: 4,
+                title: "Бхрамари Пранаяма",
+                category: "breathing",
+                description: "Дыхание пчелы. Закройте глаза, сделайте глубокий вдох через нос, на выдохе издавайте гудящий звук, как жужжание пчелы. Почувствуйте вибрацию в голове и лице. Повторите 7-11 раз для снятия стресса и беспокойства.",
+                video: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+                moreDetailsUrl: "https://example.com/bhramari-pranayama"
+            },
+            {
+                id: 5,
+                title: "Анулома Вилома",
+                category: "breathing",
+                description: "Ритмичное контролируемое дыхание по схеме 1:4:2. Вдохните через обе ноздри на счет 4, задержите дыхание на счет 16, выдохните на счет 8. Повторите 10 циклов для улучшения концентрации и спокойствия ума.",
+                video: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+                moreDetailsUrl: "https://example.com/anuloma-viloma"
+            },
+            {
+                id: 6,
+                title: "Ситали Пранаяма",
+                category: "breathing",
+                description: "Охлаждающее дыхание. Сверните язык трубочкой, выставив его немного изо рта. Вдохните через язык, как через соломинку. Закройте рот и выдохните через нос. Повторите 8-10 раз для снижения температуры тела и снятия раздражения.",
+                video: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+                moreDetailsUrl: "https://example.com/sitali-pranayama"
+            },
+            {
+                id: 7,
+                title: "Дирга Пранаяма",
+                category: "breathing",
+                description: "Трехчастное дыхание. Вдохните, последовательно наполняя живот, рёбра и верхнюю часть груди. Выдохните в обратном порядке. Практикуйте 5 минут для полной оксигенации крови и расслабления.",
+                video: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+                moreDetailsUrl: "https://example.com/dirga-pranayama"
+            },
+
+            // Body Work Practices
+            {
+                id: 8,
+                title: "Сурья Намаскар А",
+                category: "bodywork",
+                description: "Последовательность из 9 асан, образующих традиционное приветствие солнцу. Начните в Тадасане, перейдите в Уттанасану, Ардха Уттанасану, Чатуранга Дандасану, Урдхва Мукха Шванасану, Адхо Мукха Шванасану и вернитесь обратно. Повторите 5 раз, синхронизируя движения с дыханием.",
+                video: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+                moreDetailsUrl: "https://example.com/surya-namaskar-a"
+            },
+            {
+                id: 9,
+                title: "Виньяса-флоу для раскрытия бедер",
+                category: "bodywork",
+                description: "Динамическая последовательность для раскрытия тазобедренных суставов. Включает модификации Воина I и II, Голубя, Лягушки и плавные переходы между ними. Практикуйте 15-20 минут с фокусом на глубоком дыхании в каждой позе.",
+                video: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+                moreDetailsUrl: "https://example.com/vinyasa-flow-hips"
+            },
+            {
+                id: 10,
+                title: "Практика стоячих поз",
+                category: "bodywork",
+                description: "Последовательность устойчивых асан стоя для развития силы ног и баланса. Включает Тадасану, Врикшасану, Утката Конасану, Вирабхадрасану I, II, III и Ардха Чандрасану. Удерживайте каждую позу по 5-8 дыханий, проявляя внимание к выравниванию.",
+                video: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+                moreDetailsUrl: "https://example.com/standing-poses"
+            },
+            {
+                id: 11,
+                title: "Практика скручиваний",
+                category: "bodywork",
+                description: "Серия мягких и глубоких скручиваний для позвоночника. Начните с Джатхара Паривартанасаны, перейдите к Ардха Матсиендрасане, Марихиасане и Бхарадваджасане. Завершите в положении на спине с простыми скручиваниями. Удерживайте каждую позу 30-60 секунд.",
+                video: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+                moreDetailsUrl: "https://example.com/twists-practice"
+            },
+            {
+                id: 12,
+                title: "Практика перевернутых поз",
+                category: "bodywork",
+                description: "Последовательность перевернутых асан для стимуляции кровообращения к мозгу. Включает подготовительные упражнения, Сарвангасану (стойку на плечах), Халасану и Випарита Карани. При необходимости используйте поддержку стены для Ширшасаны.",
+                video: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+                moreDetailsUrl: "https://example.com/inversions-practice"
+            },
+            {
+                id: 13,
+                title: "Виньяса для спины",
+                category: "bodywork",
+                description: "Последовательность для укрепления и расслабления спины. Начните с Марджариасаны (кошки) и Битиласаны (коровы), перейдите к Балаасане, Шалабхасане, Дханурасане и закончите скручиваниями позвоночника. Практикуйте с акцентом на взаимосвязь дыхания и движения.",
+                video: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+                moreDetailsUrl: "https://example.com/vinyasa-for-back"
+            },
+            {
+                id: 14,
+                title: "Асаны для Муладхара чакры",
+                category: "bodywork",
+                description: "Практика для гармонизации корневой чакры. Включает Тадасану, Уткатасану, Малаасану (глубокое приседание) и Пашчимоттанасану. Удерживайте каждую позу, направляя внимание к основанию позвоночника и ощущению стабильности.",
+                video: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+                moreDetailsUrl: "https://example.com/muladhara-chakra-asanas"
+            },
+
+            // Meditation Practices
+            {
+                id: 15,
+                title: "Медитация внимательности",
+                category: "meditation",
+                description: "Сядьте в удобную позу, выпрямив спину. Направьте внимание на естественный ритм дыхания, не пытаясь его изменить. Когда ум блуждает, мягко возвращайте внимание к дыханию. Начните с 5-10 минут, постепенно увеличивая до 20-30 минут.",
+                video: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+                moreDetailsUrl: "https://example.com/mindfulness-meditation"
+            },
+            {
+                id: 16,
+                title: "Медитация метта (любящей доброты)",
+                category: "meditation",
+                description: "Практика развития безусловной любви и сострадания. Повторяйте мысленно: «Пусть я буду счастлив. Пусть я буду здоров. Пусть я буду в безопасности». Затем направьте эти пожелания последовательно к близким, к нейтральным людям, к тем, с кем у вас сложности, и ко всем существам.",
+                video: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+                moreDetailsUrl: "https://example.com/metta-meditation"
+            },
+            {
+                id: 17,
+                title: "Медитация Сохам",
+                category: "meditation",
+                description: "Мантра-медитация с естественным дыханием. На вдохе мысленно произносите «Со», на выдохе – «Хам». Эти слоги означают «Я есть То/Он» – указание на единство с высшим сознанием. Практикуйте 10-20 минут утром или вечером.",
+                video: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+                moreDetailsUrl: "https://example.com/soham-meditation"
+            },
+            {
+                id: 18,
+                title: "Медитация со свечой (Тратака)",
+                category: "meditation",
+                description: "Созерцание пламени свечи для развития концентрации. Поставьте зажженную свечу на уровне глаз на расстоянии около метра. Мягко сфокусируйте взгляд на пламени без моргания до появления слез. Закройте глаза и визуализируйте образ пламени. Повторите 3-5 раз.",
+                video: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+                moreDetailsUrl: "https://example.com/trataka-meditation"
+            },
+            {
+                id: 19,
+                title: "Медитация для Анахата чакры",
+                category: "meditation",
+                description: "Сердечная медитация для раскрытия чакры любви. Сидя с прямой спиной, поместите ладони на область сердца. Представляйте яркий зеленый свет в центре груди, который с каждым вдохом становится ярче, а с каждым выдохом расширяется, наполняя тело чувством любви и сострадания.",
+                video: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+                moreDetailsUrl: "https://example.com/anahata-chakra-meditation"
+            },
+            {
+                id: 20,
+                title: "Медитация сканирования тела",
+                category: "meditation",
+                description: "Практика глубокого осознавания физических ощущений. Лягте на спину и последовательно направляйте внимание от пальцев ног к макушке головы, отмечая все ощущения без оценки. Задерживайтесь на каждой части тела по 20-30 секунд, особенно в местах напряжения.",
+                video: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+                moreDetailsUrl: "https://example.com/body-scan-meditation"
+            },
+            {
+                id: 21,
+                title: "Медитация на звуки",
+                category: "meditation",
+                description: "Открытая осознанность через слушание. Сядьте удобно и направьте внимание на звуки вокруг вас. Не маркируйте их, просто отмечайте появление, длительность и исчезновение. Относитесь к звукам как к волнам на поверхности океана сознания. Практикуйте 15-20 минут.",
+                video: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+                moreDetailsUrl: "https://example.com/sound-meditation"
+            },
+
+            // Flexibility Practices
+            {
+                id: 22,
+                title: "Йин-йога для спины",
+                category: "flexibility",
+                description: "Мягкие длительные растяжки для позвоночника. Включает Бутерфляй, Сфинкс, Лягушку и Скручивание лежа. Удерживайте каждую позу 3-5 минут, фокусируясь на мягком, глубоком дыхании и полном расслаблении в позе.",
+                video: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+                moreDetailsUrl: "https://example.com/yin-yoga-for-spine"
+            },
+            {
+                id: 23,
+                title: "Практика продольных шпагатов",
+                category: "flexibility",
+                description: "Последовательность для постепенного освоения продольного шпагата (Ханумансана). Начните с Анджанеясаны, перейдите к Ардха Ханумансане с блоками, затем выполните подготовительные упражнения с использованием ремня. Заканчивайте восстанавливающими позами.",
+                video: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+                moreDetailsUrl: "https://example.com/splits-practice"
+            },
+            {
+                id: 24,
+                title: "Раскрытие плечевого пояса",
+                category: "flexibility",
+                description: "Серия упражнений для повышения подвижности плеч. Включает ротации рук, Гомукхасану (руки коровы), растяжки с использованием стены, вариации Адхо Мукха Шванасаны с акцентом на раскрытие плеч и Дельфина для подготовки к стойке на руках.",
+                video: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+                moreDetailsUrl: "https://example.com/shoulder-mobility"
+            },
+            {
+                id: 25,
+                title: "Практика для раскрытия тазобедренных суставов",
+                category: "flexibility",
+                description: "Последовательность для увеличения мобильности бедер. Включает Баддха Конасану, Джану Ширшасану, Эка Пада Раджакапотасану (голубь) и Гомукхасану для ног. Используйте пропсы для поддержки и уделяйте каждой стороне по 2-3 минуты.",
+                video: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+                moreDetailsUrl: "https://example.com/hip-opening-practice"
+            },
+            {
+                id: 26,
+                title: "Йин для задней поверхности ног",
+                category: "flexibility",
+                description: "Глубокая практика для растяжения подколенных сухожилий, икр и ягодиц. Включает Пашчимоттанасану, Джану Ширшасану, Уттан Прасаритападасану и Курмасану. Удерживайте каждую позу 3-5 минут, позволяя гравитации углублять растяжку.",
+                video: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+                moreDetailsUrl: "https://example.com/yin-for-hamstrings"
+            },
+            {
+                id: 27,
+                title: "Йога для гибкого позвоночника",
+                category: "flexibility",
+                description: "Комплексная практика для всех отделов позвоночника. Чередуйте скручивания, боковые наклоны, прогибы и наклоны вперед для создания мультиплоскостной подвижности. Включает Дживамуктасану, Паривритта Джану Ширшасану и вариации мостика.",
+                video: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+                moreDetailsUrl: "https://example.com/flexible-spine-yoga"
+            },
+            {
+                id: 28,
+                title: "Практика для стоп и голеностопов",
+                category: "flexibility",
+                description: "Целенаправленная работа с часто забываемой частью тела. Включает разминку пальцев стопы, вращения голеностопов, позу героя (Вирасану) с вариациями для стоп, и самомассаж стоп с использованием мячика. Особенно полезно для людей, много стоящих на ногах.",
+                video: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+                moreDetailsUrl: "https://example.com/feet-and-ankles-practice"
+            },
+
+            // Strength Practices
+            {
+                id: 29,
+                title: "Йога для укрепления кора",
+                category: "strength",
+                description: "Интенсивная практика для мышц кора. Включает Навасану и её вариации, планки с чередующимися подъемами ног, Дандасану с подъемами ног и динамические скручивания. Выполняйте по 5-10 повторений каждого упражнения, сохраняя стабильность центра.",
+                video: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+                moreDetailsUrl: "https://example.com/core-strength-yoga"
+            },
+            {
+                id: 30,
+                title: "Йога для укрепления верхней части тела",
+                category: "strength",
+                description: "Последовательность для рук, плеч и верхней части спины. Включает Чатурангу с различными темпами, Пинча Маюрасану у стены, Бакасану (ворону) и Аштавакрасану с подготовительными вариациями. Фокусируйтесь на правильной технике, а не количестве.",
+                video: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+                moreDetailsUrl: "https://example.com/upper-body-strength-yoga"
+            },
+            {
+                id: 31,
+                title: "Йога для силы ног",
+                category: "strength",
+                description: "Мощная практика для укрепления всех мышц ног. Включает вариации Уткатасаны (стул), Вирабхадрасану (воин) с длительными удержаниями, пульсации в Гаруде и Утката Конасане (богиня). Заканчивайте Уттанасаной для расслабления ног.",
+                video: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+                moreDetailsUrl: "https://example.com/leg-strength-yoga"
+            },
+            {
+                id: 32,
+                title: "Практика балансов на руках",
+                category: "strength",
+                description: "Прогрессивная последовательность для развития силы и баланса. Начните с подготовительных упражнений для запястий, перейдите к Бакасане (ворона), Эка Пада Коундиньясане и подводящим упражнениям для Адхо Мукха Врикшасаны (стойка на руках).",
+                video: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+                moreDetailsUrl: "https://example.com/hand-balance-practice"
+            },
+            {
+                id: 33,
+                title: "Йога для силы спины",
+                category: "strength",
+                description: "Функциональная практика для укрепления всех мышц спины. Включает Локуста позу с вариациями, Супермена, Дханурасану (лук) и Уштрасану (верблюд). Уделяйте особое внимание активации нижней и средней части спины в каждой позе.",
+                video: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+                moreDetailsUrl: "https://example.com/back-strength-yoga"
+            },
+            {
+                id: 34,
+                title: "Интенсивный виньяса-флоу",
+                category: "strength",
+                description: "Динамичная практика с быстрыми переходами для развития выносливости и силы. Включает несколько раундов Сурья Намаскар с дополнительными элементами, длительные удержания стоячих поз и интенсивную работу с весом собственного тела.",
+                video: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+                moreDetailsUrl: "https://example.com/intense-vinyasa-flow"
+            },
+            {
+                id: 35,
+                title: "Практика для мышц тазового дна",
+                category: "strength",
+                description: "Целенаправленное укрепление малоизвестной, но важной группы мышц. Включает различные вариации Мула Бандхи (корневого замка), упражнения Кегеля, асаны для активации тазового дна и работу с дыханием для улучшения тонуса этой области.",
+                video: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+                moreDetailsUrl: "https://example.com/pelvic-floor-strength"
+            },
+
+            // Balance Practices
+            {
+                id: 36,
+                title: "Практика стоячих балансов",
+                category: "balance",
+                description: "Последовательность для развития физического равновесия. Начните с Врикшасаны (дерево), перейдите к Гарудасане (орел), Ардха Чандрасане (полумесяц) и Вирабхадрасане III (воин III). Удерживайте каждую позу по 5-8 дыханий на каждой стороне.",
+                video: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+                moreDetailsUrl: "https://example.com/standing-balances"
+            },
+            {
+                id: 37,
+                title: "Практика Пранаяма для равновесия",
+                category: "balance",
+                description: "Дыхательные техники для балансировки энергии и настроения. Включает Нади Шодхана Пранаяму (альтернативное дыхание), Сама Вритти (равное дыхание) и Вишама Вритти (неравное дыхание). Практикуйте сидя в удобной позе с прямым позвоночником.",
+                video: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+                moreDetailsUrl: "https://example.com/pranayama-for-balance"
+            },
+            {
+                id: 38,
+                title: "Инь-Ян практика",
+                category: "balance",
+                description: "Сбалансированная последовательность, сочетающая активные (Ян) и пассивные (Инь) элементы. Начните с динамичной Сурья Намаскар, перейдите к статичным силовым позам, а затем завершите длительными Инь-растяжками для глубоких тканей.",
+                video: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+                moreDetailsUrl: "https://example.com/yin-yang-practice"
+            },
+            {
+                id: 39,
+                title: "Чакра-балансирующая практика",
+                category: "balance",
+                description: "Последовательность для гармонизации энергетических центров. Включает специальные асаны, мудры и аффирмации для каждой из семи основных чакр, начиная с Муладхары и заканчивая Сахасрарой. Уделите каждой чакре по 5-7 минут практики.",
+                video: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+                moreDetailsUrl: "https://example.com/chakra-balancing-practice"
+            },
+            {
+                id: 40,
+                title: "Практика для внутреннего равновесия",
+                category: "balance",
+                description: "Последовательность для развития ментальной устойчивости. Сочетает медитацию внимательности, мягкие асаны с фокусом на дыхании и длительную Шавасану с практикой Йога Нидры. Выполняйте в тихом пространстве без отвлечений.",
+                video: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+                moreDetailsUrl: "https://example.com/inner-balance-practice"
+            },
+            {
+                id: 41,
+                title: "Практика сезонного баланса",
+                category: "balance",
+                description: "Последовательность, адаптированная для гармонизации с текущим сезоном. Для весны фокус на детоксикации и стимуляции, для лета — на охлаждении, для осени — на заземлении, для зимы — на согревании и интроспекции.",
+                video: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+                moreDetailsUrl: "https://example.com/seasonal-balance-practice"
+            },
+            {
+                id: 42,
+                title: "Практика балансов на руках и предплечьях",
+                category: "balance",
+                description: "Последовательность для развития продвинутых балансовых поз. Включает подготовку запястий, Пинча Майюрасану (павлиньи перья), Адхо Мукха Врикшасану (стойка на руках) у стены и Бакасану (ворону). Используйте стену для безопасной практики.",
+                video: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+                moreDetailsUrl: "https://example.com/advanced-arm-balances"
+            },
+
+            // Relaxation Practices
+            {
+                id: 43,
+                title: "Йога Нидра",
+                category: "relaxation",
+                description: "Практика осознанного сна для глубокого расслабления. Лягте в Шавасану и следуйте за проводником через фазы: санкальпа (намерение), ротация сознания по телу, осознание дыхания, визуализация и возвращение. Рекомендуемая длительность: 20-40 минут.",
+                video: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+                moreDetailsUrl: "https://example.com/yoga-nidra"
+            },
+            {
+                id: 44,
+                title: "Ресторативная йога для вечера",
+                category: "relaxation",
+                description: "Практика с поддержкой пропсов для полного расслабления. Включает Супта Баддха Конасану с болстером, Випарита Карани у стены, Супта Вирасану и длительную Шавасану. Удерживайте каждую позу 5-10 минут, фокусируясь на полном отпускании.",
+                video: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+                moreDetailsUrl: "https://example.com/restorative-evening-yoga"
+            },
+            {
+                id: 45,
+                title: "Шавасана с прогрессивной релаксацией",
+                category: "relaxation",
+                description: "Техника напряжения и расслабления мышечных групп. Лежа в Шавасане, последовательно напрягайте, а затем полностью расслабляйте каждую часть тела, начиная от пальцев ног и заканчивая лицом. Направляйте дыхание в каждую область.",
+                video: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+                moreDetailsUrl: "https://example.com/progressive-relaxation-shavasana"
+            },
+            {
+                id: 46,
+                title: "Практика для снятия стресса",
+                category: "relaxation",
+                description: "Мягкая последовательность, активирующая парасимпатическую нервную систему. Включает наклоны вперед с поддержкой, мягкие скручивания, Випарита Карани и глубокие дыхательные практики. Фокусируйтесь на удлинении выдоха.",
+                video: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+                moreDetailsUrl: "https://example.com/stress-relief-practice"
+            },
+            {
+                id: 47,
+                title: "Пранаяма для успокоения ума",
+                category: "relaxation",
+                description: "Дыхательные техники для снижения тревожности. Включает Чандра Бхедана (левоностровое дыхание), Брахмари (жужжащее дыхание) и Шитали (охлаждающее дыхание). Практикуйте сидя с поддержкой стены или болстера для комфорта.",
+                video: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+                moreDetailsUrl: "https://example.com/calming-breath-practice"
+            },
+            {
+                id: 48,
+                title: "Практика для хорошего сна",
+                category: "relaxation",
+                description: "Вечерняя последовательность для улучшения качества сна. Выполняйте перед сном и включайте Баласану (позу ребенка), Вирасану (позу героя) с наклоном вперед, лежачие скручивания и мягкую практику осознанности дыхания.",
+                video: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+                moreDetailsUrl: "https://example.com/sleep-improvement-practice"
+            },
+            {
+                id: 49,
+                title: "Медитация для внутреннего покоя",
+                category: "relaxation",
+                description: "Тихая практика для достижения состояния умиротворения. Сядьте удобно и наблюдайте за дыханием без контроля. Используйте мантру «шанти» (мир) на выдохе. Если ум блуждает, мягко возвращайте его к дыханию. Практикуйте 10-15 минут.",
+                video: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+                moreDetailsUrl: "https://example.com/inner-peace-meditation"
+            }
+        ];
+
+        // DOM elements
+        const practiceSearch = document.getElementById('practiceSearch');
+        const categoryLinks = document.querySelectorAll('.nav-link');
+        const practicesGrid = document.getElementById('practicesGrid');
+        const practicesCount = document.getElementById('practicesCount');
+        const randomPracticeBtn = document.getElementById('randomPracticeBtn');
+        const newRandomPracticeBtn = document.getElementById('newRandomPracticeBtn');
+        const randomPracticeResult = document.getElementById('randomPracticeResult');
+        const randomPracticeTitle = document.getElementById('randomPracticeTitle');
+        const randomPracticeCategory = document.getElementById('randomPracticeCategory');
+        const randomPracticeDescription = document.getElementById('randomPracticeDescription');
+        const randomPracticeImage = document.getElementById('randomPracticeImage');
+        const moreDetailsBtn = document.getElementById('moreDetailsBtn');
+        const clockDisplay = document.getElementById('clockDisplay');
+
+        // Clock functionality - update every minute
+        function updateClock() {
+            const now = new Date();
+            const hours = now.getHours().toString().padStart(2, '0');
+            const minutes = now.getMinutes().toString().padStart(2, '0');
+            clockDisplay.textContent = `${hours}:${minutes}`;
+        }
+
+        updateClock();
+        setInterval(updateClock, 60000);
+
+        // Filter practices by category and search term
+        function filterPractices() {
+            const activeCategory = document.querySelector('.nav-link.active').dataset.category;
+            const searchTerm = practiceSearch.value.toLowerCase();
+
+            const filteredPractices = yogaPractices.filter(practice => {
+                const matchesCategory = activeCategory === 'all' || practice.category === activeCategory;
+                const matchesSearch = practice.title.toLowerCase().includes(searchTerm) ||
+                                      practice.description.toLowerCase().includes(searchTerm);
+                return matchesCategory && matchesSearch;
+            });
+
+            displayPractices(filteredPractices);
+            practicesCount.textContent = `Показано: ${filteredPractices.length} из ${yogaPractices.length} практик`;
+        }
+
+        // Display practices in the grid
+        function displayPractices(practices) {
+            practicesGrid.innerHTML = '';
+
+            practices.forEach(practice => {
+                const practiceCard = document.createElement('div');
+                practiceCard.className = 'practice-card';
+                practiceCard.dataset.id = practice.id;
+
+                practiceCard.innerHTML = `
+                    <div class="p-4 cursor-pointer practice-header">
+                        <div class="flex justify-between items-center">
+                            <h3 class="text-lg font-semibold">${practice.title}</h3>
+                            <span class="category-pill ${practice.category}">${getCategoryName(practice.category)}</span>
+                        </div>
+                    </div>
+                    <div class="practice-content hidden px-4 pb-4">
+                        <div class="h-48 bg-gray-800 rounded-lg mb-4 flex items-center justify-center">
+                            <iframe width="100%" height="100%" src="${practice.video}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                        </div>
+                        <p class="text-gray-300">${practice.description}</p>
+                        <div class="mt-4 flex justify-center">
+                            <a href="${practice.moreDetailsUrl}" class="game-button">Подробней о практике</a>
+                        </div>
+                    </div>
+                `;
+
+                practicesGrid.appendChild(practiceCard);
+
+                // Add click event to expand/collapse card
+                const header = practiceCard.querySelector('.practice-header');
+                header.addEventListener('click', () => {
+                    const content = practiceCard.querySelector('.practice-content');
+                    content.classList.toggle('hidden');
+                    practiceCard.classList.toggle('expanded');
+                });
+            });
+        }
+
+        // Category name translations
+        function getCategoryName(category) {
+            const categories = {
+                'breathing': 'Дыхание',
+                'bodywork': 'Работа с телом',
+                'meditation': 'Медитация',
+                'flexibility': 'Гибкость',
+                'strength': 'Сила',
+                'balance': 'Баланс',
+                'relaxation': 'Расслабление'
+            };
+
+            return categories[category] || category;
+        }
+
+        // Generate random practice
+        function getRandomPractice() {
+            const randomIndex = Math.floor(Math.random() * yogaPractices.length);
+            const practice = yogaPractices[randomIndex];
+
+            randomPracticeTitle.textContent = practice.title;
+            randomPracticeCategory.textContent = getCategoryName(practice.category);
+            randomPracticeCategory.className = `category-pill ${practice.category}`;
+            randomPracticeDescription.textContent = practice.description;
+            randomPracticeImage.innerHTML = `<iframe width="100%" height="100%" src="${practice.video}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`;
+            moreDetailsBtn.href = practice.moreDetailsUrl;
+
+            randomPracticeResult.classList.remove('hidden');
+
+            // Scroll to the result
+            randomPracticeResult.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+
+        // Event listeners
+        randomPracticeBtn.addEventListener('click', getRandomPractice);
+        newRandomPracticeBtn.addEventListener('click', getRandomPractice);
+
+        practiceSearch.addEventListener('input', filterPractices);
+
+        categoryLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                // Remove active class from all links
+                categoryLinks.forEach(l => l.classList.remove('active'));
+                // Add active class to clicked link
+                link.classList.add('active');
+                // Filter practices based on new category
+                filterPractices();
+            });
+        });
+
+        // Initial display
+        displayPractices(yogaPractices);
+        practicesCount.textContent = `Показано: ${yogaPractices.length} из ${yogaPractices.length} практик`;
+    </script>
+</body>
+</html>
