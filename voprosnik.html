@@ -1,0 +1,854 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Игра в вопросы</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.2.1/css/all.min.css">
+    <style>
+        :root {
+            --neon-blue: #00f3ff;
+            --neon-pink: #ff00f7;
+            --neon-violet: #b347ff;
+            --neon-yellow: #f2ff00;
+            --neon-orange: #ff7b00;
+            --neon-electric-blue: #0084ff;
+            --neon-green: #00ff66;
+            --neon-ice-blue: #7df9ff;
+            --neon-red: #ff0045;
+            --bg-dark: #0a0c10;
+            --bg-darker: #060709;
+        }
+
+        body {
+            font-family: 'Oswald', sans-serif;
+            background-color: var(--bg-darker);
+            background-image:
+                radial-gradient(circle at 15% 50%, rgba(0, 100, 150, 0.1) 0%, transparent 40%),
+                radial-gradient(circle at 85% 30%, rgba(50, 0, 100, 0.1) 0%, transparent 40%);
+            color: white;
+            overflow-x: hidden;
+            position: relative;
+            min-height: 100vh;
+        }
+
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('data:image/png;base64,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');
+            opacity: 0.04;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .noise-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('data:image/png;base64,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');
+            opacity: 0.05;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .grid-lines {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-size: 50px 50px;
+            background-image: linear-gradient(to right, rgba(30, 144, 255, 0.05) 1px, transparent 1px),
+                              linear-gradient(to bottom, rgba(30, 144, 255, 0.05) 1px, transparent 1px);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .neon-text {
+            color: white;
+            text-shadow:
+                0 0 5px var(--neon-blue),
+                0 0 10px var(--neon-blue),
+                0 0 20px var(--neon-blue),
+                0 0 40px var(--neon-blue);
+            animation: pulsate 2s infinite alternate;
+        }
+
+        .neon-box {
+            border: 2px solid rgba(0, 243, 255, 0.7);
+            box-shadow:
+                0 0 5px var(--neon-blue),
+                0 0 10px var(--neon-blue),
+                inset 0 0 5px var(--neon-blue);
+            border-radius: 10px;
+            background-color: rgba(10, 15, 25, 0.7);
+            backdrop-filter: blur(5px);
+        }
+
+        .main-container {
+            position: relative;
+            z-index: 10;
+        }
+
+        .question-button {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            background-color: rgba(0, 10, 20, 0.8);
+            position: relative;
+            border: 3px solid rgba(0, 243, 255, 0.8);
+            box-shadow:
+                0 0 10px var(--neon-blue),
+                0 0 20px var(--neon-blue),
+                inset 0 0 5px var(--neon-blue);
+            transition: all 0.3s ease;
+            animation: pulseButton 3s infinite alternate;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            cursor: pointer;
+            z-index: 20;
+        }
+
+        .question-button:hover {
+            transform: scale(1.05);
+            box-shadow:
+                0 0 15px var(--neon-blue),
+                0 0 30px var(--neon-blue),
+                inset 0 0 10px var(--neon-blue);
+        }
+
+        .question-button:active {
+            transform: scale(0.95);
+        }
+
+        .category-circle {
+            width: 90px;
+            height: 90px;
+            border-radius: 50%;
+            position: absolute;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 500;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            transform-origin: center;
+            text-align: center;
+            background-color: rgba(10, 15, 25, 0.8);
+            border: 2px solid rgba(255, 255, 255, 0.4);
+            z-index: 10;
+        }
+
+        .category-circle:hover {
+            transform: scale(1.1) translateX(var(--translate-x)) translateY(var(--translate-y));
+        }
+
+        .category-circle.selected {
+            border-width: 3px;
+            transform: scale(1.15) translateX(var(--translate-x)) translateY(var(--translate-y));
+            box-shadow: 0 0 15px var(--color), 0 0 30px var(--color), inset 0 0 5px var(--color);
+            animation: selectedCategory 2s infinite alternate;
+        }
+
+        .category-circle::before {
+            content: '';
+            position: absolute;
+            top: -10px;
+            left: -10px;
+            right: -10px;
+            bottom: -10px;
+            border-radius: 50%;
+            background: radial-gradient(circle, var(--color) 0%, transparent 70%);
+            opacity: 0;
+            z-index: -1;
+            transition: opacity 0.3s ease;
+        }
+
+        .category-circle.selected::before {
+            opacity: 0.15;
+            animation: smokePulse 3s infinite;
+        }
+
+        .toggle-container {
+            position: relative;
+            display: inline-block;
+            width: 60px;
+            height: 34px;
+        }
+
+        .toggle-container input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(20, 40, 60, 0.5);
+            border: 1px solid rgba(100, 200, 255, 0.3);
+            transition: .4s;
+            border-radius: 34px;
+        }
+
+        .toggle-slider:before {
+            position: absolute;
+            content: "";
+            height: 26px;
+            width: 26px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .toggle-slider {
+            background-color: rgba(0, 243, 255, 0.3);
+            border-color: var(--neon-blue);
+            box-shadow: 0 0 10px var(--neon-blue);
+        }
+
+        input:checked + .toggle-slider:before {
+            transform: translateX(26px);
+        }
+
+        .question-display {
+            min-height: 150px;
+            background-color: rgba(0, 0, 0, 0.7);
+            border: 2px solid rgba(0, 243, 255, 0.7);
+            border-radius: 10px;
+            box-shadow: 0 0 10px var(--neon-blue);
+            padding: 20px;
+            margin-top: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            position: relative;
+            backdrop-filter: blur(5px);
+        }
+
+        .question-display p {
+            font-size: 20px;
+            line-height: 1.5;
+            margin: 0;
+        }
+
+        .question-category-tag {
+            position: absolute;
+            top: -15px;
+            left: 20px;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+            backdrop-filter: blur(5px);
+        }
+
+        .particles {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        .particle {
+            position: absolute;
+            width: 5px;
+            height: 5px;
+            background: var(--neon-blue);
+            border-radius: 50%;
+            animation: particleFloat 15s infinite linear;
+            opacity: 0.7;
+            box-shadow: 0 0 5px var(--neon-blue), 0 0 10px var(--neon-blue);
+        }
+
+        @keyframes particleFloat {
+            0% {
+                transform: translateY(0) translateX(0);
+                opacity: 0;
+            }
+            10% {
+                opacity: 0.7;
+            }
+            90% {
+                opacity: 0.5;
+            }
+            100% {
+                transform: translateY(-500px) translateX(100px);
+                opacity: 0;
+            }
+        }
+
+        @keyframes pulsate {
+            0% {
+                text-shadow:
+                    0 0 5px var(--neon-blue),
+                    0 0 10px var(--neon-blue),
+                    0 0 15px var(--neon-blue);
+            }
+            100% {
+                text-shadow:
+                    0 0 7px var(--neon-blue),
+                    0 0 14px var(--neon-blue),
+                    0 0 21px var(--neon-blue),
+                    0 0 42px var(--neon-blue);
+            }
+        }
+
+        @keyframes pulseButton {
+            0% {
+                box-shadow:
+                    0 0 5px var(--neon-blue),
+                    0 0 10px var(--neon-blue),
+                    inset 0 0 3px var(--neon-blue);
+            }
+            100% {
+                box-shadow:
+                    0 0 10px var(--neon-blue),
+                    0 0 20px var(--neon-blue),
+                    0 0 30px var(--neon-blue),
+                    inset 0 0 5px var(--neon-blue);
+            }
+        }
+
+        @keyframes selectedCategory {
+            0% {
+                box-shadow:
+                    0 0 5px var(--color),
+                    0 0 10px var(--color),
+                    inset 0 0 3px var(--color);
+            }
+            100% {
+                box-shadow:
+                    0 0 10px var(--color),
+                    0 0 20px var(--color),
+                    0 0 30px var(--color),
+                    inset 0 0 5px var(--color);
+            }
+        }
+
+        @keyframes smokePulse {
+            0% {
+                opacity: 0.05;
+                transform: scale(1);
+            }
+            50% {
+                opacity: 0.2;
+                transform: scale(1.2);
+            }
+            100% {
+                opacity: 0.05;
+                transform: scale(1);
+            }
+        }
+
+        .loading-animation {
+            display: none;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.6);
+            border-radius: 50%;
+            z-index: 30;
+        }
+
+        .loading-spinner {
+            position: absolute;
+            width: 140px;
+            height: 140px;
+            border-radius: 50%;
+            border: 5px solid transparent;
+            border-top: 5px solid var(--neon-blue);
+            border-bottom: 5px solid var(--neon-blue);
+            animation: spin 1.5s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Media Queries for Responsiveness */
+        @media (max-width: 768px) {
+            .category-circle {
+                width: 70px;
+                height: 70px;
+                font-size: 11px;
+            }
+
+            .question-button {
+                width: 120px;
+                height: 120px;
+            }
+
+            .question-display {
+                margin: 20px 20px 0 20px;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .category-circle {
+                width: 60px;
+                height: 60px;
+                font-size: 10px;
+            }
+
+            .question-button {
+                width: 100px;
+                height: 100px;
+            }
+
+            .question-display p {
+                font-size: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="grid-lines"></div>
+    <div class="noise-overlay"></div>
+
+    <div class="particles" id="particles">
+        <!-- Particles will be added here via JS -->
+    </div>
+
+    <div class="main-container min-h-screen flex flex-col items-center">
+        <h1 class="neon-text text-3xl md:text-4xl font-bold mt-8 mb-6 text-center px-4">Игра в вопросы - лишь ты и твоя правда</h1>
+
+        <div class="flex items-center justify-center mb-6">
+            <span class="mr-3 font-medium">Рэндом</span>
+            <label class="toggle-container">
+                <input type="checkbox" id="randomToggle">
+                <span class="toggle-slider"></span>
+            </label>
+        </div>
+
+        <div class="relative flex justify-center items-center mb-10" style="min-height: 400px;">
+            <!-- Categories will be generated around this button -->
+            <div id="questionButton" class="question-button">
+                <span class="text-xl font-bold">Хочу</span>
+                <span class="text-xl font-bold">вопрос</span>
+                <div class="loading-animation" id="loadingAnimation">
+                    <div class="loading-spinner"></div>
+                </div>
+            </div>
+
+            <!-- Categories will be placed here by JS -->
+            <div id="categoriesContainer"></div>
+        </div>
+
+        <div class="w-full max-w-3xl px-4 pb-10">
+            <div class="question-display">
+                <div id="categoryTag" class="question-category-tag hidden"></div>
+                <p id="questionText">Нажмите на "Хочу вопрос", чтобы начать игру</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Categories with unique colors
+            const categories = [
+                { id: 1, name: 'Нескромные', color: 'var(--neon-pink)' },
+                { id: 2, name: 'Личные', color: 'var(--neon-violet)' },
+                { id: 3, name: 'Смешные', color: 'var(--neon-yellow)' },
+                { id: 4, name: 'Интригующие', color: 'var(--neon-orange)' },
+                { id: 5, name: 'Фантастика', color: 'var(--neon-electric-blue)' },
+                { id: 6, name: 'Испытания', color: 'var(--neon-green)' },
+                { id: 7, name: 'Психология', color: 'var(--neon-ice-blue)' },
+                { id: 8, name: 'Абсурдные', color: 'var(--neon-red)' }
+            ];
+
+            // Sample questions for each category (expand these with more questions)
+            const questions = {
+                1: [
+                    "Какой самый смелый сексуальный опыт у тебя был?",
+                    "Что тебя больше всего возбуждает?",
+                    "Если бы ты мог(ла) заняться сексом с любой знаменитостью, кто бы это был?",
+                    "Какая твоя самая необычная сексуальная фантазия?",
+                    "Где самое странное место, где ты занимался(лась) любовью?",
+                    "Какой твой самый запоминающийся сексуальный момент?",
+                    "Что ты предпочитаешь: романтический секс или страстный?",
+                    "Какой твой самый смелый сексуальный жест?",
+                    "Какой твой любимый сексуальный аксессуар?",
+                    "Какой твой самый необычный сексуальный опыт на публике?",
+                    "Какой твой самый смелый сексуальный разговор?",
+                    "Какой твой самый необычный сексуальный комплимент?",
+                    "Какой твой самый смелый сексуальный эксперимент?",
+                    "Какой твой самый необычный сексуальный ритуал?",
+                    "Какой твой самый смелый сексуальный жест в отношениях?",
+                    "Какой твой самый необычный сексуальный опыт с партнером?",
+                    "Какой твой самый смелый сексуальный разговор с партнером?",
+                    "Какой твой самый необычный сексуальный комплимент партнеру?",
+                    "Какой твой самый смелый сексуальный эксперимент с партнером?",
+                    "Какой твой самый необычный сексуальный ритуал с партнером?"
+                ],
+                2: [
+                    "Какой самый трудный момент в твоей жизни ты пережил(а)?",
+                    "О чем ты больше всего жалеешь?",
+                    "Какой самый большой секрет ты скрываешь от близких?",
+                    "Что заставляет тебя чувствовать себя по-настоящему уязвимым?",
+                    "Какое самое болезненное расставание ты пережил(а)?",
+                    "Какой самый трудный момент в твоей карьере ты пережил(а)?",
+                    "О чем ты больше всего жалеешь в своей карьере?",
+                    "Какой самый большой секрет ты скрываешь от коллег?",
+                    "Что заставляет тебя чувствовать себя по-настоящему уязвимым на работе?",
+                    "Какое самое болезненное расставание ты пережил(а) с коллегой?",
+                    "Какой самый трудный момент в твоей личной жизни ты пережил(а)?",
+                    "О чем ты больше всего жалеешь в своей личной жизни?",
+                    "Какой самый большой секрет ты скрываешь от друзей?",
+                    "Что заставляет тебя чувствовать себя по-настоящему уязвимым с друзьями?",
+                    "Какое самое болезненное расставание ты пережил(а) с другом?",
+                    "Какой самый трудный момент в твоей семейной жизни ты пережил(а)?",
+                    "О чем ты больше всего жалеешь в своей семейной жизни?",
+                    "Какой самый большой секрет ты скрываешь от семьи?",
+                    "Что заставляет тебя чувствовать себя по-настоящему уязвимым с семьей?",
+                    "Какое самое болезненное расставание ты пережил(а) с членом семьи?"
+                ],
+                3: [
+                    "Какая самая смешная ситуация случалась с тобой на публике?",
+                    "Какую самую нелепую ложь ты когда-либо говорил(а)?",
+                    "Что самое странное ты делал(а), думая, что тебя никто не видит?",
+                    "Какой самый смешной розыгрыш ты устраивал(а) или был его жертвой?",
+                    "Какая самая нелепая фобия у тебя есть?",
+                    "Какая самая смешная ситуация случалась с тобой на работе?",
+                    "Какую самую нелепую ложь ты когда-либо говорил(а) на работе?",
+                    "Что самое странное ты делал(а) на работе, думая, что тебя никто не видит?",
+                    "Какой самый смешной розыгрыш ты устраивал(а) на работе или был его жертвой?",
+                    "Какая самая нелепая фобия у тебя есть на работе?",
+                    "Какая самая смешная ситуация случалась с тобой в школе?",
+                    "Какую самую нелепую ложь ты когда-либо говорил(а) в школе?",
+                    "Что самое странное ты делал(а) в школе, думая, что тебя никто не видит?",
+                    "Какой самый смешной розыгрыш ты устраивал(а) в школе или был его жертвой?",
+                    "Какая самая нелепая фобия у тебя есть в школе?",
+                    "Какая самая смешная ситуация случалась с тобой в университете?",
+                    "Какую самую нелепую ложь ты когда-либо говорил(а) в университете?",
+                    "Что самое странное ты делал(а) в университете, думая, что тебя никто не видит?",
+                    "Какой самый смешной розыгрыш ты устраивал(а) в университете или был его жертвой?",
+                    "Какая самая нелепая фобия у тебя есть в университете?"
+                ],
+                4: [
+                    "Если бы ты мог(ла) прочитать мысли одного человека, кого бы ты выбрал(а)?",
+                    "Что ты выберешь: никогда больше не лгать или никогда не знать, когда тебе лгут?",
+                    "Если бы ты мог(ла) узнать дату своей смерти, ты бы хотел(а) это знать?",
+                    "Что бы ты сделал(а), если бы узнал(а), что через месяц наступит конец света?",
+                    "Если бы ты мог(ла) стереть одно событие из своей памяти, что бы это было?",
+                    "Если бы ты мог(ла) прочитать мысли одного человека из своего прошлого, кого бы ты выбрал(а)?",
+                    "Что ты выберешь: никогда больше не лгать или никогда не знать, когда тебе лгут в прошлом?",
+                    "Если бы ты мог(ла) узнать дату своей смерти в прошлом, ты бы хотел(а) это знать?",
+                    "Что бы ты сделал(а), если бы узнал(а), что через месяц наступит конец света в прошлом?",
+                    "Если бы ты мог(ла) стереть одно событие из своей памяти в прошлом, что бы это было?",
+                    "Если бы ты мог(ла) прочитать мысли одного человека из своего будущего, кого бы ты выбрал(а)?",
+                    "Что ты выберешь: никогда больше не лгать или никогда не знать, когда тебе лгут в будущем?",
+                    "Если бы ты мог(ла) узнать дату своей смерти в будущем, ты бы хотел(а) это знать?",
+                    "Что бы ты сделал(а), если бы узнал(а), что через месяц наступит конец света в будущем?",
+                    "Если бы ты мог(ла) стереть одно событие из своей памяти в будущем, что бы это было?",
+                    "Если бы ты мог(ла) прочитать мысли одного человека из своего настоящего, кого бы ты выбрал(а)?",
+                    "Что ты выберешь: никогда больше не лгать или никогда не знать, когда тебе лгут в настоящем?",
+                    "Если бы ты мог(ла) узнать дату своей смерти в настоящем, ты бы хотел(а) это знать?",
+                    "Что бы ты сделал(а), если бы узнал(а), что через месяц наступит конец света в настоящем?",
+                    "Если бы ты мог(ла) стереть одно событие из своей памяти в настоящем, что бы это было?"
+                ],
+                5: [
+                    "Если бы ты мог(ла) создать идеальный мир, каким бы он был?",
+                    "Какую сверхспособность ты бы выбрал(а) и почему?",
+                    "Если бы ты мог(ла) жить в любом вымышленном мире из книг или фильмов, какой бы ты выбрал(а)?",
+                    "Если бы ты мог(ла) встретиться с любым историческим персонажем, кто бы это был?",
+                    "Если бы ты мог(ла) путешествовать во времени, в какую эпоху ты бы отправился(лась)?",
+                    "Если бы ты мог(ла) создать идеальный мир для своих друзей, каким бы он был?",
+                    "Какую сверхспособность ты бы выбрал(а) для своих друзей и почему?",
+                    "Если бы ты мог(ла) жить в любом вымышленном мире из книг или фильмов с друзьями, какой бы ты выбрал(а)?",
+                    "Если бы ты мог(ла) встретиться с любым историческим персонажем с друзьями, кто бы это был?",
+                    "Если бы ты мог(ла) путешествовать во времени с друзьями, в какую эпоху ты бы отправился(лась)?",
+                    "Если бы ты мог(ла) создать идеальный мир для своей семьи, каким бы он был?",
+                    "Какую сверхспособность ты бы выбрал(а) для своей семьи и почему?",
+                    "Если бы ты мог(ла) жить в любом вымышленном мире из книг или фильмов с семьей, какой бы ты выбрал(а)?",
+                    "Если бы ты мог(ла) встретиться с любым историческим персонажем с семьей, кто бы это был?",
+                    "Если бы ты мог(ла) путешествовать во времени с семьей, в какую эпоху ты бы отправился(лась)?",
+                    "Если бы ты мог(ла) создать идеальный мир для своей карьеры, каким бы он был?",
+                    "Какую сверхспособность ты бы выбрал(а) для своей карьеры и почему?",
+                    "Если бы ты мог(ла) жить в любом вымышленном мире из книг или фильмов для своей карьеры, какой бы ты выбрал(а)?",
+                    "Если бы ты мог(ла) встретиться с любым историческим персонажем для своей карьеры, кто бы это был?",
+                    "Если бы ты мог(ла) путешествовать во времени для своей карьеры, в какую эпоху ты бы отправился(лась)?"
+                ],
+                6: [
+                    "Расскажи самую странную историю из своего детства.",
+                    "Напиши сообщение своему первому возлюбленному прямо сейчас.",
+                    "Покажи самое смущающее фото в твоем телефоне.",
+                    "Позвони своему другу и скажи, что ты выиграл(а) в лотерею.",
+                    "Спой припев своей любимой песни прямо сейчас.",
+                    "Расскажи самую странную историю из своего подросткового возраста.",
+                    "Напиши сообщение своему лучшему другу прямо сейчас.",
+                    "Покажи самое смущающее фото из своего альбома.",
+                    "Позвони своему коллеге и скажи, что ты выиграл(а) в лотерею.",
+                    "Спой припев своей любимой песни из детства прямо сейчас.",
+                    "Расскажи самую странную историю из своего студенческого возраста.",
+                    "Напиши сообщение своему преподавателю прямо сейчас.",
+                    "Покажи самое смущающее фото из своего студенческого альбома.",
+                    "Позвони своему начальнику и скажи, что ты выиграл(а) в лотерею.",
+                    "Спой припев своей любимой песни из студенческих времен прямо сейчас.",
+                    "Расскажи самую странную историю из своего взрослого возраста.",
+                    "Напиши сообщение своему коллеге прямо сейчас.",
+                    "Покажи самое смущающее фото из своего взрослого альбома.",
+                    "Позвони своему другу и скажи, что ты выиграл(а) в лотерею.",
+                    "Спой припев своей любимой песни из взрослых времен прямо сейчас."
+                ],
+                7: [
+                    "Что для тебя значит настоящее счастье?",
+                    "Как ты думаешь, что происходит после смерти?",
+                    "Что делает человека по-настоящему успешным в твоих глазах?",
+                    "Если бы ты знал(а), что это твой последний день на Земле, как бы ты его провел(а)?",
+                    "Что важнее: быть правым или быть счастливым?",
+                    "Что для тебя значит настоящая любовь?",
+                    "Как ты думаешь, что происходит после смерти с душой?",
+                    "Что делает человека по-настоящему успешным в твоих глазах в карьере?",
+                    "Если бы ты знал(а), что это твой последний день на Земле, как бы ты его провел(а) с семьей?",
+                    "Что важнее: быть правым или быть счастливым с друзьями?",
+                    "Что для тебя значит настоящая любовь в отношениях?",
+                    "Как ты думаешь, что происходит после смерти с душой в отношениях?",
+                    "Что делает человека по-настоящему успешным в твоих глазах в отношениях?",
+                    "Если бы ты знал(а), что это твой последний день на Земле, как бы ты его провел(а) с друзьями?",
+                    "Что важнее: быть правым или быть счастливым в карьере?",
+                    "Что для тебя значит настоящая любовь в карьере?",
+                    "Как ты думаешь, что происходит после смерти с душой в карьере?",
+                    "Что делает человека по-настоящему успешным в твоих глазах в личной жизни?",
+                    "Если бы ты знал(а), что это твой последний день на Земле, как бы ты его провел(а) в личной жизни?",
+                    "Что важнее: быть правым или быть счастливым в личной жизни?"
+                ],
+                8: [
+                    "Если бы ты был(а) супом, какой бы ты был(а) и почему?",
+                    "Если бы твоя жизнь была фильмом, какая песня играла бы в титрах?",
+                    "Если бы животные могли говорить, какое животное было бы самым грубым?",
+                    "Если бы ты мог(ла) заменить свои руки любым предметом, что бы ты выбрал(а)?",
+                    "Если бы ты был(а) привидением, где бы ты предпочел(ла) обитать?",
+                    "Если бы ты был(а) супом в детстве, какой бы ты был(а) и почему?",
+                    "Если бы твоя жизнь была фильмом в детстве, какая песня играла бы в титрах?",
+                    "Если бы животные могли говорить в детстве, какое животное было бы самым грубым?",
+                    "Если бы ты мог(ла) заменить свои руки любым предметом в детстве, что бы ты выбрал(а)?",
+                    "Если бы ты был(а) привидением в детстве, где бы ты предпочел(ла) обитать?",
+                    "Если бы ты был(а) супом в подростковом возрасте, какой бы ты был(а) и почему?",
+                    "Если бы твоя жизнь была фильмом в подростковом возрасте, какая песня играла бы в титрах?",
+                    "Если бы животные могли говорить в подростковом возрасте, какое животное было бы самым грубым?",
+                    "Если бы ты мог(ла) заменить свои руки любым предметом в подростковом возрасте, что бы ты выбрал(а)?",
+                    "Если бы ты был(а) привидением в подростковом возрасте, где бы ты предпочел(ла) обитать?",
+                    "Если бы ты был(а) супом во взрослом возрасте, какой бы ты был(а) и почему?",
+                    "Если бы твоя жизнь была фильмом во взрослом возрасте, какая песня играла бы в титрах?",
+                    "Если бы животные могли говорить во взрослом возрасте, какое животное было бы самым грубым?",
+                    "Если бы ты мог(ла) заменить свои руки любым предметом во взрослом возрасте, что бы ты выбрал(а)?",
+                    "Если бы ты был(а) привидением во взрослом возрасте, где бы ты предпочел(ла) обитать?"
+                ]
+            };
+
+            const questionButton = document.getElementById('questionButton');
+            const questionText = document.getElementById('questionText');
+            const categoryTag = document.getElementById('categoryTag');
+            const randomToggle = document.getElementById('randomToggle');
+            const loadingAnimation = document.getElementById('loadingAnimation');
+            const categoriesContainer = document.getElementById('categoriesContainer');
+            const particlesContainer = document.getElementById('particles');
+
+            let selectedCategory = null;
+            let isAnimating = false;
+
+            // Create particles
+            for (let i = 0; i < 20; i++) {
+                createParticle();
+            }
+
+            function createParticle() {
+                const particle = document.createElement('div');
+                particle.classList.add('particle');
+                particle.style.left = `${Math.random() * 100}%`;
+                particle.style.top = `${Math.random() * 100}%`;
+                particle.style.animationDelay = `${Math.random() * 15}s`;
+                particlesContainer.appendChild(particle);
+            }
+
+            // Create category circles around the center button
+            function createCategoryCircles() {
+                categoriesContainer.innerHTML = '';
+                const radius = window.innerWidth < 768 ? 140 : 180;
+
+                categories.forEach((category, index) => {
+                    const angle = (index / categories.length) * 2 * Math.PI;
+                    const x = radius * Math.cos(angle);
+                    const y = radius * Math.sin(angle);
+
+                    const circle = document.createElement('div');
+                    circle.classList.add('category-circle');
+                    circle.dataset.id = category.id;
+                    circle.dataset.name = category.name;
+                    circle.dataset.color = category.color;
+                    circle.style.setProperty('--color', category.color);
+                    circle.style.setProperty('--translate-x', `${x > 0 ? '' : '-'}${Math.abs(x) / 10}px`);
+                    circle.style.setProperty('--translate-y', `${y > 0 ? '' : '-'}${Math.abs(y) / 10}px`);
+                    circle.style.borderColor = category.color;
+                    circle.style.left = `calc(50% + ${x}px - 45px)`;
+                    circle.style.top = `calc(50% + ${y}px - 45px)`;
+
+                    if (window.innerWidth < 768) {
+                        circle.style.left = `calc(50% + ${x}px - 35px)`;
+                        circle.style.top = `calc(50% + ${y}px - 35px)`;
+                    }
+
+                    if (window.innerWidth < 576) {
+                        circle.style.left = `calc(50% + ${x}px - 30px)`;
+                        circle.style.top = `calc(50% + ${y}px - 30px)`;
+                    }
+
+                    circle.innerHTML = category.name;
+                    categoriesContainer.appendChild(circle);
+
+                    // Add click event to select category
+                    circle.addEventListener('click', () => {
+                        if (randomToggle.checked || isAnimating) return;
+
+                        // Deselect all other categories
+                        document.querySelectorAll('.category-circle').forEach(c => {
+                            c.classList.remove('selected');
+                        });
+
+                        // Select this category
+                        circle.classList.add('selected');
+                        selectedCategory = category.id;
+                    });
+                });
+            }
+
+            // Create initial category circles
+            createCategoryCircles();
+
+            // Handle window resize
+            window.addEventListener('resize', () => {
+                createCategoryCircles();
+                // Reselect the previously selected category if there was one
+                if (selectedCategory && !randomToggle.checked) {
+                    const circle = document.querySelector(`.category-circle[data-id="${selectedCategory}"]`);
+                    if (circle) circle.classList.add('selected');
+                }
+            });
+
+            // Random toggle handling
+            randomToggle.addEventListener('change', () => {
+                if (randomToggle.checked) {
+                    // Deselect any selected category
+                    document.querySelectorAll('.category-circle.selected').forEach(c => {
+                        c.classList.remove('selected');
+                    });
+                    selectedCategory = null;
+                }
+            });
+
+            // Question button click handling
+            questionButton.addEventListener('click', () => {
+                if (isAnimating) return;
+
+                isAnimating = true;
+                loadingAnimation.style.display = 'block';
+
+                // If random mode is on, pick a random category
+                if (randomToggle.checked) {
+                    animateRandomSelection();
+                } else {
+                    // If no category is selected, alert user
+                    if (!selectedCategory) {
+                        alert('Пожалуйста, выберите категорию или включите режим "Рэндом"');
+                        isAnimating = false;
+                        loadingAnimation.style.display = 'none';
+                        return;
+                    }
+
+                    // Proceed with selected category
+                    setTimeout(() => {
+                        displayRandomQuestion(selectedCategory);
+                    }, 1000);
+                }
+            });
+
+            // Animate random category selection
+            function animateRandomSelection() {
+                const categoryCircles = document.querySelectorAll('.category-circle');
+                let iterations = 0;
+                const maxIterations = 10;
+                const interval = 150;
+
+                // Highlight categories in sequence to create spinning effect
+                const highlight = setInterval(() => {
+                    // Remove highlight from all categories
+                    categoryCircles.forEach(c => c.classList.remove('selected'));
+
+                    // Highlight current category
+                    const index = iterations % categoryCircles.length;
+                    categoryCircles[index].classList.add('selected');
+
+                    iterations++;
+
+                    if (iterations >= maxIterations) {
+                        clearInterval(highlight);
+
+                        // Pick final random category
+                        const randomIndex = Math.floor(Math.random() * categories.length);
+                        selectedCategory = categories[randomIndex].id;
+
+                        // Highlight final selection
+                        categoryCircles.forEach(c => c.classList.remove('selected'));
+                        categoryCircles[randomIndex].classList.add('selected');
+
+                        // Display question after a short delay
+                        setTimeout(() => {
+                            displayRandomQuestion(selectedCategory);
+                        }, 500);
+                    }
+                }, interval);
+            }
+
+            // Display a random question from the selected category
+            function displayRandomQuestion(categoryId) {
+                const categoryQuestions = questions[categoryId];
+                const randomQuestion = categoryQuestions[Math.floor(Math.random() * categoryQuestions.length)];
+                const category = categories.find(c => c.id === parseInt(categoryId));
+
+                // Update question display
+                questionText.textContent = randomQuestion;
+                categoryTag.textContent = category.name;
+                categoryTag.style.backgroundColor = category.color;
+                categoryTag.style.borderColor = category.color;
+                categoryTag.style.boxShadow = `0 0 5px ${category.color}`;
+                categoryTag.classList.remove('hidden');
+
+                // End animation
+                loadingAnimation.style.display = 'none';
+                isAnimating = false;
+
+                // Scroll to question if needed
+                const questionDisplay = document.querySelector('.question-display');
+                if (questionDisplay.getBoundingClientRect().bottom > window.innerHeight) {
+                    questionDisplay.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }
+            }
+        });
+    </script>
+</body>
+</html>
