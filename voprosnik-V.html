@@ -1,0 +1,709 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Question Game</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --neskromnye-color: #ff3366;
+            --personal-color: #9d4edd;
+            --funny-color: #ffaa00;
+            --intriguing-color: #00bbff;
+            --fantasy-color: #00ddaa;
+            --challenges-color: #ff7700;
+            --psychological-color: #00ccff;
+            --absurd-color: #ff00ff;
+        }
+
+        body {
+            background-color: #0c0e16;
+            font-family: 'Montserrat', sans-serif;
+            overflow-x: hidden;
+            height: 100vh;
+            margin: 0;
+            padding: 0;
+        }
+
+        .neon-text {
+            text-shadow: 0 0 5px rgba(255, 255, 255, 0.8),
+                         0 0 10px currentColor,
+                         0 0 20px currentColor,
+                         0 0 30px currentColor;
+        }
+
+        .neon-border {
+            box-shadow: 0 0 5px rgba(255, 255, 255, 0.8),
+                        0 0 10px currentColor,
+                        0 0 20px currentColor;
+        }
+
+        .neon-button {
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .neon-button:hover {
+            box-shadow: 0 0 10px currentColor,
+                        0 0 20px currentColor,
+                        0 0 30px currentColor;
+            transform: scale(1.05);
+        }
+
+        .neon-button:active {
+            transform: scale(0.98);
+        }
+
+        .main-button {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            background: rgba(20, 20, 30, 0.9);
+            color: #00ff99;
+            border: 3px solid;
+            font-size: 1.5rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.5s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            text-transform: uppercase;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .main-button::before {
+            content: '';
+            position: absolute;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, transparent 50%, rgba(0, 255, 153, 0.1) 100%);
+            top: -50%;
+            left: -50%;
+            transition: all 0.5s ease;
+        }
+
+        .main-button:hover::before {
+            transform: scale(1.1);
+        }
+
+        .category-pill {
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: 2px solid;
+            padding: 0.5rem 1rem;
+            border-radius: 2rem;
+            margin: 0.5rem;
+            font-weight: 600;
+            opacity: 0.7;
+        }
+
+        .category-pill:hover {
+            opacity: 1;
+            transform: translateY(-3px);
+        }
+
+        .category-pill.active {
+            opacity: 1;
+            transform: translateY(-3px);
+            box-shadow: 0 0 10px currentColor,
+                        0 0 20px currentColor;
+        }
+
+        .loading-bar-container {
+            width: 100%;
+            background-color: #333;
+            border-radius: 50px;
+            overflow: hidden;
+            margin: 20px 0;
+        }
+
+        .loading-bar {
+            height: 30px;
+            width: 0;
+            background-color: #00ff99;
+            text-align: center;
+            line-height: 30px;
+            color: white;
+            border-radius: 50px;
+        }
+
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 60px;
+            height: 30px;
+        }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #2b2b2b;
+            transition: .4s;
+            border-radius: 34px;
+        }
+
+        .toggle-slider:before {
+            position: absolute;
+            content: "";
+            height: 22px;
+            width: 22px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .toggle-slider {
+            background-color: #00ff99;
+        }
+
+        input:checked + .toggle-slider:before {
+            transform: translateX(30px);
+        }
+
+        .question-card {
+            background: rgba(20, 20, 30, 0.85);
+            border-radius: 1rem;
+            padding: 2rem;
+            max-width: 600px;
+            width: 90%;
+            margin: 2rem auto;
+            text-align: center;
+            position: relative;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.5s ease;
+        }
+
+        .question-card.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .category-indicator {
+            position: absolute;
+            top: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 0.25rem 1rem;
+            border-radius: 1rem;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            font-weight: bold;
+            box-shadow: 0 0 10px currentColor;
+        }
+
+        .loading-dots {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .loading-dot {
+            width: 15px;
+            height: 15px;
+            border-radius: 50%;
+            background-color: white;
+            animation: pulse 1.5s infinite ease-in-out;
+        }
+
+        .loading-dot:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .loading-dot:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(0.8);
+                opacity: 0.5;
+            }
+            50% {
+                transform: scale(1.2);
+                opacity: 1;
+            }
+            100% {
+                transform: scale(0.8);
+                opacity: 0.5;
+            }
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        /* Responsive for mobile */
+        @media (max-width: 768px) {
+            .categories-container {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+
+            .category-pill {
+                margin: 0.3rem;
+                padding: 0.3rem 0.8rem;
+                font-size: 0.8rem;
+            }
+
+            .main-button {
+                width: 150px;
+                height: 150px;
+                font-size: 1.2rem;
+            }
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes pulse-ring {
+            0% {
+                transform: scale(0.8);
+            }
+            50% {
+                transform: scale(1.2);
+            }
+            100% {
+                transform: scale(0.8);
+            }
+        }
+
+        .pulse-animation {
+            animation: pulse-ring 2s infinite;
+        }
+    </style>
+</head>
+<body class="flex flex-col items-center justify-center min-h-screen">
+    <div class="container mx-auto px-4 py-8 flex flex-col items-center">
+        <h1 class="text-4xl md:text-5xl font-bold mb-8 neon-text text-center" style="color: #00ff99;">Лишь ты и твоя правда</h1>
+
+        <div class="random-toggle flex items-center mb-6">
+            <span class="text-gray-300 mr-3">Категория</span>
+            <label class="toggle-switch mx-3">
+                <input type="checkbox" id="randomToggle">
+                <span class="toggle-slider"></span>
+            </label>
+            <span id="randomLabel" class="text-gray-300 ml-3">Рэндом</span>
+        </div>
+
+        <div id="categoriesContainer" class="categories-container flex flex-wrap justify-center mb-8">
+            <div class="category-pill" data-category="neskromnye" style="color: var(--neskromnye-color);">Нескромные</div>
+            <div class="category-pill" data-category="personal" style="color: var(--personal-color);">Личные</div>
+            <div class="category-pill" data-category="funny" style="color: var(--funny-color);">Смешные</div>
+            <div class="category-pill" data-category="intriguing" style="color: var(--intriguing-color);">Интригующие</div>
+            <div class="category-pill" data-category="fantasy" style="color: var(--fantasy-color);">Фантастика</div>
+            <div class="category-pill" data-category="challenges" style="color: var(--challenges-color);">Испытания</div>
+            <div class="category-pill" data-category="psychological" style="color: var(--psychological-color);">Психологические</div>
+            <div class="category-pill" data-category="absurd" style="color: var(--absurd-color);">Абсурдные</div>
+        </div>
+
+        <div class="game-container flex flex-col items-center">
+            <button id="mainButton" class="main-button neon-border neon-button mb-8">
+                <span>Хочу вопрос</span>
+            </button>
+
+            <div id="loadingBarContainer" class="loading-bar-container hidden mb-8">
+                <div id="loadingBar" class="loading-bar">0%</div>
+            </div>
+
+            <div id="loadingContainer" class="loading-container hidden mb-8">
+                <div class="loading-dots">
+                    <div class="loading-dot"></div>
+                    <div class="loading-dot"></div>
+                    <div class="loading-dot"></div>
+                </div>
+            </div>
+
+            <div id="questionCard" class="question-card hidden">
+                <div id="categoryIndicator" class="category-indicator"></div>
+                <h2 id="questionText" class="text-2xl text-white mb-4"></h2>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Questions database
+        const questions = {
+            neskromnye: [
+                "С кем из присутствующих ты бы предпочел(а) провести ночь и почему?",
+                "Расскажи о своей самой необычной сексуальной фантазии.",
+                "Когда ты в последний раз испытывал(а) оргазм?",
+                "Какая часть тела партнера тебя больше всего возбуждает?",
+                "Самое неожиданное место, где у тебя был секс?",
+                "Что бы ты сделал(а), если бы стал(а) невидимым на один день?",
+                "Какой самый неловкий момент случался с тобой во время интимной близости?",
+                "Если бы ты мог(ла) заняться сексом с любой знаменитостью, кого бы ты выбрал(а)?",
+                "Что для тебя является абсолютным табу в сексе?",
+                "Что тебя сильнее всего возбуждает в партнере?",
+                "Какой твой самый смелый сексуальный эксперимент?",
+                "Что ты думаешь о сексе на первом свидании?",
+                "Какой твой самый странный сексуальный опыт?",
+                "Что ты думаешь о полиамории?",
+                "Какой твой самый запоминающийся сексуальный момент?",
+                "Что ты думаешь о сексе в общественных местах?",
+                "Какой твой самый необычный сексуальный ритуал?",
+                "Что ты думаешь о сексе с бывшим партнером?",
+                "Какой твой самый смелый сексуальный фантазия, которую ты еще не реализовал(а)?",
+                "Что ты думаешь о сексе без обязательств?"
+            ],
+            personal: [
+                "О чем ты больше всего сожалеешь в своей жизни?",
+                "Какой самый большой страх ты скрываешь от окружающих?",
+                "Что бы ты изменил(а) в своем прошлом, если бы мог(ла)?",
+                "Какая у тебя самая заветная мечта?",
+                "Когда ты в последний раз плакал(а) и почему?",
+                "За что ты благодарен(на) судьбе больше всего?",
+                "Какой момент из детства повлиял на тебя сильнее всего?",
+                "Что бы ты хотел(а) услышать от своих родителей?",
+                "Какое качество в себе ты считаешь самым ценным?",
+                "Что бы ты хотел(а), чтобы люди знали о тебе, но боишься сказать?",
+                "Какой твой самый большой успех?",
+                "Что ты думаешь о своем будущем?",
+                "Какой твой самый большой недостаток?",
+                "Что ты думаешь о своем текущем положении в жизни?",
+                "Какой твой самый большой комплекс?",
+                "Что ты думаешь о своих отношениях с друзьями?",
+                "Какой твой самый большой секрет?",
+                "Что ты думаешь о своем здоровье?",
+                "Какой твой самый большой страх в жизни?",
+                "Что ты думаешь о своем характере?"
+            ],
+            funny: [
+                "Изобрази свой самый странный танец под воображаемую музыку.",
+                "Расскажи самую нелепую шутку, которую ты знаешь.",
+                "Если бы твоя жизнь была фильмом, как бы он назывался и кто бы в нем играл?",
+                "Изобрази, как выглядит твое лицо, когда ты притворяешься, что работаешь.",
+                "Расскажи о самом смешном моменте своей жизни.",
+                "Какое животное ты напоминаешь, когда злишься?",
+                "Если бы ты был(а) супергероем с бесполезной суперспособностью, какой бы она была?",
+                "Спой припев из популярной песни с полным ртом воображаемой воды.",
+                "Какое самое странное прозвище у тебя было?",
+                "Опиши свое утро тремя звуками.",
+                "Расскажи о самом смешном сне, который ты видел.",
+                "Какой самый смешной подарок ты когда-либо получал?",
+                "Изобрази, как ты реагируешь на неожиданный звонок в дверь.",
+                "Расскажи о самом смешном моменте с животными.",
+                "Какой самый смешной фильм ты когда-либо видел?",
+                "Изобрази, как ты танцуешь под свою любимую песню.",
+                "Расскажи о самом смешном моменте на работе.",
+                "Какой самый смешной розыгрыш ты когда-либо делал?",
+                "Изобрази, как ты реагируешь на неожиданный комплимент.",
+                "Расскажи о самом смешном моменте с друзьями."
+            ],
+            intriguing: [
+                "Что ты выберешь: всегда говорить правду или никогда не слышать ложь?",
+                "Если бы ты мог(ла) прочитать мысли только одного человека, кого бы ты выбрал(а)?",
+                "Что, по-твоему, думают о тебе люди при первой встрече?",
+                "Если бы ты мог(ла) стереть одно воспоминание из своей памяти, что бы это было?",
+                "Что бы ты сделал(а), если бы нашел(ла) чемодан с миллионом долларов?",
+                "Если бы ты мог(ла) задать один вопрос и получить на него 100% правдивый ответ, что бы ты спросил(а)?",
+                "Какой самый важный урок ты извлек(ла) из своих отношений?",
+                "Если бы у тебя была возможность переписать любое событие в истории, что бы ты изменил(а)?",
+                "Что ты считаешь своим самым большим достижением?",
+                "Если бы ты мог(ла) дать совет себе 10-летней давности, что бы ты сказал(а)?",
+                "Что ты думаешь о судьбе?",
+                "Если бы ты мог(ла) изменить одну вещь в мире, что бы это было?",
+                "Что ты думаешь о будущем человечества?",
+                "Если бы ты мог(ла) путешествовать во времени, куда бы ты отправился(лась)?",
+                "Что ты думаешь о жизни на других планетах?",
+                "Если бы ты мог(ла) изменить одну вещь в своей жизни, что бы это было?",
+                "Что ты думаешь о вечной жизни?",
+                "Если бы ты мог(ла) изменить одну вещь в своем характере, что бы это было?",
+                "Что ты думаешь о счастье?",
+                "Если бы ты мог(ла) изменить одну вещь в своем прошлом, что бы это было?"
+            ],
+            fantasy: [
+                "Если бы ты мог(ла) жить в любой исторической эпохе, какую бы выбрал(а) и почему?",
+                "Какую суперспособность ты бы хотел(а) иметь и как бы её использовал(а)?",
+                "Если бы ты мог(ла) провести один день в теле любого человека, кого бы ты выбрал(а)?",
+                "Представь, что ты можешь телепортироваться. Куда бы ты отправился(лась) в первую очередь?",
+                "Если бы ты мог(ла) взять с собой на необитаемый остров только три вещи, что бы это было?",
+                "Представь, что ты можешь общаться с животными. С каким животным ты бы поговорил(а) в первую очередь?",
+                "Если бы существовала машина времени, какое событие в истории ты бы хотел(а) увидеть своими глазами?",
+                "Если бы ты мог(ла) создать идеальный мир, каким бы он был?",
+                "Представь, что ты можешь стать невидимым на один день. Как бы ты его провел(а)?",
+                "Если бы тебе предложили полететь на Марс без возможности вернуться на Землю, согласился(лась) бы ты?",
+                "Если бы ты мог(ла) изменить одну вещь в природе, что бы это было?",
+                "Если бы ты мог(ла) создать новое животное, каким бы оно было?",
+                "Если бы ты мог(ла) изменить одну вещь в космосе, что бы это было?",
+                "Если бы ты мог(ла) создать новую планету, какой бы она была?",
+                "Если бы ты мог(ла) изменить одну вещь в океане, что бы это было?",
+                "Если бы ты мог(ла) создать новый вид растений, каким бы он был?",
+                "Если бы ты мог(ла) изменить одну вещь в атмосфере, что бы это было?",
+                "Если бы ты мог(ла) создать новый вид птиц, каким бы он был?",
+                "Если бы ты мог(ла) изменить одну вещь в лесу, что бы это было?",
+                "Если бы ты мог(ла) создать новый вид рыб, каким бы он был?"
+            ],
+            challenges: [
+                "Позвони своему другу и скажи ему, что ты его ценишь, не объясняя причину.",
+                "Сделай селфи с самым странным выражением лица и отправь его трем людям из твоего списка контактов.",
+                "Расскажи что-то о себе, чего никто из присутствующих не знает.",
+                "Напиши сообщение своему бывшему/бывшей, но не отправляй его. Зачитай вслух.",
+                "Признайся в чем-то, за что тебе до сих пор стыдно.",
+                "Покажи самую странную фотографию в твоем телефоне.",
+                "Опиши свой самый большой страх и как ты с ним справляешься.",
+                "Расскажи о своем самом неловком моменте на публике.",
+                "Три минуты говори только комплименты окружающим.",
+                "Признайся в чем-то, что никогда не осмеливался(лась) сказать вслух.",
+                "Сделай что-то, что тебе всегда хотелось попробовать, но ты боялся(лась).",
+                "Расскажи о своем самом большом провале.",
+                "Покажи самую смешную фотографию в твоем телефоне.",
+                "Опиши свой самый большой успех и как ты его достиг(ла).",
+                "Расскажи о своем самом неловком моменте на работе.",
+                "Три минуты говори только правду.",
+                "Признайся в чем-то, что тебе стыдно, но ты гордишься этим.",
+                "Сделай что-то, что тебе всегда хотелось попробовать, но ты боялся(лась) попробовать.",
+                "Расскажи о своем самом большом достижении.",
+                "Покажи самую красивую фотографию в твоем телефоне."
+            ],
+            psychological: [
+                "Что для тебя означает истинное счастье?",
+                "Как ты думаешь, можно ли оправдать ложь во благо?",
+                "Что тебя больше мотивирует: страх или надежда?",
+                "В чем разница между мудростью и интеллектом?",
+                "Что для тебя значит быть по-настоящему свободным?",
+                "Если бы ты знал(а), что через месяц наступит конец света, как бы ты провел(а) это время?",
+                "Как ты думаешь, что важнее: справедливость или милосердие?",
+                "Что бы ты предпочел(ла): быть бессмертным или иметь возможность читать мысли других людей?",
+                "Считаешь ли ты, что человеку суждено прожить одну и ту же жизнь, если бы он имел шанс прожить её заново?",
+                "Является ли прощение актом силы или слабости?",
+                "Что для тебя значит быть счастливым?",
+                "Как ты думаешь, что важнее: любовь или уважение?",
+                "Что для тебя значит быть успешным?",
+                "Как ты думаешь, что важнее: здоровье или богатство?",
+                "Что для тебя значит быть свободным?",
+                "Как ты думаешь, что важнее: знания или опыт?",
+                "Что для тебя значит быть смелым?",
+                "Как ты думаешь, что важнее: честность или тактичность?",
+                "Что для тебя значит быть мудрым?",
+                "Как ты думаешь, что важнее: мечты или реальность?"
+            ],
+            absurd: [
+                "Если бы ты был(а) супом, какой бы ты был(а) и почему?",
+                "Если бы твоя левая нога могла говорить, что бы она сказала о тебе?",
+                "Ты можешь поменяться головами с любым животным на день. Какое животное ты выберешь?",
+                "Если бы ты мог(ла) добавить одну букву во все алфавиты мира, как бы она выглядела?",
+                "Опиши цвет своего настроения сегодня звуком.",
+                "Если бы твоя жизнь была сэндвичем, какие ингредиенты в нем были бы?",
+                "Что бы сказала твоя зубная щетка, если бы могла говорить?",
+                "Если бы ты был(а) невидимым дверным звонком, у чьей двери ты бы хотел(а) висеть?",
+                "Что случится, если поцеловать лимон в полночь?",
+                "Если бы твои носки могли записывать мемуары, о чем бы они рассказали?",
+                "Если бы ты был(а) облаком, какой бы формы ты был(а)?",
+                "Если бы твоя тень могла говорить, что бы она сказала?",
+                "Если бы ты был(а) цветком, какой бы ты был(а)?",
+                "Если бы твоя кровать могла говорить, что бы она сказала?",
+                "Если бы ты был(а) книгой, какой бы жанр ты выбрал(а)?",
+                "Если бы твоя еда могла говорить, что бы она сказала?",
+                "Если бы ты был(а) музыкальным инструментом, каким бы ты был(а)?",
+                "Если бы твоя одежда могла говорить, что бы она сказала?",
+                "Если бы ты был(а) фильмом, какой бы жанр ты выбрал(а)?",
+                "Если бы твоя обувь могла говорить, что бы она сказала?"
+            ]
+        };
+
+        // DOM elements
+        const mainButton = document.getElementById('mainButton');
+        const randomToggle = document.getElementById('randomToggle');
+        const randomLabel = document.getElementById('randomLabel');
+        const categoriesContainer = document.getElementById('categoriesContainer');
+        const categoryPills = document.querySelectorAll('.category-pill');
+        const loadingBarContainer = document.getElementById('loadingBarContainer');
+        const loadingBar = document.getElementById('loadingBar');
+        const loadingContainer = document.getElementById('loadingContainer');
+        const questionCard = document.getElementById('questionCard');
+        const questionText = document.getElementById('questionText');
+        const categoryIndicator = document.getElementById('categoryIndicator');
+
+        // Game state
+        let isRandomMode = false;
+        let selectedCategory = null;
+        let isSpinning = false;
+
+        // Initialize the game
+        function initGame() {
+            // Set up event listeners
+            randomToggle.addEventListener('change', toggleRandomMode);
+            mainButton.addEventListener('click', handleMainButtonClick);
+
+            categoryPills.forEach(pill => {
+                pill.addEventListener('click', () => {
+                    if (!isRandomMode) {
+                        selectCategory(pill.dataset.category);
+                    }
+                });
+            });
+
+            // Initial mode setup
+            toggleRandomMode();
+        }
+
+        // Toggle between random mode and category selection mode
+        function toggleRandomMode() {
+            isRandomMode = randomToggle.checked;
+
+            if (isRandomMode) {
+                randomLabel.style.color = '#00ff99';
+                randomLabel.classList.add('neon-text');
+                categoriesContainer.classList.add('opacity-50');
+                categoryPills.forEach(pill => {
+                    pill.classList.remove('active');
+                });
+                selectedCategory = null;
+            } else {
+                randomLabel.style.color = '#999';
+                randomLabel.classList.remove('neon-text');
+                categoriesContainer.classList.remove('opacity-50');
+            }
+        }
+
+        // Select a category
+        function selectCategory(category) {
+            categoryPills.forEach(pill => {
+                if (pill.dataset.category === category) {
+                    pill.classList.add('active');
+                    selectedCategory = category;
+                } else {
+                    pill.classList.remove('active');
+                }
+            });
+        }
+
+        // Handle main button click
+        function handleMainButtonClick() {
+            // Reset question card
+            questionCard.classList.add('hidden');
+
+            if (isRandomMode) {
+                startLoadingBar();
+            } else {
+                if (selectedCategory) {
+                    showLoading();
+                    setTimeout(() => {
+                        showQuestion(selectedCategory);
+                    }, 2000);
+                } else {
+                    // If no category is selected, pulse all categories to remind user
+                    categoryPills.forEach(pill => {
+                        pill.classList.add('pulse-animation');
+                        setTimeout(() => {
+                            pill.classList.remove('pulse-animation');
+                        }, 2000);
+                    });
+                }
+            }
+        }
+
+        // Start the loading bar animation
+        function startLoadingBar() {
+            if (isSpinning) return;
+
+            isSpinning = true;
+            loadingBarContainer.classList.remove('hidden');
+            mainButton.classList.add('hidden');
+
+            let width = 0;
+            const interval = setInterval(() => {
+                if (width >= 100) {
+                    clearInterval(interval);
+                    const randomCategoryIndex = Math.floor(Math.random() * Object.keys(questions).length);
+                    const randomCategory = Object.keys(questions)[randomCategoryIndex];
+
+                    loadingBarContainer.classList.add('hidden');
+                    showLoading();
+
+                    setTimeout(() => {
+                        showQuestion(randomCategory);
+                        isSpinning = false;
+                        mainButton.classList.remove('hidden');
+                    }, 2000);
+                } else {
+                    width++;
+                    loadingBar.style.width = width + '%';
+                    loadingBar.textContent = width + '%';
+                }
+            }, 30); // Adjust the interval for smoother animation
+        }
+
+        // Show loading animation
+        function showLoading() {
+            loadingContainer.classList.remove('hidden');
+            mainButton.classList.add('hidden');
+        }
+
+        // Show the selected question
+        function showQuestion(category) {
+            loadingContainer.classList.add('hidden');
+            mainButton.classList.remove('hidden');
+
+            // Get random question from selected category
+            const randomQuestionIndex = Math.floor(Math.random() * questions[category].length);
+            const randomQuestion = questions[category][randomQuestionIndex];
+
+            // Update question card
+            questionText.textContent = randomQuestion;
+
+            // Set category indicator
+            const categoryColors = {
+                'neskromnye': 'var(--neskromnye-color)',
+                'personal': 'var(--personal-color)',
+                'funny': 'var(--funny-color)',
+                'intriguing': 'var(--intriguing-color)',
+                'fantasy': 'var(--fantasy-color)',
+                'challenges': 'var(--challenges-color)',
+                'psychological': 'var(--psychological-color)',
+                'absurd': 'var(--absurd-color)'
+            };
+
+            const categoryNames = {
+                'neskromnye': 'Нескромные',
+                'personal': 'Личные',
+                'funny': 'Смешные',
+                'intriguing': 'Интригующие',
+                'fantasy': 'Фантастика',
+                'challenges': 'Испытания',
+                'psychological': 'Психологические',
+                'absurd': 'Абсурдные'
+            };
+
+            categoryIndicator.textContent = categoryNames[category];
+            categoryIndicator.style.backgroundColor = categoryColors[category];
+            categoryIndicator.style.borderColor = categoryColors[category];
+            categoryIndicator.style.color = 'white';
+
+            // Show the question card
+            questionCard.classList.remove('hidden');
+            questionCard.classList.add('show');
+
+            // Style the card border based on category
+            questionCard.style.borderColor = categoryColors[category];
+            questionCard.style.boxShadow = `0 0 10px ${categoryColors[category]}, 0 0 20px ${categoryColors[category]}`;
+        }
+
+        // Initialize the game
+        document.addEventListener('DOMContentLoaded', initGame);
+    </script>
+</body>
+</html>
