@@ -1,0 +1,1497 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YogaFlow - Современный портал для практики йоги</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --gold-light: #d4af37;
+            --gold: #b8860b;
+            --gold-dark: #996515;
+            --bg-dark: #111111;
+            --bg-darker: #0a0a0a;
+            --text-light: #f0f0f0;
+        }
+        
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-light);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            overflow-x: hidden;
+        }
+        
+        .gold-text {
+            color: var(--gold-light);
+        }
+        
+        .gold-border {
+            border-color: var(--gold);
+        }
+        
+        .gold-bg {
+            background-color: var(--gold);
+        }
+        
+        .gold-gradient {
+            background: linear-gradient(135deg, var(--gold-light) 0%, var(--gold) 50%, var(--gold-dark) 100%);
+        }
+        
+        .dark-card {
+            background-color: var(--bg-darker);
+            border: 1px solid var(--gold);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .dark-card::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(45deg, var(--gold-light), transparent, var(--gold-light));
+            z-index: -1;
+            opacity: 0.5;
+        }
+        
+        .btn-gold {
+            background: linear-gradient(135deg, var(--gold-light) 0%, var(--gold) 100%);
+            color: #000;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            border: none;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .btn-gold:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(184, 134, 11, 0.4);
+        }
+        
+        .btn-gold::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, transparent 100%);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        
+        .btn-gold:hover::after {
+            opacity: 1;
+        }
+        
+        .curve-decoration {
+            position: absolute;
+            height: 200px;
+            width: 50%;
+            background: linear-gradient(135deg, var(--gold-light) 0%, transparent 60%);
+            opacity: 0.15;
+            border-radius: 50%;
+        }
+        
+        .curve-top-right {
+            top: -100px;
+            right: -100px;
+            transform: rotate(45deg);
+        }
+        
+        .curve-bottom-left {
+            bottom: -100px;
+            left: -100px;
+            transform: rotate(225deg);
+        }
+        
+        header {
+            background-color: rgba(10, 10, 10, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--gold);
+        }
+        
+        .logo {
+            font-weight: 700;
+            font-size: 1.5rem;
+            background: linear-gradient(135deg, var(--gold-light), var(--gold));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-fill-color: transparent;
+        }
+        
+        .nav-link {
+            position: relative;
+            padding: 0.5rem 1rem;
+            color: var(--text-light);
+            transition: color 0.3s;
+        }
+        
+        .nav-link:hover {
+            color: var(--gold-light);
+        }
+        
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            width: 0;
+            height: 2px;
+            background: var(--gold);
+            transition: all 0.3s;
+            transform: translateX(-50%);
+        }
+        
+        .nav-link:hover::after {
+            width: 80%;
+        }
+        
+        .hero-section {
+            background-color: var(--bg-darker);
+            min-height: 60vh;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .practice-card {
+            transition: all 0.3s ease;
+        }
+        
+        .practice-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+        }
+        
+        .practice-modal {
+            background-color: rgba(10, 10, 10, 0.98);
+            backdrop-filter: blur(10px);
+        }
+        
+        .practice-modal .video-container {
+            position: relative;
+            padding-bottom: 56.25%; /* 16:9 */
+            height: 0;
+            overflow: hidden;
+        }
+        
+        .practice-modal .video-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+        
+        .practice-modal-content {
+            max-width: 90vw;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        
+        .timer-container {
+            background-color: var(--bg-darker);
+            border: 1px solid var(--gold);
+            border-radius: 10px;
+        }
+        
+        .timer-display {
+            font-family: 'Courier New', monospace;
+            font-size: 3rem;
+            font-weight: bold;
+            color: var(--gold-light);
+            text-shadow: 0 0 10px rgba(212, 175, 55, 0.5);
+        }
+        
+        .timer-controls button {
+            transition: all 0.2s ease;
+        }
+        
+        .timer-controls button:hover {
+            transform: scale(1.1);
+        }
+        
+        .level-beginner {
+            color: #4ade80;
+        }
+        
+        .level-intermediate {
+            color: #facc15;
+        }
+        
+        .level-advanced {
+            color: #f87171;
+        }
+
+        /* Scrollbar styling */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: var(--bg-darker);
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background-color: var(--gold-dark);
+            border-radius: 4px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background-color: var(--gold);
+        }
+        
+        .random-practice-container {
+            background: linear-gradient(135deg, rgba(10,10,10,0.9) 0%, rgba(20,20,20,0.9) 100%);
+            border: 2px solid var(--gold);
+            animation: goldPulse 3s infinite alternate;
+        }
+        
+        @keyframes goldPulse {
+            0% {
+                box-shadow: 0 0 5px var(--gold);
+            }
+            100% {
+                box-shadow: 0 0 20px var(--gold-light);
+            }
+        }
+        
+        .random-btn {
+            background: linear-gradient(135deg, var(--gold-light) 0%, var(--gold) 100%);
+            color: #000;
+            font-weight: bold;
+            transition: all 0.5s ease;
+            transform-style: preserve-3d;
+            perspective: 1000px;
+        }
+        
+        .random-btn:hover {
+            transform: rotateY(15deg) translateY(-5px);
+            box-shadow: -5px 5px 15px rgba(184, 134, 11, 0.3);
+        }
+        
+        .search-filter-container {
+            background-color: rgba(17, 17, 17, 0.8);
+            backdrop-filter: blur(5px);
+            border: 1px solid var(--gold);
+            border-radius: 8px;
+        }
+        
+        .search-input {
+            background-color: var(--bg-darker);
+            color: var(--text-light);
+            border: 1px solid var(--gold-dark);
+            border-radius: 4px;
+            padding: 0.5rem 1rem;
+            transition: all 0.3s;
+        }
+        
+        .search-input:focus {
+            border-color: var(--gold-light);
+            box-shadow: 0 0 10px rgba(184, 134, 11, 0.3);
+            outline: none;
+        }
+        
+        .filter-select {
+            background-color: var(--bg-darker);
+            color: var(--text-light);
+            border: 1px solid var(--gold-dark);
+            border-radius: 4px;
+            padding: 0.5rem 1rem;
+            transition: all 0.3s;
+        }
+        
+        .filter-select:focus {
+            border-color: var(--gold-light);
+            box-shadow: 0 0 10px rgba(184, 134, 11, 0.3);
+            outline: none;
+        }
+        
+        .badge {
+            display: inline-block;
+            padding: 0.25rem 0.5rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        
+        .badge-beginner {
+            background-color: rgba(74, 222, 128, 0.2);
+            color: #4ade80;
+            border: 1px solid #4ade80;
+        }
+        
+        .badge-intermediate {
+            background-color: rgba(250, 204, 21, 0.2);
+            color: #facc15;
+            border: 1px solid #facc15;
+        }
+        
+        .badge-advanced {
+            background-color: rgba(248, 113, 113, 0.2);
+            color: #f87171;
+            border: 1px solid #f87171;
+        }
+        
+        .practice-benefits {
+            background-color: rgba(212, 175, 55, 0.1);
+            border-left: 3px solid var(--gold);
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 0 4px 4px 0;
+        }
+        
+        .modal-close-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: rgba(0,0,0,0.5);
+            color: var(--text-light);
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .modal-close-btn:hover {
+            background-color: rgba(220, 38, 38, 0.7);
+        }
+        
+        .section-title {
+            position: relative;
+            display: inline-block;
+            padding-bottom: 10px;
+        }
+        
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, var(--gold) 0%, transparent 100%);
+        }
+        
+        @media (max-width: 768px) {
+            .nav-link {
+                padding: 0.3rem 0.6rem;
+                font-size: 0.9rem;
+            }
+            
+            .practice-modal-content {
+                max-width: 95vw;
+                max-height: 95vh;
+            }
+            
+            .timer-display {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header & Navigation -->
+    <header class="fixed top-0 left-0 right-0 z-50 px-4 py-3 flex items-center justify-between shadow-md">
+        <div class="logo">YogaFlow</div>
+        <nav class="hidden md:flex space-x-1">
+            <a href="#home" class="nav-link">Главная</a>
+            <a href="#practices" class="nav-link">Практики</a>
+            <a href="#game" class="nav-link">Игра-практика</a>
+            <a href="#timer" class="nav-link">Таймер</a>
+        </nav>
+        <div class="md:hidden">
+            <button id="mobile-menu-btn" class="p-2 gold-text">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+    </header>
+
+    <!-- Mobile Menu -->
+    <div id="mobile-menu" class="fixed top-16 left-0 right-0 bg-black bg-opacity-95 z-40 shadow-lg hidden">
+        <div class="flex flex-col p-4">
+            <a href="#home" class="nav-link py-2">Главная</a>
+            <a href="#practices" class="nav-link py-2">Практики</a>
+            <a href="#game" class="nav-link py-2">Игра-практика</a>
+            <a href="#timer" class="nav-link py-2">Таймер</a>
+        </div>
+    </div>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero-section pt-24 pb-16 px-4">
+        <div class="curve-decoration curve-top-right"></div>
+        <div class="container mx-auto">
+            <div class="flex flex-col md:flex-row items-center">
+                <div class="md:w-1/2 mb-10 md:mb-0">
+                    <h1 class="text-4xl md:text-5xl font-bold mb-6">
+                        <span class="gold-text">Йога</span> для гармонии тела и разума
+                    </h1>
+                    <p class="text-lg opacity-80 mb-8">
+                        Изучайте разнообразные асаны и практики йоги, медитации и дыхательные техники для улучшения физического и ментального здоровья.
+                    </p>
+                    <div class="flex space-x-4">
+                        <a href="#practices" class="btn-gold px-6 py-3 rounded-lg">
+                            Все практики
+                        </a>
+                        <a href="#game" class="px-6 py-3 rounded-lg border border-gold text-gold hover:bg-gold hover:bg-opacity-10 transition">
+                            Случайная практика
+                        </a>
+                    </div>
+                </div>
+                <div class="md:w-1/2 flex justify-center">
+                    <div class="dark-card rounded-xl p-1 w-full max-w-md">
+                        <div class="bg-black rounded-xl p-6">
+                            <h3 class="text-xl font-semibold mb-4 gold-text text-center">Преимущества йоги</h3>
+                            <ul class="space-y-3">
+                                <li class="flex items-start">
+                                    <i class="fas fa-circle-check gold-text mt-1 mr-3"></i>
+                                    <span>Улучшение гибкости и силы</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <i class="fas fa-circle-check gold-text mt-1 mr-3"></i>
+                                    <span>Снижение стресса и тревожности</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <i class="fas fa-circle-check gold-text mt-1 mr-3"></i>
+                                    <span>Улучшение осанки и координации</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <i class="fas fa-circle-check gold-text mt-1 mr-3"></i>
+                                    <span>Повышение концентрации и внимания</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <i class="fas fa-circle-check gold-text mt-1 mr-3"></i>
+                                    <span>Укрепление иммунной системы</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="curve-decoration curve-bottom-left"></div>
+    </section>
+
+    <!-- Practices Section -->
+    <section id="practices" class="py-16 px-4 relative">
+        <div class="container mx-auto">
+            <h2 class="text-3xl font-bold mb-2 gold-text section-title">Библиотека практик</h2>
+            <p class="mb-8 text-gray-300">Исследуйте разнообразные асаны йоги для всех уровней подготовки</p>
+            
+            <!-- Search and Filters -->
+            <div class="search-filter-container p-4 mb-8">
+                <div class="flex flex-col md:flex-row md:items-center md:space-x-4 space-y-4 md:space-y-0">
+                    <div class="flex-grow">
+                        <label for="search" class="block text-sm mb-1 gold-text">Поиск практики</label>
+                        <input type="text" id="search" placeholder="Введите название асаны..." class="search-input w-full">
+                    </div>
+                    <div class="md:w-1/4">
+                        <label for="level-filter" class="block text-sm mb-1 gold-text">Уровень сложности</label>
+                        <select id="level-filter" class="filter-select w-full">
+                            <option value="all">Все уровни</option>
+                            <option value="beginner">Начинающий</option>
+                            <option value="intermediate">Средний</option>
+                            <option value="advanced">Продвинутый</option>
+                        </select>
+                    </div>
+                    <div class="md:w-1/4">
+                        <label for="type-filter" class="block text-sm mb-1 gold-text">Тип практики</label>
+                        <select id="type-filter" class="filter-select w-full">
+                            <option value="all">Все типы</option>
+                            <option value="standing">Стоячие позы</option>
+                            <option value="seated">Сидячие позы</option>
+                            <option value="balance">Балансы</option>
+                            <option value="backbend">Прогибы</option>
+                            <option value="forward_bend">Наклоны</option>
+                            <option value="twist">Скручивания</option>
+                            <option value="inversion">Перевернутые позы</option>
+                            <option value="core">Укрепление кора</option>
+                            <option value="restorative">Восстановительные</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Practices Grid -->
+            <div id="practices-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                <!-- Practices will be loaded dynamically here -->
+                <div class="dark-card rounded-lg overflow-hidden practice-card skeleton-loader">
+                    <div class="h-40 bg-gray-800 animate-pulse"></div>
+                    <div class="p-4">
+                        <div class="h-6 bg-gray-800 rounded w-3/4 mb-2 animate-pulse"></div>
+                        <div class="h-4 bg-gray-800 rounded w-1/2 mb-4 animate-pulse"></div>
+                        <div class="h-4 bg-gray-800 rounded w-full mb-2 animate-pulse"></div>
+                        <div class="h-4 bg-gray-800 rounded w-full mb-4 animate-pulse"></div>
+                        <div class="h-8 bg-gray-800 rounded w-1/2 mx-auto animate-pulse"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- No Results Message -->
+            <div id="no-results" class="hidden text-center py-10">
+                <i class="fas fa-search text-4xl opacity-50 mb-4"></i>
+                <p class="text-xl">Практики не найдены. Попробуйте изменить параметры поиска.</p>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Practice Details Modal -->
+    <div id="practice-modal" class="practice-modal fixed inset-0 hidden z-50 flex items-center justify-center">
+        <div class="practice-modal-content bg-black border-2 gold-border rounded-lg shadow-2xl relative p-6">
+            <div class="modal-close-btn" id="modal-close">
+                <i class="fas fa-times"></i>
+            </div>
+            <div id="modal-content" class="overflow-y-auto">
+                <!-- Content will be dynamically loaded here -->
+            </div>
+        </div>
+    </div>
+    
+    <!-- Game Section -->
+    <section id="game" class="py-16 px-4 bg-gradient-to-b from-black to-gray-900">
+        <div class="container mx-auto">
+            <h2 class="text-3xl font-bold mb-2 gold-text section-title">Игра-практика</h2>
+            <p class="mb-8 text-gray-300">Получите случайную практику для разнообразия вашей тренировки</p>
+            
+            <div class="flex justify-center mb-10">
+                <button id="random-practice-btn" class="random-btn text-lg px-8 py-4 rounded-lg shadow-lg">
+                    <i class="fas fa-dice mr-2"></i> Выдай мне практику
+                </button>
+            </div>
+            
+            <div id="random-practice-container" class="random-practice-container max-w-4xl mx-auto rounded-xl p-1 hidden">
+                <div class="bg-black rounded-xl p-6">
+                    <div id="random-practice-content">
+                        <!-- Random practice content will be loaded here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Timer Section -->
+    <section id="timer" class="py-16 px-4">
+        <div class="container mx-auto">
+            <h2 class="text-3xl font-bold mb-2 gold-text section-title">Таймер для практики</h2>
+            <p class="mb-8 text-gray-300">Установите время для вашей практики и получите звуковое уведомление по окончании</p>
+            
+            <div class="timer-container max-w-md mx-auto p-6">
+                <div class="timer-display text-center mb-6">
+                    <span id="minutes">05</span>:<span id="seconds">00</span>
+                </div>
+                
+                <div class="grid grid-cols-3 gap-4 mb-6">
+                    <button class="time-preset-btn bg-gray-800 hover:bg-gray-700 py-2 px-4 rounded-lg" data-time="3">
+                        3 мин
+                    </button>
+                    <button class="time-preset-btn bg-gray-800 hover:bg-gray-700 py-2 px-4 rounded-lg" data-time="5">
+                        5 мин
+                    </button>
+                    <button class="time-preset-btn bg-gray-800 hover:bg-gray-700 py-2 px-4 rounded-lg" data-time="10">
+                        10 мин
+                    </button>
+                    <button class="time-preset-btn bg-gray-800 hover:bg-gray-700 py-2 px-4 rounded-lg" data-time="15">
+                        15 мин
+                    </button>
+                    <button class="time-preset-btn bg-gray-800 hover:bg-gray-700 py-2 px-4 rounded-lg" data-time="20">
+                        20 мин
+                    </button>
+                    <button class="time-preset-btn bg-gray-800 hover:bg-gray-700 py-2 px-4 rounded-lg" data-time="30">
+                        30 мин
+                    </button>
+                </div>
+                
+                <div class="flex flex-col sm:flex-row space-y-3 sm:space-y-0 sm:space-x-3">
+                    <div class="flex-1">
+                        <label for="custom-minutes" class="block text-sm mb-1 gold-text">Минуты</label>
+                        <input type="number" id="custom-minutes" min="0" max="60" value="5" class="w-full bg-gray-800 rounded-lg p-2 border border-gray-700">
+                    </div>
+                    <div class="flex-1">
+                        <label for="custom-seconds" class="block text-sm mb-1 gold-text">Секунды</label>
+                        <input type="number" id="custom-seconds" min="0" max="59" value="0" class="w-full bg-gray-800 rounded-lg p-2 border border-gray-700">
+                    </div>
+                </div>
+                
+                <div class="timer-controls flex justify-center space-x-4 mt-6">
+                    <button id="start-timer" class="btn-gold px-6 py-3 rounded-lg">
+                        <i class="fas fa-play mr-2"></i> Старт
+                    </button>
+                    <button id="pause-timer" class="px-6 py-3 rounded-lg bg-gray-800 hover:bg-gray-700 hidden">
+                        <i class="fas fa-pause mr-2"></i> Пауза
+                    </button>
+                    <button id="reset-timer" class="px-6 py-3 rounded-lg bg-gray-800 hover:bg-gray-700">
+                        <i class="fas fa-redo mr-2"></i> Сброс
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Footer -->
+    <footer class="bg-gray-900 py-10 px-4 border-t border-gray-800">
+        <div class="container mx-auto">
+            <div class="flex flex-col md:flex-row justify-between">
+                <div class="mb-6 md:mb-0">
+                    <div class="logo mb-4">YogaFlow</div>
+                    <p class="text-gray-400 max-w-md">
+                        Ваш путеводитель в мире йоги. Практикуйте регулярно и наблюдайте, как ваше тело и разум меняются к лучшему.
+                    </p>
+                </div>
+                
+                <div class="grid grid-cols-2 gap-8">
+                    <div>
+                        <h4 class="text-lg font-semibold mb-4 gold-text">Навигация</h4>
+                        <ul class="space-y-2">
+                            <li><a href="#home" class="text-gray-400 hover:text-white">Главная</a></li>
+                            <li><a href="#practices" class="text-gray-400 hover:text-white">Практики</a></li>
+                            <li><a href="#game" class="text-gray-400 hover:text-white">Игра-практика</a></li>
+                            <li><a href="#timer" class="text-gray-400 hover:text-white">Таймер</a></li>
+                        </ul>
+                    </div>
+                    
+                    <div>
+                        <h4 class="text-lg font-semibold mb-4 gold-text">Контакты</h4>
+                        <ul class="space-y-2">
+                            <li class="flex items-center">
+                                <i class="fas fa-envelope gold-text mr-2"></i>
+                                <span class="text-gray-400">info@yogaflow.example</span>
+                            </li>
+                            <li class="flex items-center">
+                                <i class="fas fa-phone gold-text mr-2"></i>
+                                <span class="text-gray-400">+7 (999) 123-45-67</span>
+                            </li>
+                            <li class="flex items-center">
+                                <i class="fas fa-map-marker-alt gold-text mr-2"></i>
+                                <span class="text-gray-400">Москва, Россия</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="mt-8 pt-8 border-t border-gray-800 text-center text-gray-500">
+                <p>© 2023 YogaFlow. Все права защищены.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Timer Sound -->
+    <audio id="timer-sound" preload="auto">
+        <source src="https://cdn.jsdelivr.net/gh/freeCodeCamp/cdn@master/build/testable-projects-fcc/audio/BeepSound.wav" type="audio/wav">
+    </audio>
+
+    <script>
+        // -----------------
+        // Yoga Practices Database
+        // -----------------
+        const yogaPractices = [
+            {
+                id: 1,
+                name: "Поза горы",
+                sanskrit: "Тадасана",
+                level: "beginner",
+                type: "standing",
+                description: "Базовая стоячая поза, основа для многих других асан.",
+                fullDescription: "Тадасана или поза горы является фундаментальной стоячей позой в йоге. Это отправная точка для всех стоячих поз. В этой асане тело находится в вертикальном положении, выравнивая позвоночник и развивая осознанность правильной осанки.",
+                benefits: "Улучшает осанку, укрепляет колени, бедра и лодыжки, тонизирует ягодичные мышцы и живот.",
+                videoId: "2HTvZp5rPrg"
+            },
+            {
+                id: 2,
+                name: "Поза дерева",
+                sanskrit: "Врикшасана",
+                level: "beginner",
+                type: "balance",
+                description: "Стоячая поза баланса, укрепляющая ноги и улучшающая концентрацию.",
+                fullDescription: "Врикшасана или поза дерева — это асана баланса, где вы стоите на одной ноге, а стопа другой ноги размещается на внутренней поверхности бедра или голени опорной ноги. Руки поднимаются над головой, соединяясь в намасте или раскрываясь как ветви дерева.",
+                benefits: "Улучшает равновесие, укрепляет ноги и позвоночник, улучшает концентрацию и развивает грациозность.",
+                videoId: "wdln9qWYloU"
+            },
+            {
+                id: 3,
+                name: "Поза воина I",
+                sanskrit: "Вирабхадрасана I",
+                level: "intermediate",
+                type: "standing",
+                description: "Мощная стоячая поза, укрепляющая ноги и раскрывающая грудную клетку.",
+                fullDescription: "Вирабхадрасана I или поза воина I — это энергичная стоячая поза, где ноги расставлены широко, одна нога согнута в колене под прямым углом, а другая вытянута назад. Туловище и руки подняты вверх, грудная клетка раскрыта.",
+                benefits: "Укрепляет ноги, раскрывает тазобедренные суставы и грудную клетку, улучшает равновесие и концентрацию, развивает силу и выносливость.",
+                videoId: "k4qaVoNJ8S8"
+            },
+            {
+                id: 4,
+                name: "Поза собаки мордой вниз",
+                sanskrit: "Адхо Мукха Шванасана",
+                level: "beginner",
+                type: "inversion",
+                description: "Перевернутая поза, растягивающая всё тело и укрепляющая руки и плечи.",
+                fullDescription: "Адхо Мукха Шванасана или поза собаки мордой вниз — это асана, в которой тело образует перевернутую букву V. Руки и ноги вытянуты, таз поднят вверх, голова расслаблена между руками. Эта поза часто используется как переходная в различных последовательностях йоги.",
+                benefits: "Укрепляет руки, плечи и запястья, растягивает плечи, подколенные сухожилия, икры и своды стоп, снимает усталость и стресс.",
+                videoId: "VpW33Celubg"
+            },
+            {
+                id: 5,
+                name: "Поза кобры",
+                sanskrit: "Бхуджангасана",
+                level: "beginner",
+                type: "backbend",
+                description: "Прогиб назад, укрепляющий позвоночник и открывающий грудную клетку.",
+                fullDescription: "Бхуджангасана или поза кобры — это прогиб назад, выполняемый лежа на животе. В этой асане верхняя часть тела поднимается от пола, опираясь на ладони, а ноги и таз остаются на земле. Эта поза напоминает кобру, поднимающую свою голову.",
+                benefits: "Укрепляет позвоночник, раскрывает грудную клетку, улучшает гибкость позвоночника, стимулирует органы брюшной полости, помогает при астме.",
+                videoId: "_RVucG_kxnM"
+            },
+            {
+                id: 6,
+                name: "Поза стула",
+                sanskrit: "Уткатасана",
+                level: "beginner",
+                type: "standing",
+                description: "Приседание с поднятыми руками, укрепляющее ноги и спину.",
+                fullDescription: "Уткатасана или поза стула — это асана, в которой тело находится в положении, как будто вы сидите на невидимом стуле. Ноги согнуты в коленях, таз опущен, спина прямая, а руки вытянуты вверх параллельно друг другу.",
+                benefits: "Укрепляет бедра, ягодицы и спину, растягивает грудную клетку и плечи, стимулирует сердце, диафрагму и брюшные органы.",
+                videoId: "JhFWJksC4ZE"
+            },
+            {
+                id: 7,
+                name: "Поза треугольника",
+                sanskrit: "Триконасана",
+                level: "intermediate",
+                type: "standing",
+                description: "Боковое растяжение с широко расставленными ногами и наклоном в сторону.",
+                fullDescription: "Триконасана или поза треугольника — это асана, в которой тело образует форму треугольника. Ноги широко расставлены, одна рука касается пола или голени, а другая вытянута вверх. Тело раскрывается в сторону, создавая глубокое боковое растяжение.",
+                benefits: "Растягивает и укрепляет бедра, колени, лодыжки, раскрывает грудную клетку и плечи, стимулирует внутренние органы, улучшает координацию и баланс.",
+                videoId: "upvhq7QXvHI"
+            },
+            {
+                id: 8,
+                name: "Поза ребенка",
+                sanskrit: "Баласана",
+                level: "beginner",
+                type: "restorative",
+                description: "Расслабляющая поза для отдыха и восстановления между более сложными асанами.",
+                fullDescription: "Баласана или поза ребенка — это расслабляющая поза, в которой человек стоит на коленях, сидит на пятках, а верхняя часть тела складывается вперед, руки вытянуты вперед или вдоль тела, лоб касается пола. Эта поза символизирует доверие и полную отдачу, как у ребенка.",
+                benefits: "Расслабляет спину, шею и плечи, успокаивает ум и снимает стресс, улучшает кровообращение и пищеварение, облегчает головную боль и усталость.",
+                videoId: "eqVMAPM00DM"
+            },
+            {
+                id: 9,
+                name: "Поза моста",
+                sanskrit: "Сету Бандха Сарвангасана",
+                level: "intermediate",
+                type: "backbend",
+                description: "Прогиб спины, выполняемый лежа на спине с подъемом таза вверх.",
+                fullDescription: "Сету Бандха Сарвангасана или поза моста — это прогиб назад, выполняемый лежа на спине. В этой асане таз поднимается вверх, создавая арку между плечами и стопами. Руки могут оставаться на полу для поддержки или соединяться под спиной.",
+                benefits: "Растягивает грудь, шею и позвоночник, укрепляет ягодицы, бедра и спину, улучшает кровообращение, помогает при стрессе, тревоге и усталости.",
+                videoId: "y4RVCKQU8pY"
+            },
+            {
+                id: 10,
+                name: "Поза лотоса",
+                sanskrit: "Падмасана",
+                level: "advanced",
+                type: "seated",
+                description: "Классическая сидячая поза для медитации с перекрещенными ногами.",
+                fullDescription: "Падмасана или поза лотоса — это классическая медитативная поза, в которой человек сидит со скрещенными ногами, каждая стопа расположена на противоположном бедре подошвой вверх. Спина прямая, руки могут быть размещены на коленях в различных мудрах.",
+                benefits: "Успокаивает ум, растягивает лодыжки и колени, стимулирует тазовые и брюшные органы, улучшает осанку и выравнивание позвоночника.",
+                videoId: "odKi0b2K4S8"
+            },
+            {
+                id: 11,
+                name: "Поза голубя",
+                sanskrit: "Эка Пада Раджакапотасана",
+                level: "intermediate",
+                type: "hip_opener",
+                description: "Глубокое раскрытие тазобедренных суставов и растяжение бедер.",
+                fullDescription: "Эка Пада Раджакапотасана или поза голубя — это асана для раскрытия тазобедренных суставов. Одна нога вытянута назад, а другая согнута так, что голень располагается примерно параллельно передней части коврика. Верхняя часть тела может быть поднята с опорой на руки или наклонена вперед для более глубокого растяжения.",
+                benefits: "Раскрывает тазобедренные суставы, растягивает бедра и ягодицы, стимулирует внутренние органы, снимает стресс и тревогу.",
+                videoId: "FVXPp1qFKQE"
+            },
+            {
+                id: 12,
+                name: "Поза саранчи",
+                sanskrit: "Шалабхасана",
+                level: "intermediate",
+                type: "backbend",
+                description: "Укрепление спины и ягодиц с подъемом ног от пола.",
+                fullDescription: "Шалабхасана или поза саранчи — это асана, выполняемая лежа на животе. В полной версии обе ноги поднимаются от пола, удерживаясь только силой мышц спины и ягодиц. Руки могут быть вытянуты вдоль тела, под бедрами или вперед.",
+                benefits: "Укрепляет спину, ягодицы и задние поверхности ног, улучшает гибкость позвоночника, стимулирует пищеварительную систему, улучшает осанку.",
+                videoId: "1i8GudElFMw"
+            },
+            {
+                id: 13,
+                name: "Поза посоха",
+                sanskrit: "Дандасана",
+                level: "beginner",
+                type: "seated",
+                description: "Базовая сидячая поза с вытянутыми вперед ногами.",
+                fullDescription: "Дандасана или поза посоха — это базовая сидячая поза, где человек сидит на полу с прямой спиной и вытянутыми вперед ногами. Руки размещаются по бокам от бедер, ладони прижаты к полу. Эта поза служит основой для многих других сидячих асан.",
+                benefits: "Укрепляет спину и кор, улучшает осанку, растягивает подколенные сухожилия, стимулирует почки и внутренние органы.",
+                videoId: "NWXV-HXtQiA"
+            },
+            {
+                id: 14,
+                name: "Поза лука",
+                sanskrit: "Дханурасана",
+                level: "intermediate",
+                type: "backbend",
+                description: "Прогиб назад лежа на животе, с захватом лодыжек руками.",
+                fullDescription: "Дханурасана или поза лука — это прогиб назад, выполняемый лежа на животе. В этой асане человек захватывает свои лодыжки или стопы руками и поднимает и грудь, и ноги от пола, создавая форму натянутого лука.",
+                benefits: "Укрепляет спину и брюшной пресс, открывает грудную клетку и плечи, стимулирует пищеварительные и репродуктивные органы, улучшает осанку.",
+                videoId: "4P2mYcOGxbU"
+            },
+            {
+                id: 15,
+                name: "Поза верблюда",
+                sanskrit: "Уштрасана",
+                level: "intermediate",
+                type: "backbend",
+                description: "Прогиб назад стоя на коленях, открывающий грудную клетку и плечи.",
+                fullDescription: "Уштрасана или поза верблюда — это глубокий прогиб назад, выполняемый стоя на коленях. В этой асане бедра остаются перпендикулярны полу, а верхняя часть тела прогибается назад, руки тянутся к пяткам. Голова может быть запрокинута или оставаться в нейтральном положении.",
+                benefits: "Растягивает переднюю поверхность тела, открывает сердечный центр, улучшает пищеварение, укрепляет спину и плечи, улучшает осанку.",
+                videoId: "HQV_40dyMFw"
+            },
+            {
+                id: 16,
+                name: "Поза скручивания позвоночника",
+                sanskrit: "Джатара Паривартанасана",
+                level: "beginner",
+                type: "twist",
+                description: "Скручивание позвоночника лежа на спине для массажа внутренних органов.",
+                fullDescription: "Джатара Паривартанасана или поза скручивания позвоночника — это асана, выполняемая лежа на спине. Ноги согнуты или вытянуты и перемещаются в сторону, создавая скручивание в позвоночнике, в то время как плечи и руки остаются прижатыми к полу.",
+                benefits: "Массирует внутренние органы, улучшает пищеварение, снимает напряжение в спине, улучшает подвижность позвоночника, очищает организм.",
+                videoId: "CcLhoT_0Hx8"
+            },
+            {
+                id: 17,
+                name: "Поза журавля",
+                sanskrit: "Бакасана",
+                level: "intermediate",
+                type: "arm_balance",
+                description: "Балансировка на руках с коленями, опирающимися на плечи.",
+                fullDescription: "Бакасана или поза журавля — это балансировка на руках, где вес тела поддерживается руками, а колени размещаются на задней поверхности плеч или верхней части рук. Стопы оторваны от пола, тело компактно сложено, балансируя на ладонях.",
+                benefits: "Укрепляет запястья, руки и плечи, тонизирует корпус, улучшает равновесие и концентрацию, развивает координацию.",
+                videoId: "TQ8fW4JsEpY"
+            },
+            {
+                id: 18,
+                name: "Поза рыбы",
+                sanskrit: "Матсиасана",
+                level: "intermediate",
+                type: "backbend",
+                description: "Прогиб назад лежа на спине с открытой грудной клеткой.",
+                fullDescription: "Матсиасана или поза рыбы — это прогиб назад, выполняемый лежа на спине. В этой асане грудная клетка поднимается вверх, а голова запрокидывается назад, иногда касаясь макушкой пола. Тело принимает форму, напоминающую рыбу.",
+                benefits: "Растягивает грудную клетку и плечи, укрепляет мышцы шеи и верхней части спины, улучшает дыхание, помогает при астме и респираторных проблемах.",
+                videoId: "4eCX6Tztc1s"
+            },
+            {
+                id: 19,
+                name: "Поза орла",
+                sanskrit: "Гарудасана",
+                level: "intermediate",
+                type: "balance",
+                description: "Поза баланса с переплетенными руками и ногами.",
+                fullDescription: "Гарудасана или поза орла — это асана равновесия, в которой ноги и руки переплетены. Одна нога обернута вокруг другой, а руки переплетены и подняты на уровень лица. Эта поза требует концентрации, баланса и гибкости в плечах и бедрах.",
+                benefits: "Укрепляет лодыжки и бедра, растягивает плечи и верхнюю часть спины, улучшает равновесие и концентрацию, улучшает кровообращение.",
+                videoId: "K0OV6qcKx4k"
+            },
+            {
+                id: 20,
+                name: "Поза полумесяца",
+                sanskrit: "Ардха Чандрасана",
+                level: "intermediate",
+                type: "balance",
+                description: "Поза баланса на одной ноге с наклоном в сторону.",
+                fullDescription: "Ардха Чандрасана или поза полумесяца — это асана равновесия, в которой тело опирается на одну ногу и одну руку. Другая нога вытянута параллельно полу, а другая рука тянется вверх. Тело образует форму полумесяца или звезды.",
+                benefits: "Укрепляет ноги, ягодицы и кор, растягивает подколенные сухожилия и внутреннюю поверхность бедер, улучшает равновесие и концентрацию, улучшает пищеварение.",
+                videoId: "tCBLYXvVPaM"
+            },
+            {
+                id: 21,
+                name: "Поза трупа",
+                sanskrit: "Шавасана",
+                level: "beginner",
+                type: "restorative",
+                description: "Расслабляющая поза для отдыха и восстановления в конце практики.",
+                fullDescription: "Шавасана или поза трупа — это асана глубокого расслабления, выполняемая лежа на спине. Тело полностью расслаблено, ноги слегка расставлены, руки лежат по бокам ладонями вверх. Эта поза обычно выполняется в конце практики йоги для интеграции всех эффектов предыдущих асан.",
+                benefits: "Снижает кровяное давление, успокаивает нервную систему, снимает усталость, снижает уровень стресса и тревоги, улучшает концентрацию и память.",
+                videoId: "RZ6dZGRPG8I"
+            },
+            {
+                id: 22,
+                name: "Поза воина II",
+                sanskrit: "Вирабхадрасана II",
+                level: "intermediate",
+                type: "standing",
+                description: "Стоячая поза с широко расставленными ногами и руками в стороны.",
+                fullDescription: "Вирабхадрасана II или поза воина II — это мощная стоячая поза, в которой ноги широко расставлены, передняя нога согнута в колене, а задняя вытянута. Руки вытянуты в стороны параллельно полу, взгляд направлен над передней рукой.",
+                benefits: "Укрепляет ноги, раскрывает грудную клетку и плечи, улучшает выносливость и концентрацию, стимулирует брюшные органы.",
+                videoId: "4Ejz7IgODpQ"
+            },
+            {
+                id: 23,
+                name: "Поза воина III",
+                sanskrit: "Вирабхадрасана III",
+                level: "advanced",
+                type: "balance",
+                description: "Поза баланса на одной ноге с параллельным полу телом.",
+                fullDescription: "Вирабхадрасана III или поза воина III — это балансирующая поза, в которой тело параллельно полу, опирающееся на одну ногу. Другая нога вытянута назад, руки вытянуты вперед, создавая прямую линию от пальцев рук до пальцев задней ноги.",
+                benefits: "Укрепляет лодыжки, ноги, плечи и спину, улучшает равновесие и концентрацию, тонизирует брюшные органы, улучшает осанку.",
+                videoId: "lVj_GBgj_Fg"
+            },
+            {
+                id: 24,
+                name: "Поза лодки",
+                sanskrit: "Навасана",
+                level: "intermediate",
+                type: "core",
+                description: "Укрепление пресса с балансировкой на копчике с поднятыми ногами и верхней частью тела.",
+                fullDescription: "Навасана или поза лодки — это асана для укрепления кора, в которой тело балансирует на копчике, образуя форму буквы V. Ноги и верхняя часть тела подняты от пола, руки вытянуты параллельно полу или вдоль ног.",
+                benefits: "Укрепляет мышцы живота, бедер и спины, улучшает равновесие, стимулирует почки и пищеварительные органы, улучшает концентрацию.",
+                videoId: "mKXJ1HRzFtc"
+            },
+            {
+                id: 25,
+                name: "Поза плуга",
+                sanskrit: "Халасана",
+                level: "intermediate",
+                type: "inversion",
+                description: "Перевернутая поза с ногами за головой, растягивающая позвоночник.",
+                fullDescription: "Халасана или поза плуга — это перевернутая поза, в которой ноги перебрасываются за голову, стопы касаются пола позади головы. Руки могут быть вытянуты в противоположном направлении или поддерживать поясницу. Шея и плечи остаются на полу.",
+                benefits: "Растягивает позвоночник и плечи, успокаивает нервную систему, стимулирует щитовидную железу, улучшает пищеварение, снижает стресс и утомление.",
+                videoId: "qpuY0jXimtk"
+            },
+            {
+                id: 26,
+                name: "Поза царя голубей",
+                sanskrit: "Раджа Капотасана",
+                level: "advanced",
+                type: "backbend",
+                description: "Глубокий прогиб назад с захватом стоп руками.",
+                fullDescription: "Раджа Капотасана или поза царя голубей — это продвинутый прогиб назад, который начинается из позы голубя. Верхняя часть тела прогибается назад, руки тянутся к задней ноге или стопам. В полной форме обе руки захватывают обе стопы, создавая глубокий прогиб в верхней части спины.",
+                benefits: "Глубоко растягивает спину, бедра и четырехглавые мышцы, открывает грудную клетку и плечи, стимулирует органы брюшной полости, повышает эмоциональную устойчивость.",
+                videoId: "5EVfZ6jWFKo"
+            },
+            {
+                id: 27,
+                name: "Собака мордой вверх",
+                sanskrit: "Урдхва Мукха Шванасана",
+                level: "beginner",
+                type: "backbend",
+                description: "Прогиб назад с опорой на руки и верхнюю часть стоп.",
+                fullDescription: "Урдхва Мукха Шванасана или собака мордой вверх — это асана, в которой тело прогибается назад с опорой на ладони и верхнюю часть стоп. Бедра приподняты от пола, руки выпрямлены, а грудь открыта и вытянута вперед.",
+                benefits: "Укрепляет позвоночник, запястья, руки и плечи, раскрывает грудную клетку, улучшает осанку, стимулирует органы брюшной полости, может облегчить симптомы астмы.",
+                videoId: "TowXvKhFlOQ"
+            },
+            {
+                id: 28,
+                name: "Поза широкого угла сидя",
+                sanskrit: "Упавишта Конасана",
+                level: "intermediate",
+                type: "seated",
+                description: "Сидячее раскрытие ног в стороны с наклоном вперед.",
+                fullDescription: "Упавишта Конасана или поза широкого угла сидя — это асана, в которой человек сидит с широко расставленными в стороны ногами. Верхняя часть тела может быть прямой или наклоненной вперед для более глубокого растяжения.",
+                benefits: "Растягивает внутреннюю и заднюю поверхность бедер, укрепляет спину, стимулирует брюшные органы, улучшает циркуляцию крови в области таза.",
+                videoId: "CGlQSGKOoos"
+            },
+            {
+                id: 29,
+                name: "Поза полушпагата",
+                sanskrit: "Ардха Ханумасана",
+                level: "intermediate",
+                type: "standing",
+                description: "Глубокое растяжение бедер и подколенных сухожилий.",
+                fullDescription: "Ардха Ханумасана или поза полушпагата — это асана, в которой одна нога вытянута вперед, а другая назад, создавая форму, напоминающую шпагат, но без полного опускания таза к полу. Руки могут быть размещены по бокам от передней ноги для поддержки.",
+                benefits: "Растягивает бедра, подколенные сухожилия и паховую область, укрепляет квадрицепсы и кор, улучшает равновесие и концентрацию.",
+                videoId: "QFVRHBDzxus"
+            },
+            {
+                id: 30,
+                name: "Поза гирлянды",
+                sanskrit: "Малассана",
+                level: "intermediate",
+                type: "standing",
+                description: "Глубокое приседание с расставленными коленями и сложенными руками.",
+                fullDescription: "Малассана или поза гирлянды — это глубокое приседание со стопами на полу, коленями широко расставленными, и тазом опущенным низко. Руки обычно складываются в намасте перед грудью или используются для поддержки баланса.",
+                benefits: "Раскрывает тазобедренные суставы и паховую область, укрепляет лодыжки, растягивает поясницу и ахилловы сухожилия, улучшает пищеварение.",
+                videoId: "p0z_lUQIoGg"
+            },
+            {
+                id: 31,
+                name: "Поза кролика",
+                sanskrit: "Шашанкасана",
+                level: "beginner",
+                type: "forward_bend",
+                description: "Растяжение спины с коленями и макушкой головы на полу.",
+                fullDescription: "Шашанкасана или поза кролика — это асана, в которой человек стоит на коленях, прижимает лоб к полу, а макушку головы — к коленям. Руки могут держаться за пятки или быть вытянутыми вперед. Эта поза создает глубокое растяжение задней поверхности тела.",
+                benefits: "Растягивает спину и шею, стимулирует нервную систему, улучшает пищеварение, способствует расслаблению, помогает при легкой депрессии и стрессе.",
+                videoId: "v4uQZm5a6RA"
+            },
+            {
+                id: 32,
+                name: "Поза верхней лодки",
+                sanskrit: "Урдхва Навасана",
+                level: "intermediate",
+                type: "core",
+                description: "Укрепление корпуса с балансом на ягодицах.",
+                fullDescription: "Урдхва Навасана или поза верхней лодки — это вариация позы лодки, где тело балансирует на ягодицах, образуя форму буквы V. В этой версии руки вытянуты параллельно ногам, создавая прямую линию от пальцев рук до пальцев ног.",
+                benefits: "Укрепляет глубокие мышцы живота, спины и бедер, улучшает баланс и концентрацию, стимулирует пищеварительные органы.",
+                videoId: "iNbJQJ7RB9g"
+            },
+            {
+                id: 33,
+                name: "Поза павлина",
+                sanskrit: "Маюрасана",
+                level: "advanced",
+                type: "arm_balance",
+                description: "Сложная балансировка на руках с телом, параллельным полу.",
+                fullDescription: "Маюрасана или поза павлина — это продвинутая балансировка на руках. Руки размещаются на полу так, что локти упираются в живот. Тело поднимается и балансирует на руках в горизонтальном положении, параллельно полу. Только ладони касаются пола.",
+                benefits: "Укрепляет запястья, предплечья и плечи, тонизирует брюшные органы, улучшает пищеварение, развивает концентрацию и балансировку.",
+                videoId: "mK5fgIrZTM4"
+            },
+            {
+                id: 34,
+                name: "Поза перевернутого посоха",
+                sanskrit: "Чатуранга Дандасана",
+                level: "intermediate",
+                type: "core",
+                description: "Положение планки с низким положением тела, укрепляющее руки и корпус.",
+                fullDescription: "Чатуранга Дандасана или поза перевернутого посоха — это асана, напоминающая нижнюю фазу отжимания. Тело параллельно полу, опирается на пальцы ног и ладони, локти согнуты и прижаты к бокам. Эта поза часто используется как переход между другими асанами в виньясах.",
+                benefits: "Укрепляет руки, запястья, плечи и спину, тонизирует кор, улучшает осанку и выравнивание тела, развивает силу и выносливость.",
+                videoId: "iGNgxJ9JCdg"
+            },
+            {
+                id: 35,
+                name: "Поза поворота сидя",
+                sanskrit: "Маричиасана",
+                level: "intermediate",
+                type: "twist",
+                description: "Скручивание позвоночника сидя для улучшения пищеварения и гибкости спины.",
+                fullDescription: "Маричиасана или поза мудреца Маричи — это сидячее скручивание, в котором одна нога вытянута, а другая согнута так, что стопа стоит возле бедра вытянутой ноги. Туловище скручивается в сторону согнутой ноги, а противоположный локоть может прижиматься к внешней стороне согнутого колена.",
+                benefits: "Растягивает позвоночник, плечи и бедра, массирует и стимулирует внутренние органы, улучшает пищеварение, облегчает боли в пояснице, улучшает осанку.",
+                videoId: "aziLWMBwx5k"
+            },
+            {
+                id: 36,
+                name: "Поза четырех конечностей",
+                sanskrit: "Чатуш Падасана",
+                level: "beginner",
+                type: "core",
+                description: "Балансирование на четырех точках для стабилизации корпуса.",
+                fullDescription: "Чатуш Падасана или поза четырех конечностей — это базовая поза, в которой тело опирается на ладони и колени, создавая стабильную основу для других поз. Позвоночник нейтральный, живот слегка подтянут, плечи расслаблены, взгляд направлен вниз.",
+                benefits: "Улучшает осанку, укрепляет запястья, руки и плечи, стабилизирует позвоночник, подготавливает к более сложным позам.",
+                videoId: "TGc2KYLTr8A"
+            },
+            {
+                id: 37,
+                name: "Поза коровьей морды",
+                sanskrit: "Гомукхасана",
+                level: "intermediate",
+                type: "seated",
+                description: "Сидячая поза с перекрещенными ногами и заведенными за спину руками.",
+                fullDescription: "Гомукхасана или поза коровьей морды — это сидячая асана, в которой ноги скрещены так, что одно колено находится над другим, а стопы расположены у противоположных бедер. Руки перекрещиваются за спиной: одна рука заводится через верх и тянется вниз по спине, а другая — снизу и вверх по спине до соединения пальцев или захвата запястья.",
+                benefits: "Растягивает плечи, руки, грудь, бедра, колени и лодыжки, улучшает осанку, открывает грудную клетку, помогает при боли в плечах.",
+                videoId: "GqyBl4_rGzI"
+            },
+            {
+                id: 38,
+                name: "Поза танцующего Шивы",
+                sanskrit: "Натараджасана",
+                level: "advanced",
+                type: "balance",
+                description: "Сложная поза баланса с захватом одной ноги сзади.",
+                fullDescription: "Натараджасана или поза танцующего Шивы — это сложная поза равновесия, в которой человек стоит на одной ноге, а другую ногу захватывает одной или обеими руками сзади и поднимает вверх. Верхняя часть тела наклоняется вперед, образуя дугу с поднятой ногой.",
+                benefits: "Растягивает плечи, грудь, бедра и голени, укрепляет ноги и лодыжки, улучшает баланс и концентрацию, развивает грацию и устойчивость.",
+                videoId: "iNIbEA2fZVE"
+            },
+            {
+                id: 39,
+                name: "Поза наклона вперед",
+                sanskrit: "Уттанасана",
+                level: "beginner",
+                type: "forward_bend",
+                description: "Наклон вперед из положения стоя для растяжения спины и ног.",
+                fullDescription: "Уттанасана или поза наклона вперед — это асана, в которой человек стоит с прямыми ногами и наклоняется вперед в тазобедренных суставах. Руки могут касаться пола, лодыжек или быть обернутыми вокруг задней поверхности ног. В полной версии лоб касается голеней.",
+                benefits: "Растягивает бедра, подколенные сухожилия и икры, укрепляет бедра и колени, снижает стресс и тревогу, стимулирует внутренние органы, улучшает пищеварение.",
+                videoId: "7YQz5me1UZ8"
+            },
+            {
+                id: 40,
+                name: "Поза скручивания стоя",
+                sanskrit: "Паривритта Тадасана",
+                level: "beginner",
+                type: "twist",
+                description: "Скручивание позвоночника из положения стоя для улучшения гибкости.",
+                fullDescription: "Паривритта Тадасана или поза скручивания стоя — это асана, в которой человек стоит с прямыми ногами и выполняет скручивание туловища. Руки могут быть размещены на бедрах, вытянуты в стороны или сложены в намасте перед грудью.",
+                benefits: "Улучшает гибкость позвоночника, массирует внутренние органы, улучшает пищеварение, укрепляет мышцы спины, улучшает осанку и выравнивание позвоночника.",
+                videoId: "O4S-3ITQkqI"
+            }
+        ];
+
+        // -----------------
+        // UI Functions
+        // -----------------
+        
+        // Mobile menu toggle
+        document.getElementById('mobile-menu-btn').addEventListener('click', function() {
+            const mobileMenu = document.getElementById('mobile-menu');
+            if (mobileMenu.classList.contains('hidden')) {
+                mobileMenu.classList.remove('hidden');
+            } else {
+                mobileMenu.classList.add('hidden');
+            }
+        });
+
+        // Close mobile menu when clicking a link
+        document.querySelectorAll('#mobile-menu a').forEach(link => {
+            link.addEventListener('click', function() {
+                document.getElementById('mobile-menu').classList.add('hidden');
+            });
+        });
+
+        // -----------------
+        // Practices Rendering
+        // -----------------
+        
+        // Render all practices
+        function renderPractices(practices) {
+            const practicesGrid = document.getElementById('practices-grid');
+            const noResults = document.getElementById('no-results');
+            
+            practicesGrid.innerHTML = '';
+            
+            if (practices.length === 0) {
+                noResults.classList.remove('hidden');
+                return;
+            }
+            
+            noResults.classList.add('hidden');
+            
+            practices.forEach(practice => {
+                const levelClass = practice.level === 'beginner' ? 'level-beginner' : 
+                                  practice.level === 'intermediate' ? 'level-intermediate' : 
+                                  'level-advanced';
+                                  
+                const levelText = practice.level === 'beginner' ? 'Начинающий' : 
+                                 practice.level === 'intermediate' ? 'Средний' : 
+                                 'Продвинутый';
+
+                const typeText = getTypeText(practice.type);
+                
+                const practiceCard = document.createElement('div');
+                practiceCard.className = 'dark-card rounded-lg overflow-hidden practice-card';
+                practiceCard.innerHTML = `
+                    <div class="h-40 bg-black flex items-center justify-center">
+                        <i class="fas fa-yoga text-5xl gold-text"></i>
+                    </div>
+                    <div class="p-4">
+                        <h3 class="text-xl font-semibold mb-1 gold-text">${practice.name}</h3>
+                        <p class="text-sm text-gray-400 mb-2">${practice.sanskrit}</p>
+                        <div class="flex justify-between mb-3">
+                            <span class="text-xs ${levelClass}">
+                                <i class="fas fa-signal mr-1"></i> ${levelText}
+                            </span>
+                            <span class="text-xs text-gray-400">
+                                <i class="fas fa-tag mr-1"></i> ${typeText}
+                            </span>
+                        </div>
+                        <p class="text-sm text-gray-300 mb-4 line-clamp-2">${practice.description}</p>
+                        <button class="view-practice-btn w-full btn-gold py-2 rounded-lg text-sm" data-id="${practice.id}">
+                            Просмотреть практику
+                        </button>
+                    </div>
+                `;
+                
+                practicesGrid.appendChild(practiceCard);
+            });
+            
+            // Add event listeners to all practice buttons
+            document.querySelectorAll('.view-practice-btn').forEach(button => {
+                button.addEventListener('click', function() {
+                    const practiceId = this.getAttribute('data-id');
+                    openPracticeDetails(practiceId);
+                });
+            });
+        }
+
+        // Function to get readable type text
+        function getTypeText(type) {
+            const typeMap = {
+                'standing': 'Стоячие позы',
+                'seated': 'Сидячие позы',
+                'balance': 'Балансы',
+                'backbend': 'Прогибы',
+                'forward_bend': 'Наклоны',
+                'twist': 'Скручивания',
+                'inversion': 'Перевернутые позы',
+                'core': 'Укрепление кора',
+                'arm_balance': 'Балансы на руках',
+                'restorative': 'Восстановительные',
+                'hip_opener': 'Раскрытие бедер'
+            };
+            
+            return typeMap[type] || type;
+        }
+
+        // Open practice details modal
+        function openPracticeDetails(id) {
+            const practice = yogaPractices.find(p => p.id == id);
+            if (!practice) return;
+            
+            const levelClass = practice.level === 'beginner' ? 'badge-beginner' : 
+                              practice.level === 'intermediate' ? 'badge-intermediate' : 
+                              'badge-advanced';
+                              
+            const levelText = practice.level === 'beginner' ? 'Начинающий' : 
+                             practice.level === 'intermediate' ? 'Средний' : 
+                             'Продвинутый';
+
+            const typeText = getTypeText(practice.type);
+            
+            const modalContent = document.getElementById('modal-content');
+            modalContent.innerHTML = `
+                <h2 class="text-2xl font-bold mb-2 gold-text">${practice.name}</h2>
+                <p class="text-gray-400 mb-4">${practice.sanskrit}</p>
+                
+                <div class="flex flex-wrap gap-2 mb-4">
+                    <span class="badge ${levelClass}">
+                        <i class="fas fa-signal mr-1"></i> ${levelText}
+                    </span>
+                    <span class="badge gold-bg text-black">
+                        <i class="fas fa-tag mr-1"></i> ${typeText}
+                    </span>
+                </div>
+                
+                <div class="video-container mb-6">
+                    <iframe width="560" height="315" src="https://www.youtube.com/embed/${practice.videoId}" 
+                    title="${practice.name}" frameborder="0" 
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                    allowfullscreen></iframe>
+                </div>
+                
+                <div class="mb-4">
+                    <h3 class="text-xl font-semibold mb-2 gold-text">Описание</h3>
+                    <p class="text-gray-300">${practice.fullDescription}</p>
+                </div>
+                
+                <div class="practice-benefits mb-4">
+                    <h3 class="text-xl font-semibold mb-2 gold-text">Преимущества</h3>
+                    <p class="text-gray-300">${practice.benefits}</p>
+                </div>
+            `;
+            
+            document.getElementById('practice-modal').classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+        }
+
+        // Close practice modal
+        document.getElementById('modal-close').addEventListener('click', function() {
+            document.getElementById('practice-modal').classList.add('hidden');
+            document.body.style.overflow = 'auto';
+        });
+
+        // Close modal when clicking outside content
+        document.getElementById('practice-modal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                this.classList.add('hidden');
+                document.body.style.overflow = 'auto';
+            }
+        });
+
+        // -----------------
+        // Search and Filtering
+        // -----------------
+        
+        function filterPractices() {
+            const searchTerm = document.getElementById('search').value.toLowerCase();
+            const levelFilter = document.getElementById('level-filter').value;
+            const typeFilter = document.getElementById('type-filter').value;
+            
+            let filteredPractices = yogaPractices.filter(practice => {
+                // Search term filter
+                const nameMatch = practice.name.toLowerCase().includes(searchTerm);
+                const sanskritMatch = practice.sanskrit.toLowerCase().includes(searchTerm);
+                const descriptionMatch = practice.description.toLowerCase().includes(searchTerm);
+                
+                // Level filter
+                const levelMatch = levelFilter === 'all' || practice.level === levelFilter;
+                
+                // Type filter
+                const typeMatch = typeFilter === 'all' || practice.type === typeFilter;
+                
+                return (nameMatch || sanskritMatch || descriptionMatch) && levelMatch && typeMatch;
+            });
+            
+            renderPractices(filteredPractices);
+        }
+
+        // Add event listeners to search and filter elements
+        document.getElementById('search').addEventListener('input', filterPractices);
+        document.getElementById('level-filter').addEventListener('change', filterPractices);
+        document.getElementById('type-filter').addEventListener('change', filterPractices);
+
+        // -----------------
+        // Random Practice Feature
+        // -----------------
+        
+        document.getElementById('random-practice-btn').addEventListener('click', function() {
+            const randomIndex = Math.floor(Math.random() * yogaPractices.length);
+            const randomPractice = yogaPractices[randomIndex];
+            
+            const levelClass = randomPractice.level === 'beginner' ? 'level-beginner' : 
+                              randomPractice.level === 'intermediate' ? 'level-intermediate' : 
+                              'level-advanced';
+                              
+            const levelText = randomPractice.level === 'beginner' ? 'Начинающий' : 
+                             randomPractice.level === 'intermediate' ? 'Средний' : 
+                             'Продвинутый';
+
+            const typeText = getTypeText(randomPractice.type);
+            
+            const randomPracticeContent = document.getElementById('random-practice-content');
+            randomPracticeContent.innerHTML = `
+                <div class="text-center mb-4">
+                    <h3 class="text-2xl font-bold gold-text mb-1">${randomPractice.name}</h3>
+                    <p class="text-gray-400">${randomPractice.sanskrit}</p>
+                </div>
+                
+                <div class="flex justify-center mb-4 gap-3">
+                    <span class="badge ${levelClass}">
+                        <i class="fas fa-signal mr-1"></i> ${levelText}
+                    </span>
+                    <span class="badge gold-bg text-black">
+                        <i class="fas fa-tag mr-1"></i> ${typeText}
+                    </span>
+                </div>
+                
+                <div class="video-container mb-5">
+                    <iframe width="560" height="315" src="https://www.youtube.com/embed/${randomPractice.videoId}" 
+                    title="${randomPractice.name}" frameborder="0" 
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                    allowfullscreen></iframe>
+                </div>
+                
+                <div class="mb-4">
+                    <p class="text-gray-300">${randomPractice.description}</p>
+                </div>
+                
+                <div class="text-center mt-6">
+                    <button class="view-full-practice-btn btn-gold px-6 py-2 rounded-lg" data-id="${randomPractice.id}">
+                        Подробнее о практике
+                    </button>
+                </div>
+            `;
+            
+            // Show random practice container
+            document.getElementById('random-practice-container').classList.remove('hidden');
+            
+            // Scroll to random practice container
+            document.getElementById('random-practice-container').scrollIntoView({
+                behavior: 'smooth'
+            });
+            
+            // Add event listener to view full practice button
+            document.querySelector('.view-full-practice-btn').addEventListener('click', function() {
+                const practiceId = this.getAttribute('data-id');
+                openPracticeDetails(practiceId);
+            });
+        });
+
+        // -----------------
+        // Timer Functionality
+        // -----------------
+        
+        let timerInterval;
+        let totalSeconds = 300; // Default 5 min
+        let isPaused = false;
+        
+        function updateTimerDisplay() {
+            const minutes = Math.floor(totalSeconds / 60);
+            const seconds = totalSeconds % 60;
+            
+            document.getElementById('minutes').textContent = minutes.toString().padStart(2, '0');
+            document.getElementById('seconds').textContent = seconds.toString().padStart(2, '0');
+        }
+        
+        function startTimer() {
+            if (timerInterval) clearInterval(timerInterval);
+            
+            document.getElementById('start-timer').classList.add('hidden');
+            document.getElementById('pause-timer').classList.remove('hidden');
+            
+            timerInterval = setInterval(function() {
+                if (totalSeconds > 0) {
+                    totalSeconds--;
+                    updateTimerDisplay();
+                } else {
+                    clearInterval(timerInterval);
+                    document.getElementById('timer-sound').play();
+                    document.getElementById('start-timer').classList.remove('hidden');
+                    document.getElementById('pause-timer').classList.add('hidden');
+                    
+                    // Notification
+                    alert('Время вышло!');
+                }
+            }, 1000);
+        }
+        
+        function pauseTimer() {
+            clearInterval(timerInterval);
+            document.getElementById('start-timer').classList.remove('hidden');
+            document.getElementById('pause-timer').classList.add('hidden');
+        }
+        
+        function resetTimer() {
+            clearInterval(timerInterval);
+            
+            // Get values from inputs
+            const minutes = parseInt(document.getElementById('custom-minutes').value) || 5;
+            const seconds = parseInt(document.getElementById('custom-seconds').value) || 0;
+            
+            totalSeconds = (minutes * 60) + seconds;
+            updateTimerDisplay();
+            
+            document.getElementById('start-timer').classList.remove('hidden');
+            document.getElementById('pause-timer').classList.add('hidden');
+        }
+        
+        // Timer event listeners
+        document.getElementById('start-timer').addEventListener('click', startTimer);
+        document.getElementById('pause-timer').addEventListener('click', pauseTimer);
+        document.getElementById('reset-timer').addEventListener('click', resetTimer);
+        
+        // Timer preset buttons
+        document.querySelectorAll('.time-preset-btn').forEach(button => {
+            button.addEventListener('click', function() {
+                const minutes = parseInt(this.getAttribute('data-time'));
+                
+                document.getElementById('custom-minutes').value = minutes;
+                document.getElementById('custom-seconds').value = 0;
+                
+                totalSeconds = minutes * 60;
+                updateTimerDisplay();
+            });
+        });
+        
+        // Initialize the page
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initial render of practices
+            renderPractices(yogaPractices);
+            
+            // Set up the timer
+            updateTimerDisplay();
+        });
+    </script>
+</body>
+</html>
