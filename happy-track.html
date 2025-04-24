@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>Happy Track | Продажа готового бизнеса "Песни на заказ"</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- Tailwind CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <!-- Google Fonts: Montserrat -->
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+  <!-- Font Awesome for icons -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.2/css/all.min.css">
+  <style>
+    body {
+      font-family: 'Montserrat', Arial, sans-serif;
+      background-color: #111010;
+      color: #bdbdbd;
+    }
+    .gold-gradient {
+      background: linear-gradient(90deg, #C6862C 10%, #FFD700 90%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      text-fill-color: transparent;
+    }
+    .gold-bg {
+      background: linear-gradient(90deg, #C6862C, #FFD700);
+      color: #111010 !important;
+    }
+    .gold-border {
+      border-color: #FFD700 !important;
+    }
+    .gold-shadow {
+      box-shadow: 0 4px 24px 0 rgba(198, 134, 44, 0.10);
+    }
+    .section {
+      max-width: 780px;
+      margin-left: auto;
+      margin-right: auto;
+      padding-left: 1.5rem;
+      padding-right: 1.5rem;
+      padding-top: 2.5rem;
+      padding-bottom: 2.5rem;
+    }
+    h2.section-h {
+      font-size: 2rem;
+      font-weight: 600;
+    }
+    .lead {
+      font-size: 1.18rem;
+      color: #e1b868;
+      margin-bottom: 1.2rem;
+      font-weight: 400;
+    }
+    @media (max-width: 640px) {
+      h2.section-h {
+        font-size: 1.2rem;
+      }
+      .lead {
+        font-size: 1em;
+      }
+      .section {
+        padding-left: 1rem;
+        padding-right: 1rem;
+        padding-top: 1.5rem;
+        padding-bottom: 1.5rem;
+      }
+    }
+    a.gold-link,
+    a.gold-link:visited {
+      color: #FFD700 !important;
+      transition: color 0.18s;
+    }
+    a.gold-link:hover {
+      color: #e1b868 !important;
+      text-decoration: underline;
+    }
+    .card {
+      background: #181818;
+      border-radius: 0.85rem;
+      padding: 1.5rem 1.5rem 1.5rem 1.5rem;
+      margin-bottom: 1.5rem;
+      box-shadow: 0 2px 12px 0 rgba(29, 27, 19, 0.07);
+      border: 1px solid #292522;
+    }
+    .item-list li {
+      margin-bottom: 0.7rem;
+      display: flex;
+      align-items: flex-start;
+    }
+    .item-list li i {
+      margin-right: 0.68rem;
+      color: #FFD700;
+      min-width: 1.2em;
+    }
+    .btn-gold {
+      display: inline-block;
+      padding: 0.8rem 2.2rem;
+      background: linear-gradient(90deg, #ffd700,#c99c44);
+      color: #111010;
+      border: none;
+      border-radius: 0.6rem;
+      font-weight: 700;
+      font-size: 1.13rem;
+      text-align: center;
+      transition: background 0.18s, color 0.18s;
+      box-shadow: 0 2px 12px 0 rgba(198, 134, 44, 0.17);
+    }
+    .btn-gold:hover {
+      background: linear-gradient(90deg,#ffe27a,#ddb35f);
+      color: #111010;
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <!-- Hero Section -->
+    <section class="section text-center">
+      <div class="mb-2 flex justify-center gap-2">
+        <span class="inline-block py-1 px-3 gold-bg rounded uppercase font-semibold text-xs tracking-wider gold-shadow">🔥&nbsp;Продается бизнес</span>
+      </div>
+      <h1 class="text-3xl sm:text-4xl md:text-5xl font-bold gold-gradient mb-3 leading-tight">Готовый бизнес “Песни на заказ”<br><span class="text-xl sm:text-2xl block gold-gradient mt-2" style="font-weight:600;">от Happy Track</span></h1>
+      <div class="lead flex flex-row items-center justify-center gap-2 mb-4">
+        <i class="fas fa-money-bill-wave"></i>
+        <span>Цена: <span class="font-bold gold-gradient" style="font-size:1.17em;">5 000 000 ₸</span></span>
+        <span class="text-xs text-gray-400 font-normal ml-2 italic">(Возможна рассрочка через Kaspi)</span>
+      </div>
+      <a href="https://t.me/kopaimc" class="btn-gold mb-3" rel="noopener" target="_blank"><i class="fab fa-telegram-plane mr-2"></i>Связаться в Telegram</a>
+      <p class="mt-4 text-gray-400 max-w-2xl mx-auto">Уникальное предложение: стабильный доход, высокий спрос, все процессы настроены под масштабирование, развитый бренд и аудитория.</p>
+    </section>
+
+    <!-- Что входит в покупку -->
+    <section class="section">
+      <h2 class="section-h gold-gradient mb-6 flex items-center"><i class="fas fa-check-circle mr-2 text-2xl"></i>Что входит в покупку</h2>
+      <div class="card">
+        <ul class="item-list">
+          <li><i class="fas fa-user-check"></i> <strong>Личный бренд</strong> и доверие: живые подписчики, высокое вовлечение, активные заказы</li>
+          <li><i class="fas fa-search"></i> <strong>Поисковое SEO-продвижение</strong>: Страница instagram в Google находиться на первом месте по ключевому запросу песни на заказ, стабильный, ежедневный поток клиентов без вложения в рекламу <span class="italic text-blue-100">без рекламы</span></li>
+          <li><i class="fas fa-cloud-download-alt"></i> <strong>Стабильный поток заказов</strong>: приходят автоматически</li>
+          <li><i class="fas fa-robot"></i> <strong> Обучение ИИ</strong> для создания песен</li>
+          <li><i class="fas fa-users"></i> <strong>Клиентская база</strong>: множество постоянных клиентов </li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3 class="font-semibold text-lg gold-gradient mb-2 flex items-center"><i class="fas fa-cogs mr-2"></i>Рабочая система</h3>
+        <ul class="item-list ml-2">
+          <li><i class="fas fa-check"></i>Чёткий алгоритм работы с клиентами</li>
+          <li><i class="fas fa-copy"></i>Шаблоны общения</li>
+          <li><i class="fas fa-file-alt"></i>Формы сбора ТЗ</li>
+          <li><i class="fas fa-music"></i>Скрипт создания песен через ИИ автоматизацию </li>
+          <li><i class="fas fa-expand-alt"></i>Все процессы адаптированы для масштабирования</li>
+        </ul>
+      </div>
+      <div class="card flex flex-wrap sm:space-x-8 space-y-3 sm:space-y-0 items-center">
+        <div>
+          <h3 class="font-semibold text-lg gold-gradient mb-2 flex items-center"><i class="fas fa-folder-open mr-2"></i>Портфолио и кейсы</h3>
+          <span class="text-gray-300">Примеры работ, реальные <span class="text-green-300">отзывы клиентов</span></span>
+        </div>
+        <div>
+          <h3 class="font-semibold text-lg gold-gradient mb-2 flex items-center"><i class="fas fa-chart-line mr-2"></i>Доходность</h3>
+          <span class="text-gray-300">Средний доход: <span class="gold-gradient font-semibold">500 000 ₸</span> в месяц (без усилий)<br>В настоящий момент бизнес реализуется усилиями одного человека, без привлечения рекламного бюджета и дополнительных инвестиций. Однако при формировании команды и активном развитии проекта, данный бизнес обладает потенциалом для масштабирования и может приносить неограниченный доход, прямо пропорциональный вложенным усилиям и уровню вовлечённости. </span>
+        </div>
+      </div>
+      <div class="card">
+        <ul class="item-list">
+           <li><i class="fab fa-instagram"></i> живой Instagram</li>
+          <li><i class="fas fa-globe"></i> Лэндинг сайт</li>
+        </ul>
+      </div>
+      <div class="card flex justify-between flex-col sm:flex-row gap-6 items-start sm:items-center">
+        <div>
+          <h3 class="font-semibold text-lg gold-gradient mb-2 flex items-center"><i class="fas fa-hands-helping mr-2"></i>Поддержка после покупки</h3>
+          <span class="text-gray-300">1 неделя личного сопровождения, передача всех материалов и обучение</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Почему продаю -->
+    <section class="section">
+      <h2 class="section-h gold-gradient mb-4 flex items-center"><i class="fas fa-hand-holding-heart mr-2"></i>Почему продаю</h2>
+      <div class="card">
+        <p class="mb-3">
+          <b>Ухожу в своё истинное призвание — целительство и гипнотерапия.</b><br>
+          Музыкой занимался много лет. Бизнес строился с любовью.<br>
+          Хочу передать дело человеку, которому оно <span class="text-green-300">искренне откликается</span>.
+        </p>
+      </div>
+    </section>
+
+    <!-- Кому подойдет -->
+    <section class="section">
+      <h2 class="section-h gold-gradient mb-4 flex items-center"><i class="fas fa-crosshairs mr-2"></i>Кому подойдёт</h2>
+      <div class="card">
+        <ul class="item-list">
+          <li><i class="fas fa-microphone-alt"></i> Музыкантам, авторам песен, продюсерам</li>
+          <li><i class="fas fa-bolt"></i> Быстрый старт для тех, кто хочет войти в музыкальный бизнес</li>
+          <li><i class="fas fa-money-check-alt"></i> Тем, кто ищет готовый источник дохода <span class="italic text-green-300"> без затрат на рекламу</span></li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- Контакты -->
+    <section class="section">
+      <h2 class="section-h gold-gradient mb-4 flex items-center"><i class="fas fa-envelope-open-text mr-2"></i>Контакты для покупки и вопросов</h2>
+      <div class="grid md:grid-cols-2 gap-6">
+        <div class="mb-2 flex flex-col gap-2">
+          <a href="https://t.me/kopaimc" target="_blank" rel="noopener" class="gold-link text-lg hover:underline"><i class="fab fa-telegram-plane"></i>&nbsp;Telegram: @kopaimc</a>
+          <a href="https://wa.me/+77002886678" target="_blank" rel="noopener" class="gold-link text-lg hover:underline"><i class="fab fa-whatsapp"></i>&nbsp;WhatsApp: +7 702 886 678</a>
+        </div>
+        <div class="mb-2 flex flex-col gap-2">
+          <a href="https://instagram.com/happytrack.kz" target="_blank" rel="noopener" class="gold-link text-lg hover:underline"><i class="fab fa-instagram"></i>&nbsp;Instagram: happytrack.kz</a>
+          <a href="https://hipolink.net/happytrack" target="_blank" rel="noopener" class="gold-link text-lg hover:underline"><i class="fas fa-link"></i>&nbsp;Лэндинг для рекламы: hipolink.net/happytrack</a>
+          <span class="text-sm text-gray-400 mt-1">Научу, как сделать такой же лэндинг для своих контактов</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer / Final remark -->
+    <footer class="w-full text-center py-8 mt-12 text-sm text-gray-600" style="background: #151510;">
+      <span class="text-gray-500">© 2024 Happy Track</span>
+      <span class="mx-1 text-gray-700">|</span>
+      <span class="text-gray-600">Песни на заказ • Готовый бизнес</span>
+    </footer>
+  </main>
+</body>
+</html>
+
