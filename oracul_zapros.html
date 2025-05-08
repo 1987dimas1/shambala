@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SHAMBALA - Метафорические карты</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #000;
+            color: #d4af37;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            position: relative;
+            z-index: 10;
+        }
+
+        .title {
+            font-family: 'Oswald', sans-serif;
+            font-size: 3.5rem;
+            text-align: center;
+            color: #d4af37;
+            text-shadow: 0 0 10px rgba(212, 175, 55, 0.7),
+                         0 0 20px rgba(212, 175, 55, 0.5),
+                         2px 2px 2px rgba(0, 0, 0, 0.9);
+            margin-bottom: 40px;
+            position: relative;
+            -webkit-text-stroke: 1px black;
+            letter-spacing: 2px;
+            animation: pulsate 3s infinite alternate;
+        }
+
+        @keyframes pulsate {
+            0% {
+                text-shadow: 0 0 10px rgba(212, 175, 55, 0.7),
+                             0 0 20px rgba(212, 175, 55, 0.5),
+                             2px 2px 2px rgba(0, 0, 0, 0.9);
+            }
+            100% {
+                text-shadow: 0 0 15px rgba(212, 175, 55, 0.9),
+                             0 0 30px rgba(212, 175, 55, 0.7),
+                             0 0 45px rgba(212, 175, 55, 0.5),
+                             2px 2px 2px rgba(0, 0, 0, 0.9);
+            }
+        }
+
+        .background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            overflow: hidden;
+            z-index: 1;
+            background-color: #000;
+        }
+
+        .light-beam {
+            position: absolute;
+            width: 100%;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, #d4af37, transparent);
+            top: 50%;
+            transform: translateY(-50%);
+            box-shadow: 0 0 20px 2px rgba(212, 175, 55, 0.7);
+            animation: moveLightBeam 15s infinite alternate ease-in-out;
+        }
+
+        @keyframes moveLightBeam {
+            0% {
+                left: -100%;
+                opacity: 0;
+            }
+            20% {
+                opacity: 1;
+            }
+            80% {
+                opacity: 1;
+            }
+            100% {
+                left: 100%;
+                opacity: 0;
+            }
+        }
+
+        .golden-arc {
+            position: absolute;
+            width: 150%;
+            height: 400px;
+            border: 2px solid #d4af37;
+            border-radius: 50%;
+            left: -25%;
+            opacity: 0.3;
+            box-shadow: 0 0 10px #d4af37, inset 0 0 10px #d4af37;
+        }
+
+        .arc1 {
+            top: -200px;
+            animation: pulsateArc 5s infinite alternate;
+        }
+
+        .arc2 {
+            bottom: -200px;
+            animation: pulsateArc 7s infinite alternate;
+        }
+
+        @keyframes pulsateArc {
+            0% {
+                opacity: 0.2;
+                box-shadow: 0 0 10px #d4af37, inset 0 0 10px #d4af37;
+            }
+            100% {
+                opacity: 0.4;
+                box-shadow: 0 0 20px #d4af37, inset 0 0 20px #d4af37;
+            }
+        }
+
+        .particles {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+
+        .particle {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background-color: #d4af37;
+            border-radius: 50%;
+            animation: float 20s infinite linear;
+            opacity: 0;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(0) translateX(0);
+                opacity: 0;
+            }
+            10% {
+                opacity: 0.7;
+            }
+            90% {
+                opacity: 0.7;
+            }
+            100% {
+                transform: translateY(-500px) translateX(100px);
+                opacity: 0;
+            }
+        }
+
+        .control-panel {
+            background: linear-gradient(145deg, #111 0%, #1a1a1a 100%);
+            border: 1px solid #333;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 30px;
+            position: relative;
+            box-shadow: 0 0 15px rgba(212, 175, 55, 0.3);
+            overflow: hidden;
+        }
+
+        .control-panel::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, transparent 60%, rgba(212, 175, 55, 0.1) 100%);
+            animation: rotateGradient 15s infinite linear;
+            z-index: -1;
+        }
+
+        @keyframes rotateGradient {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        .control-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .label {
+            font-family: 'Oswald', sans-serif;
+            font-size: 1.2rem;
+            color: #d4af37;
+            text-shadow: 0 0 5px rgba(212, 175, 55, 0.5);
+        }
+
+        .slider-container {
+            flex-grow: 1;
+            max-width: 400px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .slider {
+            -webkit-appearance: none;
+            width: 100%;
+            height: 6px;
+            background: linear-gradient(90deg, #333 0%, #555 100%);
+            border-radius: 3px;
+            outline: none;
+            position: relative;
+            cursor: pointer;
+        }
+
+        .slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #d4af37;
+            cursor: pointer;
+            box-shadow: 0 0 5px rgba(212, 175, 55, 0.8);
+            transition: all 0.3s ease;
+        }
+
+        .slider::-webkit-slider-thumb:hover {
+            box-shadow: 0 0 10px rgba(212, 175, 55, 1);
+            background: #e5c04e;
+        }
+
+        .slider::-moz-range-thumb {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #d4af37;
+            cursor: pointer;
+            box-shadow: 0 0 5px rgba(212, 175, 55, 0.8);
+            border: none;
+            transition: all 0.3s ease;
+        }
+
+        .slider::-moz-range-thumb:hover {
+            box-shadow: 0 0 10px rgba(212, 175, 55, 1);
+            background: #e5c04e;
+        }
+
+        .slider-value {
+            color: #d4af37;
+            font-size: 1.2rem;
+            min-width: 30px;
+            text-align: center;
+            text-shadow: 0 0 5px rgba(212, 175, 55, 0.5);
+        }
+
+        .btn {
+            border: none;
+            border-radius: 30px;
+            padding: 12px 30px;
+            font-family: 'Oswald', sans-serif;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            display: block;
+            margin: 0 auto;
+            background: linear-gradient(145deg, #111 0%, #1a1a1a 100%);
+            color: #d4af37;
+            border: 1px solid #d4af37;
+            box-shadow: 0 0 10px rgba(212, 175, 55, 0.3), inset 0 0 10px rgba(212, 175, 55, 0.1);
+            text-shadow: 0 0 5px rgba(212, 175, 55, 0.5);
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(212, 175, 55, 0.1) 0%, transparent 70%);
+            transform: rotate(45deg);
+            animation: shineEffect 3s infinite linear;
+        }
+
+        @keyframes shineEffect {
+            0% {
+                transform: rotate(0deg) translate(-100%, -100%);
+            }
+            100% {
+                transform: rotate(45deg) translate(100%, 100%);
+            }
+        }
+
+        .btn:hover {
+            box-shadow: 0 0 15px rgba(212, 175, 55, 0.5), inset 0 0 15px rgba(212, 175, 55, 0.2);
+            text-shadow: 0 0 10px rgba(212, 175, 55, 0.7);
+        }
+
+        .btn:active {
+            transform: scale(0.98);
+            box-shadow: 0 0 20px rgba(212, 175, 55, 0.6), inset 0 0 20px rgba(212, 175, 55, 0.3);
+        }
+
+        .result-panel {
+            background: linear-gradient(145deg, #111 0%, #1a1a1a 100%);
+            border: 1px solid #333;
+            border-radius: 15px;
+            padding: 20px;
+            position: relative;
+            box-shadow: 0 0 15px rgba(212, 175, 55, 0.3);
+            min-height: 100px;
+            overflow: hidden;
+        }
+
+        .result-panel::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, transparent 65%, rgba(212, 175, 55, 0.1) 100%);
+            animation: rotateGradient 25s infinite linear;
+            z-index: -1;
+        }
+
+        .question-card {
+            background: linear-gradient(145deg, #0a0a0a 0%, #1c1c1c 100%);
+            border: 1px solid #333;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 15px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+            position: relative;
+            overflow: hidden;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+
+        .question-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 5px;
+            height: 100%;
+            background: linear-gradient(to bottom, transparent, #d4af37, transparent);
+            opacity: 0.7;
+        }
+
+        .question-card.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .question-text {
+            color: #e5c04e;
+            font-size: 1.1rem;
+            line-height: 1.4;
+            text-shadow: 0 0 3px rgba(0, 0, 0, 0.5);
+        }
+
+        .loading-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 100;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+            border-radius: 15px;
+        }
+
+        .loading-overlay.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .loader {
+            width: 50px;
+            height: 50px;
+            border: 3px solid rgba(212, 175, 55, 0.3);
+            border-radius: 50%;
+            border-top-color: #d4af37;
+            animation: spin 1s infinite linear;
+            margin-bottom: 15px;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        .loading-text {
+            color: #d4af37;
+            font-family: 'Oswald', sans-serif;
+            font-size: 1.2rem;
+            text-shadow: 0 0 5px rgba(212, 175, 55, 0.5);
+        }
+
+        @media (max-width: 768px) {
+            .title {
+                font-size: 2.5rem;
+            }
+
+            .control-row {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .control-panel, .result-panel {
+                padding: 15px;
+            }
+
+            .slider-container {
+                max-width: 100%;
+            }
+
+            .label {
+                margin-bottom: 10px;
+            }
+
+            .slider-value {
+                min-width: 20px;
+            }
+
+            .btn {
+                padding: 10px 25px;
+                font-size: 1.1rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .title {
+                font-size: 2rem;
+            }
+
+            .question-text {
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="background">
+        <div class="light-beam"></div>
+        <div class="golden-arc arc1"></div>
+        <div class="golden-arc arc2"></div>
+        <div class="particles" id="particles"></div>
+    </div>
+
+    <div class="container">
+        <h1 class="title">SHAMBALA</h1>
+
+        <div class="control-panel">
+            <div class="control-row">
+                <span class="label">Выберите количество вопросов:</span>
+                <div class="slider-container">
+                    <input type="range" min="1" max="10" value="1" class="slider" id="questionCount">
+                    <span class="slider-value" id="sliderValue">1</span>
+                </div>
+            </div>
+            <button class="btn" id="showButton">Показать расклад</button>
+        </div>
+
+        <div class="result-panel">
+            <div id="results"></div>
+            <div class="loading-overlay" id="loadingOverlay">
+                <div class="loader"></div>
+                <div class="loading-text">Составление расклада...</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // База данных вопросов
+        const questionsDatabase = [
+                        "Как эта ситуация повлияет на моё будущее?",
+            "Что привело меня к этой ситуации?",
+            "Что я пытаюсь избежать или не видеть?",
+            "Чего я боюсь в этой ситуации?",
+            "Чему я могу научиться благодаря этому?",
+            "Что удерживает меня на месте?",
+            "Что мне мешает принять решение?",
+            "Какую роль я играю в этой ситуации?",                                    
+            "Какие у меня есть силы, которые я недооцениваю?",                
+            "Что хочет сказать мне это событие?",    
+            "Покажи что скрывается за этим опытом?",
+            "Для чего мне эта ситуация?",
+            "Какой урок я прохожу сейчас?",
+            "Что хочет сказать мне мое подсознание?",
+            "Что хочет сказать мне мое сознание?",
+            "Какой момент из прошлого привел к этому событию?",
+            "Как это событие может повлиять на мое будущее?",
+            "Что мне важно осознать здесь и сейчас?",
+            "Что я могу изменить прямо сейчас?",
+"Передай послание через карты",
+"Покажи послание от моего рода через карты",
+"Покажи истинную причину?",
+"что вызывает текущие переживания?",
+"Какие эмоции я подавляю? Почему я не позволяю себе их проживать?)",
+"Покажи что может вдохновить меня на движение вперед? ",
+"Какие эмоции удерживают меня в негативном состоянии?",
+"Как освободиться от этого?",
+"Что я пока не замечаю?",
+"На что подсказывает обратить внимание моя интуиция?",
+"Какие эмоции или страхи я должен отпустить, чтобы двигаться дальше?",
+"Какие возможности мне готова предложить Вселенная? ",
+"Какими я стану после прохождения этого пути?",
+"Что поможет мне смириться с тем, что я не могу изменить?",
+"Как обрести внутренний покой связанный с этой ситуацией?",
+"Какие мои сильные стороны помогут мне преодолеть трудности?",
+"Какие шаги мне необходимо сделать прямо сейчас?",
+"Кто сможет мне подсказать решение??",
+"Что блокирует мой прогресс?",
+"Какие уроки из прошлого я должен учитывать? Что из моего прошлого продолжает влиять на меня?",
+"Какой первый шаг мне стоит предпринять для улучшения ситуации? ",
+            "Какие страхи стоят за этим?"
+
+
+        ];
+
+        // Создание частиц для фонового эффекта
+        const particlesContainer = document.getElementById('particles');
+        for (let i = 0; i < 50; i++) {
+            const particle = document.createElement('div');
+            particle.classList.add('particle');
+            particle.style.left = `${Math.random() * 100}%`;
+            particle.style.top = `${Math.random() * 100}%`;
+            particle.style.animationDelay = `${Math.random() * 20}s`;
+            particle.style.animationDuration = `${15 + Math.random() * 15}s`;
+            particlesContainer.appendChild(particle);
+        }
+
+        // Получение элементов DOM
+        const slider = document.getElementById('questionCount');
+        const sliderValue = document.getElementById('sliderValue');
+        const showButton = document.getElementById('showButton');
+        const resultsContainer = document.getElementById('results');
+        const loadingOverlay = document.getElementById('loadingOverlay');
+
+        // Обновление значения слайдера
+        slider.addEventListener('input', () => {
+            sliderValue.textContent = slider.value;
+        });
+
+        // Функция для получения случайных вопросов
+        function getRandomQuestions(count) {
+            const shuffled = [...questionsDatabase].sort(() => 0.5 - Math.random());
+            return shuffled.slice(0, count);
+        }
+
+        // Функция для отображения вопросов с задержкой
+        function displayQuestionsWithDelay(questions) {
+            resultsContainer.innerHTML = '';
+            questions.forEach((question, index) => {
+                const card = document.createElement('div');
+                card.classList.add('question-card');
+                card.innerHTML = `<p class="question-text">${question}</p>`;
+                resultsContainer.appendChild(card);
+
+                // Добавляем класс show с задержкой
+                setTimeout(() => {
+                    card.classList.add('show');
+                }, 300 + (index * 500)); // Увеличиваем задержку для каждого следующего вопроса
+            });
+        }
+
+        // Обработчик клика на кнопку
+        showButton.addEventListener('click', () => {
+            const count = parseInt(slider.value);
+
+            // Показываем анимацию загрузки
+            loadingOverlay.classList.add('active');
+
+            // Задержка перед отображением результатов
+            setTimeout(() => {
+                const selectedQuestions = getRandomQuestions(count);
+
+                // Скрываем анимацию загрузки
+                loadingOverlay.classList.remove('active');
+
+                // Отображаем вопросы с задержкой
+                displayQuestionsWithDelay(selectedQuestions);
+            }, 1500); // Задержка для симуляции загрузки
+        });
+
+        // Инициализация
+        sliderValue.textContent = slider.value;
+    </script>
+</body>
+</html>
