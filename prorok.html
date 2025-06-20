@@ -1,0 +1,689 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SHAMBALA: Пророк XXI Века</title>
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Oswald', sans-serif;
+            background: #121212;
+            color: #ffffff;
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Мистический фон */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 50%, rgba(255, 215, 0, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(255, 215, 0, 0.05) 0%, transparent 50%),
+                radial-gradient(circle at 40% 80%, rgba(128, 128, 128, 0.1) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        /* Золотая рамка интерфейса */
+        .interface-border {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            border: 3px solid;
+            border-image: linear-gradient(45deg, #FFD700, #C0C0C0, #FFD700, #C0C0C0) 1;
+            pointer-events: none;
+            z-index: 1000;
+        }
+
+        /* Заголовок */
+        .header {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 100;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: clamp(1.5rem, 4vw, 2.5rem);
+            font-weight: 700;
+            background: linear-gradient(45deg, #FFD700, #FFA500);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 0 0 20px rgba(255, 215, 0, 0.3);
+            letter-spacing: 2px;
+        }
+
+        /* Контейнер приложения */
+        .app-container {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            padding: 80px 20px 120px;
+            position: relative;
+        }
+
+        /* Кнопка открытия карты */
+        .open-card-btn {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(135deg, #00ff88, #00cc6a);
+            border: none;
+            padding: 15px 40px;
+            border-radius: 50px;
+            color: white;
+            font-family: 'Oswald', sans-serif;
+            font-size: 1.2rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 
+                0 4px 15px rgba(0, 255, 136, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2);
+            z-index: 100;
+            letter-spacing: 1px;
+        }
+
+        .open-card-btn:hover {
+            transform: translateX(-50%) translateY(-2px);
+            box-shadow: 
+                0 6px 20px rgba(0, 255, 136, 0.4),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2);
+        }
+
+        .open-card-btn:active {
+            transform: translateX(-50%) translateY(0px);
+        }
+
+        /* Карточка */
+        .card-container {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0);
+            width: 90%;
+            max-width: 500px;
+            background: linear-gradient(135deg, #1a1a1a, #2a2a2a);
+            border: 3px solid #dc3545;
+            border-radius: 20px;
+            padding: 30px;
+            z-index: 200;
+            opacity: 0;
+            transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            box-shadow: 
+                0 20px 40px rgba(0, 0, 0, 0.8),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1),
+                0 0 30px rgba(220, 53, 69, 0.3);
+        }
+
+        .card-container.show {
+            transform: translate(-50%, -50%) scale(1);
+            opacity: 1;
+        }
+
+        .card-section {
+            margin-bottom: 25px;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.6s ease;
+        }
+
+        .card-section.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+
+        .card-section h3 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #FFD700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin: 0;
+        }
+
+        .reveal-btn {
+            background: linear-gradient(135deg, #FFD700, #FFA500);
+            border: none;
+            padding: 8px 16px;
+            border-radius: 20px;
+            color: #121212;
+            font-family: 'Oswald', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(255, 215, 0, 0.3);
+            letter-spacing: 0.5px;
+            min-width: 100px;
+        }
+
+        .reveal-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(255, 215, 0, 0.4);
+        }
+
+        .reveal-btn:active {
+            transform: translateY(0);
+        }
+
+        .section-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: all 0.5s ease;
+            opacity: 0;
+        }
+
+        .section-content.revealed {
+            max-height: 500px;
+            opacity: 1;
+            padding-top: 10px;
+        }
+
+        .section-content p {
+            font-size: 1rem;
+            line-height: 1.6;
+            color: #e0e0e0;
+            font-weight: 300;
+            white-space: pre-line;
+        }
+
+        .card-section.question h3 {
+            color: #ff6b6b;
+        }
+
+        .card-section.question .reveal-btn {
+            background: linear-gradient(135deg, #ff6b6b, #ff5252);
+            color: white;
+            box-shadow: 0 2px 8px rgba(255, 107, 107, 0.3);
+        }
+
+        .card-section.question .reveal-btn:hover {
+            box-shadow: 0 4px 12px rgba(255, 107, 107, 0.4);
+        }
+
+        .card-section.message h3 {
+            color: #4ecdc4;
+        }
+
+        .card-section.message .reveal-btn {
+            background: linear-gradient(135deg, #4ecdc4, #26a69a);
+            color: white;
+            box-shadow: 0 2px 8px rgba(78, 205, 196, 0.3);
+        }
+
+        .card-section.message .reveal-btn:hover {
+            box-shadow: 0 4px 12px rgba(78, 205, 196, 0.4);
+        }
+
+        .card-section.task h3 {
+            color: #ffe66d;
+        }
+
+        .card-section.task .reveal-btn {
+            background: linear-gradient(135deg, #ffe66d, #ffcc02);
+            color: #121212;
+            box-shadow: 0 2px 8px rgba(255, 230, 109, 0.3);
+        }
+
+        .card-section.task .reveal-btn:hover {
+            box-shadow: 0 4px 12px rgba(255, 230, 109, 0.4);
+        }
+
+        /* Загрузчик */
+        .loader-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 200px;
+        }
+
+        .mystical-loader {
+            width: 60px;
+            height: 60px;
+            position: relative;
+            margin-bottom: 20px;
+        }
+
+        .mystical-loader::before,
+        .mystical-loader::after {
+            content: '';
+            position: absolute;
+            border: 3px solid transparent;
+            border-radius: 50%;
+            animation: mysticSpin 2s linear infinite;
+        }
+
+        .mystical-loader::before {
+            width: 60px;
+            height: 60px;
+            border-top-color: #FFD700;
+            border-bottom-color: #FFD700;
+        }
+
+        .mystical-loader::after {
+            width: 40px;
+            height: 40px;
+            top: 10px;
+            left: 10px;
+            border-top-color: #dc3545;
+            border-bottom-color: #dc3545;
+            animation-direction: reverse;
+            animation-duration: 1.5s;
+        }
+
+        @keyframes mysticSpin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .loading-text {
+            color: #FFD700;
+            font-size: 1.1rem;
+            font-weight: 400;
+            letter-spacing: 2px;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.6; }
+            50% { opacity: 1; }
+        }
+
+        /* Кнопка закрытия */
+        .close-btn {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            background: none;
+            border: none;
+            color: #dc3545;
+            font-size: 1.5rem;
+            cursor: pointer;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: all 0.3s ease;
+        }
+
+        .close-btn:hover {
+            background: rgba(220, 53, 69, 0.1);
+            transform: scale(1.1);
+        }
+
+        /* Overlay */
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 150;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .overlay.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        /* Адаптивность */
+        @media (max-width: 768px) {
+            .card-container {
+                width: 95%;
+                padding: 25px;
+                max-height: 80vh;
+                overflow-y: auto;
+            }
+
+            .header h1 {
+                font-size: 1.3rem;
+            }
+
+            .open-card-btn {
+                padding: 12px 30px;
+                font-size: 1.1rem;
+            }
+
+            .card-section {
+                margin-bottom: 20px;
+            }
+
+            .card-section h3 {
+                font-size: 1rem;
+            }
+
+            .section-content p {
+                font-size: 0.9rem;
+            }
+
+            .reveal-btn {
+                padding: 6px 12px;
+                font-size: 0.7rem;
+                min-width: 80px;
+            }
+
+            .section-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 8px;
+            }
+        }
+
+        @media (max-height: 600px) {
+            .app-container {
+                padding: 60px 20px 100px;
+            }
+
+            .card-container {
+                max-height: 70vh;
+                overflow-y: auto;
+            }
+        }
+
+        /* Ландшафтная ориентация на мобильных */
+        @media (max-width: 768px) and (orientation: landscape) {
+            .header {
+                top: 10px;
+            }
+
+            .header h1 {
+                font-size: 1.1rem;
+            }
+
+            .app-container {
+                padding: 50px 20px 80px;
+            }
+
+            .open-card-btn {
+                bottom: 15px;
+                padding: 10px 25px;
+                font-size: 1rem;
+            }
+
+            .card-container {
+                max-height: 85vh;
+                width: 80%;
+                max-width: 600px;
+            }
+        }
+
+        /* Скроллбар для карточки */
+        .card-container::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .card-container::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 3px;
+        }
+
+        .card-container::-webkit-scrollbar-thumb {
+            background: #FFD700;
+            border-radius: 3px;
+        }
+
+        .card-container::-webkit-scrollbar-thumb:hover {
+            background: #FFA500;
+        }
+    </style>
+</head>
+<body>
+    <div class="interface-border"></div>
+    
+    <div class="header">
+        <h1>SHAMBALA: Пророк XXI Века</h1>
+    </div>
+
+    <div class="app-container">
+        <button class="open-card-btn" onclick="openCard()">Открыть карту</button>
+    </div>
+
+    <div class="overlay" id="overlay" onclick="closeCard()"></div>
+
+    <div class="card-container" id="cardContainer">
+        <button class="close-btn" onclick="closeCard()">&times;</button>
+        
+        <div class="loader-container" id="loader">
+            <div class="mystical-loader"></div>
+            <div class="loading-text">Поиск карты...</div>
+        </div>
+
+        <div id="cardContent" style="display: none;">
+            <div class="card-section">
+                <div class="section-header">
+                    <h3>Выпавшая карта:</h3>
+                    <button class="reveal-btn" onclick="revealSection('cardType')">Показать</button>
+                </div>
+                <div class="section-content" id="cardTypeContent">
+                    <p id="cardType"></p>
+                </div>
+            </div>
+
+            <div class="card-section question">
+                <div class="section-header">
+                    <h3>Вопрос:</h3>
+                    <button class="reveal-btn" onclick="revealSection('cardQuestion')">Показать</button>
+                </div>
+                <div class="section-content" id="cardQuestionContent">
+                    <p id="cardQuestion"></p>
+                </div>
+            </div>
+
+            <div class="card-section message">
+                <div class="section-header">
+                    <h3>Послание SHAMBALA:</h3>
+                    <button class="reveal-btn" onclick="revealSection('cardMessage')">Показать</button>
+                </div>
+                <div class="section-content" id="cardMessageContent">
+                    <p id="cardMessage"></p>
+                </div>
+            </div>
+
+            <div class="card-section task">
+                <div class="section-header">
+                    <h3>Задание:</h3>
+                    <button class="reveal-btn" onclick="revealSection('cardTask')">Показать</button>
+                </div>
+                <div class="section-content" id="cardTaskContent">
+                    <p id="cardTask"></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // База карт
+        const cardsDatabase = [
+            {
+                type: "Состояние + Послание",
+                question: "Принимаю ли я материальность жизни — со всеми её гранями?",
+                message: "Ты не обязан быть только светом.\nТы здесь, в теле, в мире форм. И это не наказание, а опыт.\nПринять плотность — значит обрести силу.",
+                task: "Проведи день в наблюдении за телесными ощущениями.\nКаждый час отмечай: \"Я в теле. Я чувствую\".\nЗапиши, какие открытия это тебе принесло."
+            },
+            {
+                type: "Состояние в позитиве",
+                question: "Как я могу увеличить свой поток изобилия?",
+                message: "Когда ты не зажимаешь, — энергия течёт.\nИзобилие любит движение, щедрость, игру.\nНаучись принимать — и ты получишь больше.",
+                task: "Сделай сегодня один акт щедрости без ожиданий.\nПотом запиши, как ты себя чувствовал(а).\nЧто ты открыл(а) в этом действии?"
+            },
+            {
+                type: "Направление в негативе",
+                question: "Что мне нужно отпустить, чтобы двигаться дальше?",
+                message: "Старые оковы — это не ты.\nОни были защитой, но теперь стали клеткой.\nОтпускание освобождает место для нового.",
+                task: "Выбери одну привычку или убеждение, которое тебя ограничивает.\nСегодня сознательно поступи по-другому.\nПрочувствуй разницу."
+            },
+            {
+                type: "Послание (позитив), Состояние (позитив)",
+                question: "Какой урок несёт мне текущая ситуация?",
+                message: "В каждом вызове спрятан дар.\nТы не жертва обстоятельств — ты их создатель.\nИщи золото в том, что кажется свинцом.",
+                task: "Опиши самую сложную ситуацию в твоей жизни сейчас.\nНайди в ней три возможности для роста.\nВыбери одну и действуй."
+            },
+            {
+                type: "Послание (позитив)",
+                question: "Как я могу выразить свою уникальность?",
+                message: "Твоя аутентичность — это твоя сила.\nМир ждёт именно того, что можешь дать только ты.\nНе копируй — создавай.",
+                task: "Сделай что-то творческое сегодня без цели и результата.\nПросто для радости выражения.\nЧто это пробудило в тебе?"
+            }
+        ];
+
+        let isCardOpen = false;
+
+        function openCard() {
+            if (isCardOpen) return;
+            
+            isCardOpen = true;
+            const overlay = document.getElementById('overlay');
+            const cardContainer = document.getElementById('cardContainer');
+            const loader = document.getElementById('loader');
+            const cardContent = document.getElementById('cardContent');
+
+            // Показываем overlay и карточку
+            overlay.classList.add('show');
+            cardContainer.classList.add('show');
+
+            // Показываем загрузчик
+            loader.style.display = 'flex';
+            cardContent.style.display = 'none';
+
+            // Сбрасываем состояние всех секций
+            resetSections();
+
+            // Симулируем загрузку
+            setTimeout(() => {
+                // Выбираем случайную карту
+                const randomCard = cardsDatabase[Math.floor(Math.random() * cardsDatabase.length)];
+                
+                // Заполняем контент
+                document.getElementById('cardType').textContent = randomCard.type;
+                document.getElementById('cardQuestion').textContent = randomCard.question;
+                document.getElementById('cardMessage').textContent = randomCard.message;
+                document.getElementById('cardTask').textContent = randomCard.task;
+
+                // Скрываем загрузчик и показываем контент
+                loader.style.display = 'none';
+                cardContent.style.display = 'block';
+
+                // Анимируем появление секций
+                const sections = document.querySelectorAll('.card-section');
+                sections.forEach((section, index) => {
+                    setTimeout(() => {
+                        section.classList.add('show');
+                    }, index * 200);
+                });
+
+            }, 2000 + Math.random() * 1000); // 2-3 секунды загрузки
+        }
+
+        function resetSections() {
+            // Скрываем все секции контента и сбрасываем кнопки
+            const sections = ['cardType', 'cardQuestion', 'cardMessage', 'cardTask'];
+            sections.forEach(sectionId => {
+                const content = document.getElementById(sectionId + 'Content');
+                const button = content.parentElement.querySelector('.reveal-btn');
+                
+                content.classList.remove('revealed');
+                button.textContent = 'Показать';
+            });
+
+            // Убираем анимацию с секций
+            const cardSections = document.querySelectorAll('.card-section');
+            cardSections.forEach(section => {
+                section.classList.remove('show');
+            });
+        }
+
+        function revealSection(sectionId) {
+            const content = document.getElementById(sectionId + 'Content');
+            const button = content.parentElement.querySelector('.reveal-btn');
+            
+            if (content.classList.contains('revealed')) {
+                content.classList.remove('revealed');
+                button.textContent = 'Показать';
+            } else {
+                content.classList.add('revealed');
+                button.textContent = 'Скрыть';
+            }
+        }
+
+        function closeCard() {
+            if (!isCardOpen) return;
+            
+            const overlay = document.getElementById('overlay');
+            const cardContainer = document.getElementById('cardContainer');
+
+            // Сбрасываем состояние секций
+            resetSections();
+
+            // Скрываем карточку и overlay
+            overlay.classList.remove('show');
+            cardContainer.classList.remove('show');
+
+            // Сбрасываем состояние через некоторое время
+            setTimeout(() => {
+                isCardOpen = false;
+                const loader = document.getElementById('loader');
+                const cardContent = document.getElementById('cardContent');
+                loader.style.display = 'flex';
+                cardContent.style.display = 'none';
+            }, 500);
+        }
+
+        // Закрытие по ESC
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && isCardOpen) {
+                closeCard();
+            }
+        });
+
+        // Предотвращаем закрытие при клике на карточку
+        document.getElementById('cardContainer').addEventListener('click', function(e) {
+            e.stopPropagation();
+        });
+
+        // Улучшенная адаптивность при изменении ориентации
+        window.addEventListener('orientationchange', function() {
+            setTimeout(() => {
+                // Принудительно пересчитываем позицию карточки
+                if (isCardOpen) {
+                    const cardContainer = document.getElementById('cardContainer');
+                    cardContainer.style.transform = 'translate(-50%, -50%) scale(1)';
+                }
+            }, 100);
+        });
+    </script>
+</body>
+</html>
