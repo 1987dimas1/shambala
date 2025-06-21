@@ -1,0 +1,655 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SHAMBALA: Карточки развития</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #121212;
+            color: #ffffff;
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+            line-height: 1.5;
+        }
+
+        /* Мистический фон */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 50%, rgba(255, 215, 0, 0.08) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(255, 215, 0, 0.04) 0%, transparent 50%),
+                radial-gradient(circle at 40% 80%, rgba(128, 128, 128, 0.08) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        /* Золотая рамка интерфейса */
+        .interface-border {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            border: 2px solid;
+            border-image: linear-gradient(45deg, #FFD700, #C0C0C0, #FFD700, #C0C0C0) 1;
+            pointer-events: none;
+            z-index: 1000;
+        }
+
+        /* Заголовок */
+        .header {
+            position: fixed;
+            top: 15px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 100;
+            text-align: center;
+            width: calc(100% - 30px);
+            max-width: 600px;
+        }
+
+        .header h1 {
+            font-size: clamp(1.2rem, 3.5vw, 2rem);
+            font-weight: 700;
+            background: linear-gradient(45deg, #FFD700, #FFA500);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 0 0 20px rgba(255, 215, 0, 0.3);
+            letter-spacing: 1px;
+            text-align: center;
+        }
+
+        /* Контейнер приложения */
+        .app-container {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            padding: 70px 15px 100px;
+            position: relative;
+        }
+
+        /* Кнопка открытия карты */
+        .open-card-btn {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(135deg, #00ff88, #00cc6a);
+            border: none;
+            padding: 12px 35px;
+            border-radius: 50px;
+            color: white;
+            font-family: 'Inter', sans-serif;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 
+                0 4px 15px rgba(0, 255, 136, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2);
+            z-index: 100;
+            letter-spacing: 0.5px;
+            min-width: 160px;
+        }
+
+        .open-card-btn:hover {
+            transform: translateX(-50%) translateY(-2px);
+            box-shadow: 
+                0 6px 20px rgba(0, 255, 136, 0.4),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2);
+        }
+
+        .open-card-btn:active {
+            transform: translateX(-50%) translateY(0px);
+        }
+
+        /* Карточка */
+        .card-container {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0);
+            width: calc(100% - 20px);
+            max-width: 450px;
+            max-height: calc(100vh - 40px);
+            background: linear-gradient(135deg, #1a1a1a, #2a2a2a);
+            border: 2px solid #000000;
+            border-radius: 16px;
+            padding: 20px;
+            z-index: 200;
+            opacity: 0;
+            transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            box-shadow: 
+                0 20px 40px rgba(0, 0, 0, 0.8),
+                inset 0 1px 0 rgba(255, 255, 255, 0.05);
+            overflow-y: auto;
+        }
+
+        .card-container.show {
+            transform: translate(-50%, -50%) scale(1);
+            opacity: 1;
+        }
+
+        /* Заголовок карточки */
+        .card-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #FFD700;
+            margin-bottom: 15px;
+            text-align: center;
+            line-height: 1.4;
+            padding: 0 10px;
+        }
+
+        /* Описание карточки */
+        .card-description {
+            color: #e8e8e8;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            margin-bottom: 20px;
+            white-space: pre-line;
+            text-align: left;
+            padding: 0 5px;
+        }
+
+        /* Кнопка показать карту */
+        .show-map-btn {
+            width: 100%;
+            background: linear-gradient(135deg, #FFD700, #FFA500);
+            border: none;
+            padding: 12px 20px;
+            border-radius: 12px;
+            color: #000000;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 
+                0 4px 12px rgba(255, 215, 0, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2);
+            letter-spacing: 0.5px;
+            margin-top: auto;
+        }
+
+        .show-map-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 
+                0 6px 16px rgba(255, 215, 0, 0.4),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2);
+        }
+
+        .show-map-btn:active {
+            transform: translateY(0);
+        }
+
+        .show-map-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* Кнопка закрытия */
+        .close-btn {
+            position: absolute;
+            top: 8px;
+            right: 12px;
+            background: none;
+            border: none;
+            color: #666;
+            font-size: 24px;
+            cursor: pointer;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: all 0.3s ease;
+            z-index: 10;
+        }
+
+        .close-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: #ffffff;
+            transform: scale(1.1);
+        }
+
+        /* Overlay */
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            z-index: 150;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .overlay.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        /* Загрузчик */
+        .loader-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 150px;
+            padding: 20px;
+        }
+
+        .mystical-loader {
+            width: 50px;
+            height: 50px;
+            position: relative;
+            margin-bottom: 20px;
+        }
+
+        .mystical-loader::before,
+        .mystical-loader::after {
+            content: '';
+            position: absolute;
+            border: 2px solid transparent;
+            border-radius: 50%;
+            animation: mysticSpin 2s linear infinite;
+        }
+
+        .mystical-loader::before {
+            width: 50px;
+            height: 50px;
+            border-top-color: #FFD700;
+            border-bottom-color: #FFD700;
+        }
+
+        .mystical-loader::after {
+            width: 35px;
+            height: 35px;
+            top: 7.5px;
+            left: 7.5px;
+            border-top-color: #FFA500;
+            border-bottom-color: #FFA500;
+            animation-direction: reverse;
+            animation-duration: 1.5s;
+        }
+
+        @keyframes mysticSpin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .loading-text {
+            color: #FFD700;
+            font-size: 1rem;
+            font-weight: 500;
+            letter-spacing: 1px;
+            animation: pulse 2s ease-in-out infinite;
+            text-align: center;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.6; }
+            50% { opacity: 1; }
+        }
+
+        /* Скроллбар */
+        .card-container::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .card-container::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 2px;
+        }
+
+        .card-container::-webkit-scrollbar-thumb {
+            background: #FFD700;
+            border-radius: 2px;
+        }
+
+        .card-container::-webkit-scrollbar-thumb:hover {
+            background: #FFA500;
+        }
+
+        /* Адаптивность для мобильных */
+        @media (max-width: 480px) {
+            .header {
+                top: 10px;
+                width: calc(100% - 20px);
+            }
+
+            .header h1 {
+                font-size: 1.1rem;
+                letter-spacing: 0.5px;
+            }
+
+            .app-container {
+                padding: 60px 10px 90px;
+            }
+
+            .open-card-btn {
+                bottom: 15px;
+                padding: 10px 30px;
+                font-size: 0.9rem;
+                min-width: 140px;
+            }
+
+            .card-container {
+                width: calc(100% - 16px);
+                max-width: none;
+                padding: 18px;
+                border-radius: 12px;
+                max-height: calc(100vh - 30px);
+            }
+
+            .card-title {
+                font-size: 1rem;
+                margin-bottom: 12px;
+                padding: 0 5px;
+            }
+
+            .card-description {
+                font-size: 0.9rem;
+                line-height: 1.5;
+                margin-bottom: 18px;
+                padding: 0;
+            }
+
+            .show-map-btn {
+                padding: 11px 18px;
+                font-size: 0.9rem;
+                border-radius: 10px;
+            }
+
+            .close-btn {
+                top: 6px;
+                right: 8px;
+                font-size: 22px;
+                width: 28px;
+                height: 28px;
+            }
+
+            .interface-border {
+                border-width: 1px;
+            }
+        }
+
+        /* Ландшафтная ориентация на мобильных */
+        @media (max-width: 800px) and (orientation: landscape) and (max-height: 500px) {
+            .header {
+                top: 5px;
+            }
+
+            .header h1 {
+                font-size: 1rem;
+            }
+
+            .app-container {
+                padding: 45px 10px 70px;
+            }
+
+            .open-card-btn {
+                bottom: 10px;
+                padding: 8px 25px;
+                font-size: 0.85rem;
+            }
+
+            .card-container {
+                max-height: calc(100vh - 20px);
+                width: min(90%, 400px);
+                padding: 15px;
+            }
+
+            .card-title {
+                font-size: 0.95rem;
+                margin-bottom: 10px;
+            }
+
+            .card-description {
+                font-size: 0.85rem;
+                line-height: 1.4;
+                margin-bottom: 15px;
+            }
+
+            .show-map-btn {
+                padding: 10px 16px;
+                font-size: 0.85rem;
+            }
+        }
+
+        /* Очень маленькие экраны */
+        @media (max-width: 320px) {
+            .header h1 {
+                font-size: 1rem;
+            }
+
+            .card-container {
+                padding: 15px;
+            }
+
+            .card-title {
+                font-size: 0.95rem;
+            }
+
+            .card-description {
+                font-size: 0.85rem;
+            }
+
+            .show-map-btn {
+                font-size: 0.85rem;
+                padding: 10px 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="interface-border"></div>
+    
+    <div class="header">
+        <h1>SHAMBALA: Пророк XXI Века</h1>
+    </div>
+
+    <div class="app-container">
+        <button class="open-card-btn" onclick="openCard()">Открыть карту</button>
+    </div>
+
+    <div class="overlay" id="overlay" onclick="closeCard()"></div>
+
+    <div class="card-container" id="cardContainer">
+        <button class="close-btn" onclick="closeCard()">&times;</button>
+        
+        <div class="loader-container" id="loader">
+            <div class="mystical-loader"></div>
+            <div class="loading-text">Поиск карты...</div>
+        </div>
+
+        <div id="cardContent" style="display: none;">
+            <div class="card-title" id="cardTitle"></div>
+            <div class="card-description" id="cardDescription"></div>
+            <button class="show-map-btn" id="showMapBtn" onclick="openMap()" style="display: none;">
+                Показать карту
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // === База данных карточек ===
+        // Для каждой карточки укажите:
+        // title: Название карточки
+        // description: Полное описание (задача + смысл + ход)
+        // link: Ссылка для кнопки (оставьте пустой "" если кнопка не нужна)
+        
+        const cardsDatabase = [
+            {
+                title: "Страх перемен — блок развития",
+                description: `Задача: Расскажите, когда страх не справиться с новым останавливал вас или близких. Что помогло принять изменения и пойти вперёд?
+
+Смысл: Страх неизведанного — естественная реакция, но за ним скрывается возможность роста и обновления.
+
+Ход: Перейдите вперёд на +4 клетки.`,
+                link: "https://level-mice-33f.notion.site/14963e224e2380cab6acfc375360e9e7?source=copy_link"
+            },
+            {
+                title: "Благодарность — ключ к изобилию",
+                description: `Задача: Назовите три вещи, за которые вы благодарны прямо сейчас. Поделитесь, как благодарность меняет ваше восприятие жизни.
+
+Смысл: Благодарность превращает то, что у нас есть, в достаточное и открывает путь к большему.
+
+Ход: Переместитесь на +3 клетки и выберите бонусную карту.`,
+                link: "https://example.com/gratitude-card"
+            },
+            {
+                title: "Внутренний критик — враг или союзник?",
+                description: `Задача: Опишите ситуацию, когда внутренний критик мешал вам действовать. Как можно превратить его в конструктивного советчика?
+
+Смысл: Внутренний критик часто защищает нас от боли, но может стать препятствием для роста.
+
+Ход: Остановитесь на 1 ход для размышлений, затем продвигайтесь на +2 клетки.`,
+                link: ""
+            },
+            {
+                title: "Энергия творчества — источник силы",
+                description: `Задача: Вспомните момент, когда вы были полностью поглощены творческим процессом. Что вы чувствовали? Как это изменило вас?
+
+Смысл: Творчество соединяет нас с источником жизненной силы и помогает выразить уникальность.
+
+Ход: Выберите направление движения: влево или вправо на 3 клетки.`,
+                link: "https://example.com/creativity-boost"
+            },
+            {
+                title: "Одиночество — путь к себе",
+                description: `Задача: Проведите 10 минут в полном одиночестве без гаджетов. Что вы обнаружили в тишине? О чём думали?
+
+Смысл: В одиночестве мы встречаемся с собой настоящими и находим ответы, которые искали.
+
+Ход: Пропустите следующий ход других игроков и сделайте дополнительный ход на +5 клеток.`,
+                link: ""
+            }
+        ];
+
+        let isCardOpen = false;
+        let currentCard = null;
+
+        function openCard() {
+            if (isCardOpen) return;
+            
+            isCardOpen = true;
+            const overlay = document.getElementById('overlay');
+            const cardContainer = document.getElementById('cardContainer');
+            const loader = document.getElementById('loader');
+            const cardContent = document.getElementById('cardContent');
+
+            // Показываем overlay и карточку
+            overlay.classList.add('show');
+            cardContainer.classList.add('show');
+
+            // Показываем загрузчик
+            loader.style.display = 'flex';
+            cardContent.style.display = 'none';
+
+            // Симулируем загрузку
+            setTimeout(() => {
+                // Выбираем случайную карту
+                currentCard = cardsDatabase[Math.floor(Math.random() * cardsDatabase.length)];
+                
+                // Заполняем контент
+                document.getElementById('cardTitle').textContent = currentCard.title;
+                document.getElementById('cardDescription').textContent = currentCard.description;
+                
+                // Показываем/скрываем кнопку в зависимости от наличия ссылки
+                const showMapBtn = document.getElementById('showMapBtn');
+                if (currentCard.link && currentCard.link.trim() !== '') {
+                    showMapBtn.style.display = 'block';
+                } else {
+                    showMapBtn.style.display = 'none';
+                }
+
+                // Скрываем загрузчик и показываем контент
+                loader.style.display = 'none';
+                cardContent.style.display = 'block';
+
+            }, 1500 + Math.random() * 1000); // 1.5-2.5 секунды загрузки
+        }
+
+        function openMap() {
+            if (currentCard && currentCard.link && currentCard.link.trim() !== '') {
+                window.open(currentCard.link, '_blank');
+            }
+        }
+
+        function closeCard() {
+            if (!isCardOpen) return;
+            
+            const overlay = document.getElementById('overlay');
+            const cardContainer = document.getElementById('cardContainer');
+
+            // Скрываем карточку и overlay
+            overlay.classList.remove('show');
+            cardContainer.classList.remove('show');
+
+            // Сбрасываем состояние через некоторое время
+            setTimeout(() => {
+                isCardOpen = false;
+                currentCard = null;
+                const loader = document.getElementById('loader');
+                const cardContent = document.getElementById('cardContent');
+                loader.style.display = 'flex';
+                cardContent.style.display = 'none';
+            }, 400);
+        }
+
+        // Закрытие по ESC
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && isCardOpen) {
+                closeCard();
+            }
+        });
+
+        // Предотвращаем закрытие при клике на карточку
+        document.getElementById('cardContainer').addEventListener('click', function(e) {
+            e.stopPropagation();
+        });
+
+        // Улучшенная адаптивность при изменении ориентации
+        window.addEventListener('orientationchange', function() {
+            setTimeout(() => {
+                if (isCardOpen) {
+                    const cardContainer = document.getElementById('cardContainer');
+                    cardContainer.style.transform = 'translate(-50%, -50%) scale(1)';
+                }
+            }, 100);
+        });
+
+        // Предотвращаем зум при двойном тапе на iOS
+        let lastTouchEnd = 0;
+        document.addEventListener('touchend', function (event) {
+            const now = (new Date()).getTime();
+            if (now - lastTouchEnd <= 300) {
+                event.preventDefault();
+            }
+            lastTouchEnd = now;
+        }, false);
+    </script>
+</body>
+</html>
