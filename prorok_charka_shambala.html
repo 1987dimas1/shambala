@@ -1,0 +1,965 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SHAMBALA: Пророк XXI Века - 7 Чакр</title>
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Oswald', sans-serif;
+            background: #121212;
+            color: #ffffff;
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Мистический фон */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 50%, rgba(255, 215, 0, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(255, 215, 0, 0.05) 0%, transparent 50%),
+                radial-gradient(circle at 40% 80%, rgba(128, 128, 128, 0.1) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        /* Золотая рамка интерфейса */
+        .interface-border {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            border: 3px solid;
+            border-image: linear-gradient(45deg, #FFD700, #C0C0C0, #FFD700, #C0C0C0) 1;
+            pointer-events: none;
+            z-index: 1000;
+        }
+
+        /* Заголовок */
+        .header {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 100;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: clamp(1.5rem, 4vw, 2.5rem);
+            font-weight: 700;
+            background: linear-gradient(45deg, #FFD700, #FFA500);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 0 0 20px rgba(255, 215, 0, 0.3);
+            letter-spacing: 2px;
+        }
+
+        /* Контейнер приложения */
+        .app-container {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            padding: 80px 20px 120px;
+            position: relative;
+        }
+
+        /* Кнопка открытия карты */
+        .open-card-btn {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(135deg, #00ff88, #00cc6a);
+            border: none;
+            padding: 15px 40px;
+            border-radius: 50px;
+            color: white;
+            font-family: 'Oswald', sans-serif;
+            font-size: 1.2rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 
+                0 4px 15px rgba(0, 255, 136, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2);
+            z-index: 100;
+            letter-spacing: 1px;
+        }
+
+        .open-card-btn:hover {
+            transform: translateX(-50%) translateY(-2px);
+            box-shadow: 
+                0 6px 20px rgba(0, 255, 136, 0.4),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2);
+        }
+
+        .open-card-btn:active {
+            transform: translateX(-50%) translateY(0px);
+        }
+
+        /* Карточка */
+        .card-container {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0);
+            width: 90%;
+            max-width: 500px;
+            background: linear-gradient(135deg, #1a1a1a, #2a2a2a);
+            border: 3px solid var(--chakra-color, #dc3545);
+            border-radius: 20px;
+            padding: 30px;
+            z-index: 200;
+            opacity: 0;
+            transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            box-shadow: 
+                0 20px 40px rgba(0, 0, 0, 0.8),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1),
+                0 0 30px var(--chakra-glow, rgba(220, 53, 69, 0.3));
+        }
+
+        .card-container.show {
+            transform: translate(-50%, -50%) scale(1);
+            opacity: 1;
+        }
+
+        .chakra-title {
+            text-align: center;
+            margin-bottom: 20px;
+            padding: 10px;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
+            border-radius: 15px;
+            border: 1px solid var(--chakra-color, #dc3545);
+        }
+
+        .chakra-title h2 {
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: var(--chakra-color, #dc3545);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin: 0;
+        }
+
+        .card-section {
+            margin-bottom: 25px;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.6s ease;
+        }
+
+        .card-section.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+
+        .card-section h3 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #FFD700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin: 0;
+        }
+
+        .reveal-btn {
+            background: linear-gradient(135deg, #FFD700, #FFA500);
+            border: none;
+            padding: 8px 16px;
+            border-radius: 20px;
+            color: #121212;
+            font-family: 'Oswald', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(255, 215, 0, 0.3);
+            letter-spacing: 0.5px;
+            min-width: 100px;
+        }
+
+        .reveal-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(255, 215, 0, 0.4);
+        }
+
+        .reveal-btn:active {
+            transform: translateY(0);
+        }
+
+        .section-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: all 0.5s ease;
+            opacity: 0;
+        }
+
+        .section-content.revealed {
+            max-height: 500px;
+            opacity: 1;
+            padding-top: 10px;
+        }
+
+        .section-content p {
+            font-size: 1rem;
+            line-height: 1.6;
+            color: #e0e0e0;
+            font-weight: 300;
+            white-space: pre-line;
+        }
+
+        .card-section.question h3 {
+            color: #ff6b6b;
+        }
+
+        .card-section.question .reveal-btn {
+            background: linear-gradient(135deg, #ff6b6b, #ff5252);
+            color: white;
+            box-shadow: 0 2px 8px rgba(255, 107, 107, 0.3);
+        }
+
+        .card-section.question .reveal-btn:hover {
+            box-shadow: 0 4px 12px rgba(255, 107, 107, 0.4);
+        }
+
+        .card-section.message h3 {
+    color: #800080; /* Фиолетовый цвет */
+}
+
+.card-section.message .reveal-btn {
+    background: linear-gradient(135deg, #800080, #9370DB); /* Фиолетовый градиент */
+    color: white;
+    box-shadow: 0 2px 8px rgba(138, 43, 226, 0.3); /* Фиолетовая тень */
+}
+
+.card-section.message .reveal-btn:hover {
+    box-shadow: 0 4px 12px rgba(138, 43, 226, 0.4); /* Фиолетовая тень при наведении */
+}
+
+        .card-section.task h3 {
+            color: #b5e732;
+        }
+
+        .card-section.task .reveal-btn {
+            background: linear-gradient(135deg, #5dc318, #ffcc02);
+            color: #121212;
+            box-shadow: 0 2px 8px rgba(255, 230, 109, 0.3);
+        }
+
+        .card-section.task .reveal-btn:hover {
+            box-shadow: 0 4px 12px rgba(255, 230, 109, 0.4);
+        }
+
+        /* Загрузчик */
+        .loader-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 200px;
+        }
+
+        .mystical-loader {
+            width: 60px;
+            height: 60px;
+            position: relative;
+            margin-bottom: 60px;
+        }
+
+        .mystical-loader::before,
+        .mystical-loader::after {
+            content: '';
+            position: absolute;
+            border: 3px solid transparent;
+            border-radius: 50%;
+            animation: mysticSpin 2s linear infinite;
+        }
+
+        .mystical-loader::before {
+            width: 60px;
+            height: 60px;
+            border-top-color: #FFD700;
+            border-bottom-color: #FFD700;
+        }
+
+        .mystical-loader::after {
+            width: 40px;
+            height: 40px;
+            top: 10px;
+            left: 10px;
+            border-top-color: var(--chakra-color, #dc3545);
+            border-bottom-color: var(--chakra-color, #dc3545);
+            animation-direction: reverse;
+            animation-duration: 1.5s;
+        }
+
+        @keyframes mysticSpin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .loading-text {
+            color: #FFD700;
+            font-size: 1.1rem;
+            font-weight: 400;
+            letter-spacing: 2px;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.6; }
+            50% { opacity: 1; }
+        }
+
+        /* Кнопка закрытия */
+        .close-btn {
+            position: absolute;
+            top: 1px;
+            right: 5px;
+            background: none;
+            border: none;
+            color: var(--chakra-color, #dc3545);
+            font-size: 2.5rem;
+            cursor: pointer;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 10%;
+            transition: all 0.3s ease;
+        }
+
+        .close-btn:hover {
+            background: var(--chakra-glow, rgba(220, 53, 69, 0.1));
+            transform: scale(1.1);
+        }
+
+        /* Overlay */
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 150;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .overlay.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        /* Адаптивность */
+        @media (max-width: 768px) {
+            .card-container {
+                width: 95%;
+                padding: 25px;
+                max-height: 80vh;
+                overflow-y: auto;
+            }
+
+            .header h1 {
+                font-size: 1.3rem;
+            }
+
+            .open-card-btn {
+                padding: 12px 30px;
+                font-size: 1.1rem;
+            }
+
+            .card-section {
+                margin-bottom: 20px;
+            }
+
+            .card-section h3 {
+                font-size: 1rem;
+            }
+
+            .section-content p {
+                font-size: 0.9rem;
+            }
+
+            .reveal-btn {
+                padding: 6px 12px;
+                font-size: 0.7rem;
+                min-width: 80px;
+            }
+
+            .section-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 8px;
+            }
+
+            .chakra-title h2 {
+                font-size: 1.2rem;
+            }
+        }
+
+        @media (max-height: 600px) {
+            .app-container {
+                padding: 60px 20px 100px;
+            }
+
+            .card-container {
+                max-height: 70vh;
+                overflow-y: auto;
+            }
+        }
+
+        /* Ландшафтная ориентация на мобильных */
+        @media (max-width: 768px) and (orientation: landscape) {
+            .header {
+                top: 10px;
+            }
+
+            .header h1 {
+                font-size: 1.1rem;
+            }
+
+            .app-container {
+                padding: 50px 20px 80px;
+            }
+
+            .open-card-btn {
+                bottom: 15px;
+                padding: 10px 25px;
+                font-size: 1rem;
+            }
+
+            .card-container {
+                max-height: 85vh;
+                width: 80%;
+                max-width: 600px;
+            }
+        }
+
+        /* Скроллбар для карточки */
+        .card-container::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .card-container::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 3px;
+        }
+
+        .card-container::-webkit-scrollbar-thumb {
+            background: #FFD700;
+            border-radius: 3px;
+        }
+
+        .card-container::-webkit-scrollbar-thumb:hover {
+            background: #FFA500;
+        }
+    </style>
+</head>
+<body>
+    <div class="interface-border"></div>
+    
+    <div class="header">
+        <h1>SHAMBALA: Пророк XXI Века</h1>
+    </div>
+
+    <div class="app-container">
+        <button class="open-card-btn" onclick="openCard()">Открыть карту</button>
+    </div>
+
+    <div class="overlay" id="overlay" onclick="closeCard()"></div>
+
+    <div class="card-container" id="cardContainer">
+        <button class="close-btn" onclick="closeCard()">&times;</button>
+        
+        <div class="loader-container" id="loader">
+            <div class="mystical-loader"></div>
+            <div class="loading-text">Поиск карты в энергиях чакр...</div>
+        </div>
+
+        <div id="cardContent" style="display: none;">
+            <div class="chakra-title">
+                <h2 id="chakraName"></h2>
+            </div>
+
+            <div class="card-section">
+                <div class="section-header">
+                    <h3>Выпавшая карта:</h3>
+                    <button class="reveal-btn" onclick="revealSection('cardType')">Показать</button>
+                </div>
+                <div class="section-content" id="cardTypeContent">
+                    <p id="cardType"></p>
+                </div>
+            </div>
+
+            <div class="card-section question">
+                <div class="section-header">
+                    <h3>Вопрос:</h3>
+                    <button class="reveal-btn" onclick="revealSection('cardQuestion')">Показать</button>
+                </div>
+                <div class="section-content" id="cardQuestionContent">
+                    <p id="cardQuestion"></p>
+                </div>
+            </div>
+
+            <div class="card-section message">
+                <div class="section-header">
+                    <h3>Послание SHAMBALA:</h3>
+                    <button class="reveal-btn" onclick="revealSection('cardMessage')">Показать</button>
+                </div>
+                <div class="section-content" id="cardMessageContent">
+                    <p id="cardMessage"></p>
+                </div>
+            </div>
+
+            <div class="card-section task">
+                <div class="section-header">
+                    <h3>Задание:</h3>
+                    <button class="reveal-btn" onclick="revealSection('cardTask')">Показать</button>
+                </div>
+                <div class="section-content" id="cardTaskContent">
+                    <p id="cardTask"></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ===== БАЗЫ КАРТ ДЛЯ 7 ЧАКР =====
+        
+        // 1. МУЛАДХАРА (Корневая чакра) - Красный цвет
+        const muladharaCards = [
+            {
+                type: "Состояние + Послание",
+                question: "Принимаю ли я материальность жизни — со всеми её гранями?",
+                message: "Ты не обязан быть только светом.\nТы здесь, в теле, в мире форм. И это не наказание, а опыт.\nПринять плотность — значит обрести силу.",
+                task: "Проведи день в наблюдении за телесными ощущениями.\nКаждый час отмечай: \"Я в теле. Я чувствую\".\nЗапиши, какие открытия это тебе принесло."
+            },
+            {
+                type: "Укоренение",
+                question: "Что мне даёт силу и стабильность в этом мире?",
+                message: "Твои корни — это не только семья и традиции.\nЭто твоё внутреннее знание о том, кто ты есть.\nГлубокие корни позволяют расти высоко.",
+                task: "Найди место на природе, где чувствуешь покой.\nПосиди там 20 минут, представляя корни от твоих ног в землю.\nЧто ты почувствовал?"
+            },
+            {
+                type: "Выживание и безопасность",
+                question: "Какие страхи мешают мне чувствовать себя в безопасности?",
+                message: "Страх — это энергия, которая может стать силой.\nОн показывает, что важно защитить.\nНе беги от страха — изучи его послание.",
+                task: "Запиши свои три главных страха.\nДля каждого найди одно практическое действие.\nВыполни первое сегодня."
+            }
+        ];
+
+        // 2. СВАДХИСТХАНА (Сакральная чакра) - Оранжевый цвет
+        const svadhisthanaCards = [
+            {
+                type: "Творчество и страсть",
+                question: "Как я могу выразить свою творческую силу?",
+                message: "Твоя сексуальность и творчество — одна энергия.\nОна течёт через тебя как река жизни.\nНе блокируй её — направляй.",
+                task: "Сделай что-то творческое руками сегодня.\nРисуй, лепи, танцуй — что угодно.\nПочувствуй, как энергия движется через тебя."
+            },
+            {
+                type: "Эмоции и чувства",
+                question: "Какие эмоции я подавляю или избегаю?",
+                message: "Эмоции — это вода твоей души.\nОни должны течь, а не застаиваться.\nПозволь себе чувствовать полно и глубоко.",
+                task: "Включи музыку, которая вызывает сильные эмоции.\nПозволь себе плакать, смеяться или злиться.\nЧто освободилось в тебе?"
+            },
+            {
+                type: "Удовольствие и наслаждение",
+                question: "Что приносит мне истинную радость?",
+                message: "Удовольствие — это не грех, а дар жизни.\nТы достоин красоты, вкуса, прикосновений.\nНаслаждение исцеляет душу.",
+                task: "Устрой себе вечер наслаждений.\nВкусная еда, красивая музыка, приятные ощущения.\nЗамети, как меняется твоё состояние."
+            }
+        ];
+
+        // 3. МАНИПУРА (Солнечное сплетение) - Жёлтый цвет
+        const manipuraCards = [
+            {
+                type: "Личная сила",
+                question: "Где я отдаю свою силу другим?",
+                message: "Твоя сила — это огонь в твоём центре.\nОн горит независимо от мнений других.\nВозьми свою силу обратно — она принадлежит тебе.",
+                task: "Вспомни ситуацию, где ты чувствовал бессилие.\nПредставь, как действовал бы, имея полную силу.\nСделай один шаг в этом направлении сегодня."
+            },
+            {
+                type: "Воля и решимость",
+                question: "Что требует от меня решительных действий?",
+                message: "Воля — это мускул души.\nЧем больше ты её тренируешь, тем сильнее становишься.\nМаленькие решения создают большие перемены.",
+                task: "Выбери одну привычку, которую хочешь изменить.\nВозьми обязательство на неделю.\nКаждый день отмечай свой прогресс."
+            },
+            {
+                type: "Самооценка и уверенность",
+                question: "Что мешает мне ценить себя по достоинству?",
+                message: "Ты ценен не за то, что делаешь, а за то, кто ты есть.\nТвоя уникальность — это подарок миру.\nПерестань искать подтверждения снаружи.",
+                task: "Каждое утро на неделе говори себе в зеркало три комплимента.\nЗаписывай свои достижения, даже самые маленькие.\nЧто изменилось?"
+            }
+        ];
+
+        // 4. АНАХАТА (Сердечная чакра) - Зелёный цвет
+        const anahataCards = [
+            {
+                type: "Любовь и сострадание",
+                question: "Как я могу открыть своё сердце шире?",
+                message: "Любовь — это не эмоция, а состояние бытия.\nЧем больше ты любишь, тем больше становишься.\nНачни с любви к себе.",
+                task: "Сегодня сделай три акта доброты.\nОдин для себя, один для близкого, один для незнакомца.\nПочувствуй, как расширяется твоё сердце."
+            },
+            {
+                type: "Прощение и исцеление",
+                question: "Кого или что мне нужно простить?",
+                message: "Прощение — это подарок себе, а не другому.\nОно освобождает место для любви в твоём сердце.\nТы достоин быть свободным от боли.",
+                task: "Напиши письмо тому, кого не можешь простить.\nВыплесни всю боль на бумагу, а потом сожги письмо.\nЧто ты почувствовал в процессе?"
+            },
+            {
+                type: "Отношения и связь",
+                question: "Какие отношения в моей жизни нуждаются в исцелении?",
+                message: "Все отношения — это зеркала твоей души.\nОни показывают, что нужно исцелить в тебе.\nИзмени себя — и отношения изменятся.",
+                task: "Выбери одного человека, с которым у тебя сложные отношения.\nПошли ему сообщение с благодарностью за что-то хорошее.\nОтследи свои чувства."
+            }
+        ];
+
+        // 5. ВИШУДХА (Горловая чакра) - Голубой цвет
+        const vishudhaCards = [
+            {
+                type: "Самовыражение и правда",
+                question: "Какую правду мне страшно произнести?",
+                message: "Твоя правда — это мост между внутренним и внешним миром.\nМолчание может быть предательством себя.\nГовори свою правду с любовью.",
+                task: "Найди человека, которому давно хотел что-то сказать.\nСкажи это сегодня, но с состраданием.\nКак изменилось твоё внутреннее состояние?"
+            },
+            {
+                type: "Коммуникация и слушание",
+                question: "Как я могу улучшить свою способность слышать других?",
+                message: "Истинное слушание — это акт любви.\nКогда ты слушаешь сердцем, ты исцеляешь и себя, и другого.\nМолчание часто говорит больше слов.",
+                task: "Проведи разговор с кем-то, только слушая.\nНе давай советов, не перебивай — просто слушай.\nЧто ты узнал о другом человеке и о себе?"
+            },
+            {
+                type: "Творческое выражение",
+                question: "Как мой голос может изменить мир?",
+                message: "Твой голос уникален, как отпечаток пальца.\nЧерез него ты можешь исцелять, вдохновлять, пробуждать.\nНе прячь свой дар — дели его с миром.",
+                task: "Запиши голосовое сообщение с благодарностью жизни.\nПрослушай его сам — какие эмоции слышишь?\nПоделись этим чувством с кем-то близким."
+            }
+        ];
+
+        // 6. АДЖНА (Третий глаз) - Синий цвет
+        const ajnaCards = [
+            {
+    "type": "Состояние в негативе и Направление в позитиве",
+    "question": "В чём я отказываю себе в любви и принятии?",
+    "message": "Быть к себе добрым — это не слабость, а зрелость.\nСердце не враг, когда плачет — оно просто устало быть сильным.",
+    "task": "Напиши, как бы ты поддержал(а) близкого друга в трудную минуту.\nА теперь скажи это себе — в зеркало, вслух, с любовью."
+},
+{
+    "type": "Состояние в негативе",
+    "question": "Где я прячу свои настоящие чувства за ролью «всё хорошо»?",
+    "message": "Иногда «я сильный» — это щит.\nНо щит не греет.\nОсмелишься ли ты быть тёплым, даже если мир холоден?",
+    "task": "Проанализируй день: сколько раз ты сдержал(а) эмоции, чтобы казаться удобным?\nЧто бы изменилось, если бы ты позволил(а) себе быть настоящим?"
+},
+{
+    "type": "Направление и Послание в позитиве",
+    "question": "С кем я хочу восстановить душевную близость, но не решаюсь?",
+    "message": "Души не забывают друг друга.\nИногда нужен только один шаг — и мост снова соединяет.",
+    "task": "Выбери человека, с кем связь угасла.\nСделай первый шаг — сообщение, открытка, разговор.\nДаже если отклика не будет — ты откроешь дорогу себе."
+},
+{
+    "type": "Состояние в негативе",
+    "question": "Какие условия я ставлю себе, прежде чем позволить себе любить?",
+    "message": "«Я буду достоин(а), когда...» — это путь в никуда.\nЛюбовь начинается не после.\nОна — уже.\nСейчас.",
+    "task": "Составь список 5 условий, которые ты ставишь себе, чтобы почувствовать любовь или гордость.\nПотом вычеркни их.\nПочувствуй — что ты любим(а) уже."
+},
+{
+    "type": "Состояние в негативе и Послание в позитиве",
+    "question": "Что удерживает моё сердце закрытым после прошлых ран?",
+    "message": "Закрыв сердце от боли, ты закрыл(а) его и от света.\nНастоящая сила — в том, чтобы снова открыть, зная, что можно быть раненым.",
+    "task": "Вспомни ситуацию, где ты чувствовал(а) боль от близости.\nНапиши, какой урок ты взял(а) и что теперь можешь дать сердцу — чтобы оно снова открылось."
+},
+{
+    "type": "Направление в позитиве",
+    "question": "Умею ли я давать от избытка, а не из чувства долга?",
+    "message": "Любовь — не валюта.\nОна не убывает, когда ты ею делишься.\nОна течёт сильнее.",
+    "task": "Сделай сегодня три жеста безусловной любви — не потому, что надо, а потому что хочешь.\nЗаметь, как меняется твоё внутреннее состояние."
+},
+{
+    "type": "Послание в негативе",
+    "question": "Почему мне трудно принимать любовь и заботу от других?",
+    "message": "Принимать — это тоже акт силы.\nНо раненое сердце боится долгов, боли, привязанности.\nПозволишь ли ты себе просто быть любимым?",
+    "task": "Вспомни три момента, когда кто-то проявлял к тебе заботу, а ты отстранялся(лась).\nЧто ты тогда чувствовал(а)?\nСкажи: «Я достоин(а) быть любимым. Просто так»."
+},
+{
+    "type": "Состояние и Направление в позитиве",
+    "question": "Где я могу начать доверять снова, несмотря на прошлый опыт?",
+    "message": "Доверие — не наивность, а смелость.\nОно рождается не из гарантии, а из глубокой связи с собой.",
+    "task": "Напиши, кому ты готов(а) доверить хотя бы один шаг.\nИ сделай его — простая просьба, честный разговор, открытое признание."
+},
+{
+    "type": "Состояние в негативе",
+    "question": "Какие эмоции я прятал(а), боясь, что меня не поймут?",
+    "message": "Быть чувствительным — не слабость, а контакт с живым.\nНе глуши сердце.\nДай ему голос.",
+    "task": "Найди место, где можно поплакать — в одиночестве или с тем, кто поймёт.\nПозволь слезам прийти.\nПочувствуй — сердце стало свободнее."
+},
+{
+    "type": "Послание в негативе и Направление в позитиве",
+    "question": "Где я слишком строг(а) к себе, забывая о сострадании?",
+    "message": "Критика может толкать, но только любовь исцеляет.\nЖесткость без сердца — не рост, а наказание.",
+    "task": "Представь, что ты — маленький ребёнок.\nЧто бы ты сказал(а) себе тогда с нежностью?\nНапиши это и повторяй ежедневно как мантру."
+},
+{
+    "type": "Состояние в негативе",
+    "question": "Где я заменяю любовь на контроль, боясь потерять близких?",
+    "message": "Контроль — это страх в маске заботы.\nНо любовь — не клетка.\nНастоящее рядом остаётся не из страха, а из выбора.",
+    "task": "Проанализируй отношения — где ты вмешиваешься, навязываешь, ограничиваешь.\nКак бы выглядели эти связи без страха?"
+},
+{
+    "type": "Послание в негативе",
+    "question": "Почему мне важно внешнее признание в любви и отношениях?",
+    "message": "Твоя ценность — не в том, кто и как её подтверждает.\nОна — внутри.\nБез аплодисментов.\nБез условий.",
+    "task": "Напиши 10 причин, почему ты ценен(на), даже если никто об этом не скажет.\nПовесь список там, где будешь видеть его каждый день."
+},
+{
+    "type": "Состояние в негативе и Послание в негативе",
+    "question": "Где я пытаюсь заслужить любовь через успех, жертвы или идеальность?",
+    "message": "Любовь — не медаль.\nЭто пространство, где тебя принимают с ошибками.\nДаже с разбитым сердцем.",
+    "task": "Признай свои несовершенства — вслух или письменно.\nСкажи: «Я всё равно достоин(а) любви».\nПовторяй, когда захочется быть идеальным."
+},
+            {
+                type: "Духовное прозрение",
+                question: "Какая духовная истина готова открыться мне?",
+                message: "Все ответы уже есть внутри тебя.\nДуховность — это не поиск снаружи, а открытие внутри.\nТы и есть то, что ищешь.",
+                task: "Потрать 20 минут в тишине, задавая вопрос: \"Кто я есть?\"\nНе ищи ответ умом — позволь ему прийти.\nЗапиши всё, что почувствовал или увидел."
+            }
+        ];
+
+        // 7. САХАСРАРА (Коронная чакра) - Фиолетовый цвет
+        const sahasraraCards = [
+            {
+                type: "Духовная связь",
+                question: "Как я могу углубить связь с божественным?",
+                message: "Ты не отделён от источника жизни.\nТы — его выражение в этом мире.\nСвязь всегда есть — нужно лишь её признать.",
+                task: "Найди способ почувствовать связь с чем-то большим.\nЭто может быть природа, молитва, медитация.\nПроведи в этом состоянии хотя бы 15 минут."
+            },
+            {
+                type: "Просветление и понимание",
+                question: "Какое понимание изменит мою жизнь?",
+                message: "Просветление — это не состояние избранных.\nЭто твоё естественное состояние, скрытое под слоями иллюзий.\nКаждый момент может стать пробуждением.",
+                task: "Весь день замечай моменты красоты и чуда.\nОстанавливайся на них на несколько секунд.\nВечером запиши, что изменилось в твоём восприятии."
+            },
+            {
+                type: "Единство и целостность",
+                question: "Где я чувствую разделение, а где — единство?",
+                message: "Разделение — это иллюзия ума.\nВ глубине ты един со всем сущим.\nЛюбовь — это признание этого единства.",
+                task: "Проведи день, видя в каждом человеке часть себя.\nКак это меняет твоё отношение и поведение?\nЗапиши свои наблюдения."
+            }
+        ];
+
+        // Конфигурация чакр с названиями, цветами и базами карт
+        const chakrasConfig = {
+            muladhara: {
+                name: "Муладхара • Корневая чакра",
+                color: "#dc3545",
+                glow: "rgba(220, 53, 69, 0.3)",
+                cards: muladharaCards
+            },
+            svadhisthana: {
+                name: "Свадхистхана • Сакральная чакра",
+                color: "#ff6b35",
+                glow: "rgba(255, 107, 53, 0.3)",
+                cards: svadhisthanaCards
+            },
+            manipura: {
+                name: "Манипура • Солнечное сплетение",
+                color: "#ffd60a",
+                glow: "rgba(255, 214, 10, 0.3)",
+                cards: manipuraCards
+            },
+            anahata: {
+                name: "Анахата • Сердечная чакра",
+                color: "#40916c",
+                glow: "rgba(64, 145, 108, 0.3)",
+                cards: anahataCards
+            },
+            vishuddha: {
+                name: "Вишудха • Горловая чакра",
+                color: "#0077b6",
+                glow: "rgba(0, 119, 182, 0.3)",
+                cards: vishudhaCards
+            },
+            ajna: {
+                name: "Аджна • Третий глаз",
+                color: "#7209b7",
+                glow: "rgba(114, 9, 183, 0.3)",
+                cards: ajnaCards
+            },
+            sahasrara: {
+                name: "Сахасрара • Коронная чакра",
+                color: "#6f2dbd",
+                glow: "rgba(111, 45, 189, 0.3)",
+                cards: sahasraraCards
+            }
+        };
+
+        let isCardOpen = false;
+        let currentChakra = null;
+
+        function openCard() {
+            if (isCardOpen) return;
+            
+            isCardOpen = true;
+            const overlay = document.getElementById('overlay');
+            const cardContainer = document.getElementById('cardContainer');
+            const loader = document.getElementById('loader');
+            const cardContent = document.getElementById('cardContent');
+
+            // Выбираем случайную чакру
+            const chakraKeys = Object.keys(chakrasConfig);
+            const randomChakraKey = chakraKeys[Math.floor(Math.random() * chakraKeys.length)];
+            currentChakra = chakrasConfig[randomChakraKey];
+
+            // Устанавливаем CSS переменные для цвета чакры
+            document.documentElement.style.setProperty('--chakra-color', currentChakra.color);
+            document.documentElement.style.setProperty('--chakra-glow', currentChakra.glow);
+
+            // Показываем overlay и карточку
+            overlay.classList.add('show');
+            cardContainer.classList.add('show');
+
+            // Показываем загрузчик
+            loader.style.display = 'flex';
+            cardContent.style.display = 'none';
+
+            // Сбрасываем состояние всех секций
+            resetSections();
+
+            // Симулируем загрузку
+            setTimeout(() => {
+                // Выбираем случайную карту из выбранной чакры
+                const randomCard = currentChakra.cards[Math.floor(Math.random() * currentChakra.cards.length)];
+                
+                // Заполняем контент
+                document.getElementById('chakraName').textContent = currentChakra.name;
+                document.getElementById('cardType').textContent = randomCard.type;
+                document.getElementById('cardQuestion').textContent = randomCard.question;
+                document.getElementById('cardMessage').textContent = randomCard.message;
+                document.getElementById('cardTask').textContent = randomCard.task;
+
+                // Скрываем загрузчик и показываем контент
+                loader.style.display = 'none';
+                cardContent.style.display = 'block';
+
+                // Анимируем появление секций
+                const sections = document.querySelectorAll('.card-section');
+                sections.forEach((section, index) => {
+                    setTimeout(() => {
+                        section.classList.add('show');
+                    }, index * 200);
+                });
+
+            }, 2000 + Math.random() * 1000); // 2-3 секунды загрузки
+        }
+
+        function resetSections() {
+            // Скрываем все секции контента и сбрасываем кнопки
+            const sections = ['cardType', 'cardQuestion', 'cardMessage', 'cardTask'];
+            sections.forEach(sectionId => {
+                const content = document.getElementById(sectionId + 'Content');
+                const button = content.parentElement.querySelector('.reveal-btn');
+                
+                content.classList.remove('revealed');
+                button.textContent = 'Показать';
+            });
+
+            // Убираем анимацию с секций
+            const cardSections = document.querySelectorAll('.card-section');
+            cardSections.forEach(section => {
+                section.classList.remove('show');
+            });
+        }
+
+        function revealSection(sectionId) {
+            const content = document.getElementById(sectionId + 'Content');
+            const button = content.parentElement.querySelector('.reveal-btn');
+            
+            if (content.classList.contains('revealed')) {
+                content.classList.remove('revealed');
+                button.textContent = 'Показать';
+            } else {
+                content.classList.add('revealed');
+                button.textContent = 'Скрыть';
+            }
+        }
+
+        function closeCard() {
+            if (!isCardOpen) return;
+            
+            const overlay = document.getElementById('overlay');
+            const cardContainer = document.getElementById('cardContainer');
+
+            // Сбрасываем состояние секций
+            resetSections();
+
+            // Скрываем карточку и overlay
+            overlay.classList.remove('show');
+            cardContainer.classList.remove('show');
+
+            // Сбрасываем состояние через некоторое время
+            setTimeout(() => {
+                isCardOpen = false;
+                currentChakra = null;
+                const loader = document.getElementById('loader');
+                const cardContent = document.getElementById('cardContent');
+                loader.style.display = 'flex';
+                cardContent.style.display = 'none';
+                
+                // Сбрасываем CSS переменные
+                document.documentElement.style.setProperty('--chakra-color', '#dc3545');
+                document.documentElement.style.setProperty('--chakra-glow', 'rgba(220, 53, 69, 0.3)');
+            }, 500);
+        }
+
+        // Закрытие по ESC
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && isCardOpen) {
+                closeCard();
+            }
+        });
+
+        // Предотвращаем закрытие при клике на карточку
+        document.getElementById('cardContainer').addEventListener('click', function(e) {
+            e.stopPropagation();
+        });
+
+        // Улучшенная адаптивность при изменении ориентации
+        window.addEventListener('orientationchange', function() {
+            setTimeout(() => {
+                // Принудительно пересчитываем позицию карточки
+                if (isCardOpen) {
+                    const cardContainer = document.getElementById('cardContainer');
+                    cardContainer.style.transform = 'translate(-50%, -50%) scale(1)';
+                }
+            }, 100);
+        });
+    </script>
+</body>
+</html>
