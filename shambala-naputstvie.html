@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Напутствие - Программа Мудрости</title>
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Oswald', sans-serif;
+            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 50%, #1a1a1a 100%);
+            min-height: 100vh;
+            color: #fff;
+            overflow-x: hidden;
+        }
+
+        .container {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+            position: relative;
+        }
+
+        .header {
+            text-align: center;
+            padding: 40px 0;
+            flex: 0 0 auto;
+        }
+
+        .main-title {
+            font-size: clamp(2.5rem, 6vw, 4rem);
+            font-weight: 700;
+            background: linear-gradient(45deg, #ffd700, #ffed4e, #ffd700);
+            background-size: 200% 200%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: shimmer 3s ease-in-out infinite;
+            text-shadow: 0 0 30px rgba(255, 215, 0, 0.3);
+            letter-spacing: 3px;
+        }
+
+        @keyframes shimmer {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        .content-area {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px 0;
+        }
+
+        .footer-button {
+            flex: 0 0 auto;
+            text-align: center;
+            padding: 40px 0;
+        }
+
+        .open-cards-btn {
+            background: linear-gradient(145deg, #2d8f2d, #1e5f1e);
+            border: none;
+            border-radius: 15px;
+            padding: 20px 40px;
+            font-family: 'Oswald', sans-serif;
+            font-size: clamp(1.2rem, 3vw, 1.8rem);
+            font-weight: 600;
+            color: #fff;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 
+                0 8px 20px rgba(0, 0, 0, 0.3),
+                inset 0 2px 0 rgba(255, 255, 255, 0.2),
+                inset 0 -2px 0 rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            transform: perspective(500px) rotateX(5deg);
+        }
+
+        .open-cards-btn:hover {
+            transform: perspective(500px) rotateX(0deg) translateY(-3px);
+            box-shadow: 
+                0 15px 30px rgba(0, 0, 0, 0.4),
+                inset 0 2px 0 rgba(255, 255, 255, 0.3),
+                inset 0 -2px 0 rgba(0, 0, 0, 0.3);
+            background: linear-gradient(145deg, #32a032, #228b22);
+        }
+
+        .open-cards-btn:active {
+            transform: perspective(500px) rotateX(2deg) translateY(0px);
+            box-shadow: 
+                0 5px 15px rgba(0, 0, 0, 0.3),
+                inset 0 2px 0 rgba(255, 255, 255, 0.1),
+                inset 0 -2px 0 rgba(0, 0, 0, 0.1);
+        }
+
+        .loading-container {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            opacity: 0;
+            animation: fadeIn 0.5s ease-in-out forwards;
+        }
+
+        @keyframes fadeIn {
+            to { opacity: 1; }
+        }
+
+        .loading-spinner {
+            width: 80px;
+            height: 80px;
+            border: 4px solid rgba(255, 215, 0, 0.2);
+            border-top: 4px solid #ffd700;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 30px;
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.3);
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .loading-text {
+            font-size: clamp(1.5rem, 4vw, 2.5rem);
+            font-weight: 500;
+            color: #ffd700;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        .result-container {
+            display: none;
+            max-width: 90%;
+            width: 100%;
+            max-width: 800px;
+            opacity: 0;
+            animation: slideUp 0.8s ease-out forwards;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .result-card {
+            background: linear-gradient(145deg, #2d2d2d, #1a1a1a);
+            border: 2px solid #444;
+            border-radius: 20px;
+            padding: 30px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 
+                0 20px 40px rgba(0, 0, 0, 0.5),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+        }
+
+        .result-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #ffd700, #ffed4e, #ffd700);
+            background-size: 200% 100%;
+            animation: shimmer 2s linear infinite;
+        }
+
+        .audio-title {
+            font-size: clamp(1.8rem, 4vw, 2.5rem);
+            font-weight: 600;
+            color: #ffd700;
+            text-align: center;
+            margin-bottom: 25px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .audio-container {
+            background: linear-gradient(145deg, #1a1a1a, #2d2d2d);
+            border: 1px solid #555;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 30px;
+            box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .audio-embed {
+            width: 100%;
+            height: 166px;
+            border: none;
+            border-radius: 10px;
+        }
+
+        .text-content {
+            background: linear-gradient(145deg, #1a1a1a, #2d2d2d);
+            border: 1px solid #555;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.3);
+            position: relative;
+        }
+
+        .text-content::before {
+            content: '';
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            right: 10px;
+            bottom: 10px;
+            border: 1px solid rgba(255, 215, 0, 0.2);
+            border-radius: 10px;
+            pointer-events: none;
+        }
+
+        .wisdom-text {
+            font-size: clamp(1.1rem, 2.5vw, 1.4rem);
+            line-height: 1.8;
+            color: #e0e0e0;
+            text-align: justify;
+            font-weight: 400;
+            letter-spacing: 0.5px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .wisdom-text::first-letter {
+            font-size: 3em;
+            color: #ffd700;
+            float: left;
+            line-height: 1;
+            margin: 0 8px 0 0;
+            font-weight: 700;
+        }
+
+        .back-btn {
+            background: linear-gradient(145deg, #444, #2d2d2d);
+            border: 1px solid #666;
+            border-radius: 10px;
+            padding: 12px 25px;
+            font-family: 'Oswald', sans-serif;
+            font-size: 1rem;
+            font-weight: 500;
+            color: #ffd700;
+            cursor: pointer;
+            margin-top: 25px;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .back-btn:hover {
+            background: linear-gradient(145deg, #555, #3d3d3d);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Адаптивность для мобильных устройств */
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+            }
+            
+            .result-card {
+                padding: 20px;
+            }
+            
+            .audio-container {
+                padding: 15px;
+            }
+            
+            .text-content {
+                padding: 20px;
+            }
+            
+            .wisdom-text::first-letter {
+                font-size: 2.5em;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .open-cards-btn {
+                padding: 15px 30px;
+            }
+            
+            .result-card {
+                padding: 15px;
+            }
+            
+            .wisdom-text::first-letter {
+                font-size: 2em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1 class="main-title">НАПУТСТВИЕ</h1>
+        </div>
+
+        <div class="content-area">
+            <div id="initialState" class="initial-state">
+                <!-- Начальное состояние пустое -->
+            </div>
+
+            <div id="loadingState" class="loading-container">
+                <div class="loading-spinner"></div>
+                <div class="loading-text">Поиск напутствия</div>
+            </div>
+
+            <div id="resultState" class="result-container">
+                <div class="result-card">
+                    <h2 class="audio-title">Послушать напутствие</h2>
+                    
+                    <div class="audio-container">
+                        <!-- МЕСТО ДЛЯ ВСТАВКИ GOOGLE DRIVE АУДИО -->
+                        <!-- Замените FILE_ID на ID вашего файла из Google Drive -->
+                        <iframe id="audioEmbed" class="audio-embed" 
+                                src="" 
+                                allow="autoplay">
+                        </iframe>
+                    </div>
+
+                    <div class="text-content">
+                        <div id="wisdomText" class="wisdom-text">
+                            <!-- ТЕКСТ БУДЕТ ВСТАВЛЕН ДИНАМИЧЕСКИ -->
+                        </div>
+                    </div>
+
+                    <button class="back-btn" onclick="resetApp()">Получить новое напутствие</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer-button">
+            <button class="open-cards-btn" onclick="openCards()">
+                Открыть карты напутствия
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // БАЗА ДАННЫХ НАПУТСТВИЙ
+        const база = [
+            {
+                text: `Жизнь подобна реке, которая течет через множество ландшафтов. Иногда она спокойна и мирна, иногда бурлива и полна препятствий. Но независимо от того, какие вызовы встречаются на пути, важно помнить, что каждый поворот реки учит нас чему-то новому.
+
+                Не бойтесь неопределенности - она является источником всех возможностей. Принимайте решения с мудростью, но не забывайте прислушиваться к своему сердцу. Ваш внутренний компас знает путь даже тогда, когда разум сомневается.
+
+                Помните: сила не в том, чтобы избегать падений, а в том, чтобы вставать каждый раз, когда вы упали. Каждая неудача - это урок, каждый успех - это ступень к большим высотам.
+
+                Цените моменты тишины, ибо в них рождается мудрость. Дорожите отношениями, ибо они дают смысл всему остальному. И никогда не переставайте верить в себя, ведь в вас заключена сила изменить не только свою жизнь, но и мир вокруг.`,
+                audio: "https://drive.google.com/file/d/1WqHCEGYE72r0RIcyJeaC5dIXeJjJs7WX/preview"
+            },
+            {
+                text: `Время - это самый драгоценный дар, который у нас есть. Каждый миг уникален и неповторим, как снежинка, падающая с неба. Мы не можем остановить его течение, но мы можем выбирать, как его использовать.
+
+                Не тратьте время на сожаления о прошлом - оно уже написано. Не теряйтесь в тревогах о будущем - оно еще не наступило. Живите здесь и сейчас, цените настоящий момент, ибо он содержит в себе всю полноту жизни.
+
+                Каждый день дает нам новые возможности для роста, для любви, для творчества. Используйте их мудро. Будьте добры к себе и окружающим. Помните, что даже самые маленькие действия могут привести к великим переменам.
+
+                Ваша жизнь - это холст, а вы - художник. Каждый выбор, каждое слово, каждый поступок добавляет новые краски в эту картину. Создавайте шедевр, достойный вашей души.`,
+                audio: "https://drive.google.com/file/d/1tqQvw7u2-9eWhjAxhC_tnJjPp-wu5pbe/preview"
+            },
+            {
+                text: `Мудрость не приходит с возрастом, она приходит с опытом и размышлениями. Каждая трудность, которую вы преодолеваете, каждая радость, которую вы испытываете, формирует вашу внутреннюю силу и понимание жизни.
+
+                Не стремитесь быть идеальными - стремитесь быть искренними. Подлинность ценнее совершенства. Ваши недостатки делают вас человечными, а ваши усилия по их преодолению - героическими.
+
+                Окружайте себя людьми, которые вдохновляют вас расти. Избегайте тех, кто тянет вас вниз. Ваше окружение формирует вашу реальность больше, чем вы можете себе представить.
+
+                Помните: вы сильнее своих страхов, мудрее своих сомнений и способнее, чем думаете. Доверьтесь процессу жизни, и она покажет вам чудеса, о которых вы даже не мечтали.`,
+                audio: "https://drive.google.com/file/d/1l1CW28d9uxPLk3zlUL86CLOx3lumCSJ8/preview"
+            }
+        ];
+
+        function openCards() {
+            // Скрыть кнопку
+            document.querySelector('.footer-button').style.display = 'none';
+            
+            // Показать загрузку
+            const loadingState = document.getElementById('loadingState');
+            loadingState.style.display = 'flex';
+            
+            // Симуляция поиска напутствия (3 секунды)
+            setTimeout(() => {
+                // Выбираем случайное напутствие из базы
+                const randomIndex = Math.floor(Math.random() * база.length);
+                const selectedWisdom = база[randomIndex];
+                
+                // Вставляем выбранный текст и аудио
+                document.getElementById('wisdomText').innerHTML = selectedWisdom.text;
+                document.getElementById('audioEmbed').src = selectedWisdom.audio;
+                
+                // Скрыть загрузку
+                loadingState.style.display = 'none';
+                
+                // Показать результат
+                const resultState = document.getElementById('resultState');
+                resultState.style.display = 'block';
+            }, 3000);
+        }
+
+        function resetApp() {
+            // Скрыть результат
+            document.getElementById('resultState').style.display = 'none';
+            
+            // Показать кнопку
+            document.querySelector('.footer-button').style.display = 'block';
+            
+            // Прокрутить вверх
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        }
+
+        // Предотвращение проблем с загрузкой на мобильных устройствах
+        document.addEventListener('DOMContentLoaded', function() {
+            // Проверка ориентации и адаптация
+            function handleOrientationChange() {
+                setTimeout(() => {
+                    window.scrollTo(0, 0);
+                }, 100);
+            }
+            
+            window.addEventListener('orientationchange', handleOrientationChange);
+            window.addEventListener('resize', handleOrientationChange);
+        });
+    </script>
+</body>
+</html>
