@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Предсказание на день</title>
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Oswald', sans-serif;
+            background: linear-gradient(135deg, #0c0c0c 0%, #1a1a2e 50%, #16213e 100%);
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(circle at 20% 80%, rgba(255, 215, 0, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(255, 215, 0, 0.1) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .container {
+            position: relative;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 2;
+        }
+
+        .prediction-button {
+            position: fixed;
+            bottom: 50px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(45deg, #1a1a2e, #16213e);
+            border: 2px solid #ffd700;
+            color: #ffd700;
+            padding: 20px 40px;
+            font-size: 24px;
+            font-weight: 600;
+            cursor: pointer;
+            border-radius: 15px;
+            box-shadow: 
+                0 10px 30px rgba(255, 215, 0, 0.3),
+                inset 0 1px 0 rgba(255, 215, 0, 0.2);
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            z-index: 10;
+        }
+
+        .prediction-button:hover {
+            transform: translateX(-50%) translateY(-5px);
+            box-shadow: 
+                0 15px 40px rgba(255, 215, 0, 0.4),
+                inset 0 1px 0 rgba(255, 215, 0, 0.3);
+            background: linear-gradient(45deg, #16213e, #1a1a2e);
+        }
+
+        .prediction-button:active {
+            transform: translateX(-50%) translateY(-2px);
+            box-shadow: 
+                0 8px 25px rgba(255, 215, 0, 0.3),
+                inset 0 1px 0 rgba(255, 215, 0, 0.2);
+        }
+
+        .loading-container {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 5;
+        }
+
+        .loading-rings {
+            position: relative;
+            width: 200px;
+            height: 200px;
+            margin-bottom: 40px;
+        }
+
+        .ring {
+            position: absolute;
+            border: 3px solid transparent;
+            border-radius: 50%;
+            animation: spin 2s linear infinite;
+        }
+
+        .ring:nth-child(1) {
+            width: 200px;
+            height: 200px;
+            border-top: 3px solid #ffd700;
+            border-right: 3px solid rgba(255, 215, 0, 0.3);
+            animation-duration: 2s;
+        }
+
+        .ring:nth-child(2) {
+            width: 150px;
+            height: 150px;
+            top: 25px;
+            left: 25px;
+            border-top: 3px solid #00bfff;
+            border-left: 3px solid rgba(0, 191, 255, 0.3);
+            animation-duration: 1.5s;
+            animation-direction: reverse;
+        }
+
+        .ring:nth-child(3) {
+            width: 100px;
+            height: 100px;
+            top: 50px;
+            left: 50px;
+            border-top: 3px solid #ff6b6b;
+            border-bottom: 3px solid rgba(255, 107, 107, 0.3);
+            animation-duration: 1s;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .loading-text {
+            font-size: 24px;
+            color: #ffd700;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.6; }
+        }
+
+        .prediction-screen {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, #0c0c0c 0%, #1a1a2e 50%, #16213e 100%);
+            z-index: 8;
+            animation: screenDrop 1s ease-out;
+        }
+
+        @keyframes screenDrop {
+            0% {
+                transform: translateY(-100%);
+                opacity: 0;
+            }
+            100% {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .prediction-container {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 80%;
+            max-width: 600px;
+            background: linear-gradient(145deg, #2c2c54, #1a1a2e);
+            border: 3px solid #ffd700;
+            border-radius: 20px;
+            box-shadow: 
+                0 20px 60px rgba(0, 0, 0, 0.5),
+                inset 0 1px 0 rgba(255, 215, 0, 0.1),
+                inset 0 -1px 0 rgba(0, 0, 0, 0.3);
+            padding: 40px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .prediction-container::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(45deg, #ffd700, #ffed4e, #ffd700);
+            border-radius: 20px;
+            z-index: -1;
+            animation: borderGlow 3s ease-in-out infinite;
+        }
+
+        @keyframes borderGlow {
+            0%, 100% { opacity: 0.8; }
+            50% { opacity: 1; }
+        }
+
+        .prediction-container::after {
+            content: '';
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            right: 10px;
+            bottom: 10px;
+            background: linear-gradient(145deg, #1a1a2e, #2c2c54);
+            border-radius: 15px;
+            z-index: -1;
+        }
+
+        .prediction-title {
+            font-size: 32px;
+            color: #ffd700;
+            text-align: center;
+            margin-bottom: 30px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .prediction-text {
+            font-size: 20px;
+            color: #e0e0e0;
+            text-align: center;
+            line-height: 1.6;
+            font-weight: 400;
+            margin-bottom: 40px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .close-button {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            background: none;
+            border: none;
+            color: #ffd700;
+            font-size: 30px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .close-button:hover {
+            color: #ffed4e;
+            transform: scale(1.1);
+        }
+
+        .corner-decoration {
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            border: 2px solid #ffd700;
+        }
+
+        .corner-decoration.top-left {
+            top: 15px;
+            left: 15px;
+            border-right: none;
+            border-bottom: none;
+        }
+
+        .corner-decoration.top-right {
+            top: 15px;
+            right: 15px;
+            border-left: none;
+            border-bottom: none;
+        }
+
+        .corner-decoration.bottom-left {
+            bottom: 15px;
+            left: 15px;
+            border-right: none;
+            border-top: none;
+        }
+
+        .corner-decoration.bottom-right {
+            bottom: 15px;
+            right: 15px;
+            border-left: none;
+            border-top: none;
+        }
+
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .particle {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: #ffd700;
+            border-radius: 50%;
+            animation: float 6s infinite linear;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(100vh) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100px) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .show {
+            display: flex !important;
+        }
+
+        @media (max-width: 768px) {
+            .prediction-container {
+                width: 95%;
+                padding: 30px 20px;
+            }
+            
+            .prediction-button {
+                padding: 15px 30px;
+                font-size: 20px;
+            }
+            
+            .prediction-title {
+                font-size: 24px;
+            }
+            
+            .prediction-text {
+                font-size: 18px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="particles" id="particles"></div>
+    
+    <div class="container">
+        <button class="prediction-button" id="predictionBtn">
+            Предсказание на день
+        </button>
+        
+        <div class="loading-container" id="loadingContainer">
+            <div class="loading-rings">
+                <div class="ring"></div>
+                <div class="ring"></div>
+                <div class="ring"></div>
+            </div>
+            <div class="loading-text">Поиск пожелания на день</div>
+        </div>
+        
+        <div class="prediction-screen" id="predictionScreen">
+            <div class="prediction-container">
+                <button class="close-button" id="closeBtn">&times;</button>
+                
+                <div class="corner-decoration top-left"></div>
+                <div class="corner-decoration top-right"></div>
+                <div class="corner-decoration bottom-left"></div>
+                <div class="corner-decoration bottom-right"></div>
+                
+                <h2 class="prediction-title">Предсказание на день</h2>
+                <p class="prediction-text" id="predictionText"></p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const predictions = [
+            "Сегодня звезды благоволят вашим начинаниям. Смело двигайтесь к своей цели - успех уже близко.",
+            "Этот день принесет вам неожиданную встречу, которая изменит ваш взгляд на мир.",
+            "Ваша интуиция сегодня особенно сильна. Доверьтесь своему внутреннему голосу.",
+            "Сегодня идеальный день для творчества и самовыражения. Не бойтесь показать миру свои таланты.",
+            "Энергия дня способствует новым знакомствам и укреплению дружеских связей.",
+            "Сегодня вы найдете ответы на важные вопросы, которые давно вас беспокоят.",
+            "Этот день откроет перед вами новые возможности для профессионального роста.",
+            "Ваша доброта и щедрость сегодня вернутся к вам в тройном размере.",
+            "Сегодня особенно благоприятен для планирования будущего и принятия важных решений.",
+            "Этот день принесет вам гармонию и внутреннее спокойствие.",
+            "Сегодня вы почувствуете прилив вдохновения и жизненной энергии.",
+            "Ваша настойчивость и упорство сегодня будут вознаграждены по достоинству.",
+            "Этот день идеален для изучения чего-то нового и расширения кругозора.",
+            "Сегодня вы сможете найти компромисс в сложной ситуации.",
+            "Ваша харизма и обаяние сегодня покорят сердца окружающих.",
+            "Этот день принесет вам удачу в финансовых делах и материальную стабильность.",
+            "Сегодня вы обретете мудрость и понимание истинных ценностей жизни.",
+            "Ваша любовь и забота сегодня согреют сердца близких людей.",
+            "Этот день откроет новую главу в вашей жизни, полную возможностей.",
+            "Сегодня вы найдете в себе силы преодолеть любые препятствия на пути к цели."
+        ];
+
+        const predictionBtn = document.getElementById('predictionBtn');
+        const loadingContainer = document.getElementById('loadingContainer');
+        const predictionScreen = document.getElementById('predictionScreen');
+        const predictionText = document.getElementById('predictionText');
+        const closeBtn = document.getElementById('closeBtn');
+        const particles = document.getElementById('particles');
+
+        function createParticles() {
+            for (let i = 0; i < 30; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.animationDelay = Math.random() * 6 + 's';
+                particle.style.animationDuration = (Math.random() * 3 + 3) + 's';
+                particles.appendChild(particle);
+            }
+        }
+
+        function getRandomPrediction() {
+            const randomIndex = Math.floor(Math.random() * predictions.length);
+            return predictions[randomIndex];
+        }
+
+        function showPrediction() {
+            predictionBtn.style.display = 'none';
+            loadingContainer.classList.add('show');
+            
+            setTimeout(() => {
+                loadingContainer.classList.remove('show');
+                predictionText.textContent = getRandomPrediction();
+                predictionScreen.style.display = 'block';
+            }, 3000);
+        }
+
+        function hidePrediction() {
+            predictionScreen.style.display = 'none';
+            predictionBtn.style.display = 'block';
+        }
+
+        predictionBtn.addEventListener('click', showPrediction);
+        closeBtn.addEventListener('click', hidePrediction);
+
+        predictionScreen.addEventListener('click', (e) => {
+            if (e.target === predictionScreen) {
+                hidePrediction();
+            }
+        });
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                hidePrediction();
+            }
+        });
+
+        createParticles();
+    </script>
+</body>
+</html>
