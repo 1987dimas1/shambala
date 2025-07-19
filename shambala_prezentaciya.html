@@ -1,0 +1,1108 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SHAMBALA - Уникальные Метафизические Карты</title>
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;500;600;700&family=Crimson+Text:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Crimson Text', serif;
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 50%, #0f0f0f 100%);
+            color: #e0e0e0;
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        /* Navigation */
+        .navigation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 350px;
+            height: 100vh;
+            background: linear-gradient(180deg, #1a1a1a 0%, #0a0a0a 100%);
+            border-right: 2px solid #d4af37;
+            z-index: 1000;
+            transform: translateX(-320px);
+            transition: transform 0.4s ease;
+            box-shadow: 5px 0 20px rgba(212, 175, 55, 0.3);
+        }
+
+        .navigation.active {
+            transform: translateX(0);
+        }
+
+        .nav-toggle {
+            position: fixed;
+            top: 30px;
+            left: 30px;
+            z-index: 1001;
+            background: linear-gradient(45deg, #d4af37, #f4a261);
+            border: none;
+            padding: 15px;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(212, 175, 55, 0.4);
+        }
+
+        .nav-toggle:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 20px rgba(212, 175, 55, 0.6);
+        }
+
+        .nav-toggle i {
+            color: #000;
+            font-size: 20px;
+        }
+
+        .nav-header {
+            padding: 40px 30px;
+            border-bottom: 1px solid #333;
+        }
+
+        .nav-title {
+            font-family: 'Oswald', sans-serif;
+            font-size: 28px;
+            font-weight: 700;
+            color: #d4af37;
+            text-align: center;
+            letter-spacing: 2px;
+        }
+
+        .nav-subtitle {
+            text-align: center;
+            color: #999;
+            font-size: 14px;
+            margin-top: 10px;
+            font-style: italic;
+        }
+
+        .nav-menu {
+            padding: 30px 0;
+            height: calc(100vh - 200px);
+            overflow-y: auto;
+        }
+
+        .nav-item {
+            display: block;
+            padding: 15px 30px;
+            color: #e0e0e0;
+            text-decoration: none;
+            font-family: 'Oswald', sans-serif;
+            font-weight: 500;
+            font-size: 16px;
+            border-left: 3px solid transparent;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .nav-item:hover, .nav-item.active {
+            background: linear-gradient(90deg, rgba(212, 175, 55, 0.1) 0%, transparent 100%);
+            border-left-color: #d4af37;
+            color: #d4af37;
+            transform: translateX(10px);
+        }
+
+        .nav-item i {
+            margin-right: 15px;
+            width: 20px;
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-left: 0;
+            transition: margin-left 0.4s ease;
+        }
+
+        .section {
+            min-height: 100vh;
+            padding: 80px 60px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            position: relative;
+            border-bottom: 1px solid #333;
+        }
+
+        .section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(ellipse at center, rgba(212, 175, 55, 0.02) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        .section-title {
+            font-family: 'Oswald', sans-serif;
+            font-size: 48px;
+            font-weight: 700;
+            color: #d4af37;
+            margin-bottom: 20px;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+        }
+
+        .section-subtitle {
+            font-size: 24px;
+            color: #f4a261;
+            font-weight: 600;
+            margin-bottom: 30px;
+        }
+
+        .section-description {
+            font-size: 18px;
+            color: #ccc;
+            max-width: 800px;
+            margin: 0 auto;
+            line-height: 1.8;
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 50%, #2a1810 100%);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(212, 175, 55, 0.1) 0%, transparent 70%);
+            animation: rotate 20s linear infinite;
+            pointer-events: none;
+        }
+
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .hero-title {
+            font-family: 'Oswald', sans-serif;
+            font-size: 80px;
+            font-weight: 700;
+            background: linear-gradient(45deg, #d4af37, #f4a261, #d4af37);
+            background-size: 200% 200%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: gradientShift 3s ease-in-out infinite;
+            margin-bottom: 30px;
+            letter-spacing: 5px;
+        }
+
+        @keyframes gradientShift {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        .hero-subtitle {
+            font-size: 32px;
+            color: #e0e0e0;
+            margin-bottom: 40px;
+            font-weight: 300;
+        }
+
+        .hero-description {
+            font-size: 20px;
+            color: #ccc;
+            max-width: 900px;
+            margin: 0 auto 50px;
+            line-height: 1.8;
+        }
+
+        /* Content Cards */
+        .content-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 40px;
+            margin-top: 40px;
+        }
+
+        .content-card {
+            background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
+            border: 2px solid #333;
+            border-radius: 15px;
+            padding: 40px;
+            position: relative;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .content-card:hover {
+            border-color: #d4af37;
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(212, 175, 55, 0.2);
+        }
+
+        .card-icon {
+            font-size: 48px;
+            color: #d4af37;
+            margin-bottom: 25px;
+            display: block;
+        }
+
+        .card-title {
+            font-family: 'Oswald', sans-serif;
+            font-size: 28px;
+            font-weight: 600;
+            color: #d4af37;
+            margin-bottom: 20px;
+            letter-spacing: 1px;
+        }
+
+        .card-content {
+            font-size: 16px;
+            color: #ccc;
+            line-height: 1.7;
+        }
+
+        /* Feature List */
+        .feature-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+            margin-top: 50px;
+        }
+
+        .feature-item {
+            background: rgba(26, 26, 26, 0.8);
+            border-left: 4px solid #d4af37;
+            padding: 30px;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .feature-item:hover {
+            background: rgba(212, 175, 55, 0.1);
+            transform: translateX(10px);
+        }
+
+        .feature-title {
+            font-family: 'Oswald', sans-serif;
+            font-size: 22px;
+            font-weight: 600;
+            color: #f4a261;
+            margin-bottom: 15px;
+        }
+
+        .feature-description {
+            color: #ccc;
+            line-height: 1.6;
+        }
+
+        /* Call to Action */
+        .cta-section {
+            text-align: center;
+            background: linear-gradient(135deg, #2a1810 0%, #1a1a1a 100%);
+        }
+
+        .cta-button {
+            display: inline-block;
+            background: linear-gradient(45deg, #d4af37, #f4a261);
+            color: #000;
+            padding: 20px 50px;
+            font-family: 'Oswald', sans-serif;
+            font-size: 20px;
+            font-weight: 600;
+            text-decoration: none;
+            border-radius: 50px;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            box-shadow: 0 10px 30px rgba(212, 175, 55, 0.3);
+        }
+
+        .cta-button:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(212, 175, 55, 0.5);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .navigation {
+                width: 280px;
+                transform: translateX(-250px);
+            }
+
+            .nav-toggle {
+                top: 20px;
+                left: 20px;
+            }
+
+            .section {
+                padding: 60px 30px;
+            }
+
+            .hero-title {
+                font-size: 50px;
+            }
+
+            .hero-subtitle {
+                font-size: 24px;
+            }
+
+            .section-title {
+                font-size: 36px;
+            }
+
+            .content-grid {
+                grid-template-columns: 1fr;
+                gap: 30px;
+            }
+
+            .content-card {
+                padding: 30px;
+            }
+
+            .feature-list {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Smooth scrolling */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        /* Print styles for PDF export */
+        @media print {
+            .navigation,
+            .nav-toggle {
+                display: none;
+            }
+
+            .main-content {
+                margin-left: 0;
+            }
+
+            .section {
+                page-break-inside: avoid;
+                min-height: auto;
+                padding: 40px;
+            }
+
+            body {
+                background: white;
+                color: black;
+            }
+
+            .section-title,
+            .hero-title {
+                color: #d4af37 !important;
+                -webkit-text-fill-color: #d4af37 !important;
+            }
+        }
+
+        .decorative-line {
+            width: 100px;
+            height: 3px;
+            background: linear-gradient(90deg, #d4af37, #f4a261);
+            margin: 30px auto;
+            border-radius: 3px;
+        }
+
+        .highlight {
+            color: #f4a261;
+            font-weight: 600;
+        }
+
+        .accent {
+            color: #d4af37;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation Toggle -->
+    <button class="nav-toggle" onclick="toggleNav()">
+        <i class="fas fa-bars"></i>
+    </button>
+
+    <!-- Navigation -->
+    <nav class="navigation" id="navigation">
+        <div class="nav-header">
+            <div class="nav-title">SHAMBALA</div>
+            <div class="nav-subtitle">Метафизические Карты</div>
+        </div>
+        <div class="nav-menu">
+            <a href="#home" class="nav-item active" onclick="setActive(this)">
+                <i class="fas fa-home"></i>
+                Главная
+            </a>
+            <a href="#uniqueness" class="nav-item" onclick="setActive(this)">
+                <i class="fas fa-star"></i>
+                Уникальность
+            </a>
+            <a href="#no-analogues" class="nav-item" onclick="setActive(this)">
+                <i class="fas fa-gem"></i>
+                Нет аналогов
+            </a>
+            <a href="#voice-subconscious" class="nav-item" onclick="setActive(this)">
+                <i class="fas fa-microphone"></i>
+                Голос подсознания
+            </a>
+            <a href="#structure" class="nav-item" onclick="setActive(this)">
+                <i class="fas fa-puzzle-piece"></i>
+                Структура набора
+            </a>
+            <a href="#direction" class="nav-item" onclick="setActive(this)">
+                <i class="fas fa-compass"></i>
+                Направление
+            </a>
+            <a href="#state" class="nav-item" onclick="setActive(this)">
+                <i class="fas fa-heart"></i>
+                Состояние
+            </a>
+            <a href="#message" class="nav-item" onclick="setActive(this)">
+                <i class="fas fa-envelope"></i>
+                Послание
+            </a>
+            <a href="#question" class="nav-item" onclick="setActive(this)">
+                <i class="fas fa-question"></i>
+                Вопрос
+            </a>
+            <a href="#guidance" class="nav-item" onclick="setActive(this)">
+                <i class="fas fa-feather"></i>
+                Напутствие
+            </a>
+            <a href="#tutorial" class="nav-item" onclick="setActive(this)">
+                <i class="fas fa-book"></i>
+                Обучающая карта
+            </a>
+            <a href="#session-format" class="nav-item" onclick="setActive(this)">
+                <i class="fas fa-eye"></i>
+                Формат сессии
+            </a>
+            <a href="#oracle" class="nav-item" onclick="setActive(this)">
+                <i class="fas fa-crystal-ball"></i>
+                Интуитивный Оракул
+            </a>
+            <a href="#approach" class="nav-item" onclick="setActive(this)">
+                <i class="fas fa-hands-helping"></i>
+                Подход для всех
+            </a>
+            <a href="#conclusion" class="nav-item" onclick="setActive(this)">
+                <i class="fas fa-shopping-cart"></i>
+                Заключение
+            </a>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Hero Section -->
+        <section id="home" class="section hero">
+            <div class="section-header">
+                <h1 class="hero-title">SHAMBALA</h1>
+                <h2 class="hero-subtitle">Уникальные Метафизические Карты</h2>
+                <div class="decorative-line"></div>
+                <p class="hero-description">
+                    Откройте для себя уникальную систему карт, не имеющую аналогов в мире. 
+                    <span class="highlight">SHAMBALA</span> — это не просто карты, это живые энергетические инструменты 
+                    для глубокого внутреннего диалога, трансформации и помощи другим.
+                </p>
+            </div>
+        </section>
+
+        <!-- Section 1: Uniqueness Overview -->
+        <section id="uniqueness" class="section">
+            <div class="section-header">
+                <h2 class="section-title">
+                    <i class="fas fa-star"></i>
+                    Уникальность Карт SHAMBALA
+                </h2>
+                <div class="decorative-line"></div>
+                <p class="section-description">
+                    Карты SHAMBALA представляют собой революционный подход к работе с подсознанием и 
+                    внутренним миром человека. Каждая карта — это метафизический ключ, открывающий 
+                    двери к глубинному пониманию себя и мира вокруг.
+                </p>
+            </div>
+
+            <div class="content-grid">
+                <div class="content-card">
+                    <i class="fas fa-gem card-icon"></i>
+                    <h3 class="card-title">Нет аналогов в мире</h3>
+                    <div class="card-content">
+                        Уникальная система, не похожая на Таро или психологические карты. 
+                        Каждая карта — живой энергетический инструмент для трансформации.
+                    </div>
+                </div>
+
+                <div class="content-card">
+                    <i class="fas fa-microphone card-icon"></i>
+                    <h3 class="card-title">Голос подсознания</h3>
+                    <div class="card-content">
+                        Специально записанные аудио воздействуют на подсознание, рождая 
+                        понимание через ощущения и инсайты, а не прямые указания.
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 1.1: No Analogues -->
+        <section id="no-analogues" class="section">
+            <div class="section-header">
+                <h2 class="section-title">
+                    <i class="fas fa-gem"></i>
+                    Нет Аналогов в Мире
+                </h2>
+                <div class="decorative-line"></div>
+            </div>
+
+            <div class="feature-list">
+                <div class="feature-item">
+                    <h3 class="feature-title">🌀 Уникальная система</h3>
+                    <p class="feature-description">
+                        Карты SHAMBALA — это <span class="accent">уникальная система</span>, не имеющая аналогов.
+                        Каждая карта — не просто изображение, а <span class="highlight">живой энергетический инструмент</span>.
+                    </p>
+                </div>
+
+                <div class="feature-item">
+                    <h3 class="feature-title">🔮 Не Таро, не психологические карты</h3>
+                    <p class="feature-description">
+                        Они <span class="accent">не похожи на Таро</span>, не являются классическими психологическими картами.
+                        Это метафизические ключи, созданные для глубокого внутреннего диалога.
+                    </p>
+                </div>
+
+                <div class="feature-item">
+                    <h3 class="feature-title">✨ Инструмент трансформации</h3>
+                    <p class="feature-description">
+                        Это метафизические ключи, созданные для <span class="highlight">глубокого внутреннего диалога</span>, 
+                        трансформации и помощи другим.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 1.2: Voice of Subconscious -->
+        <section id="voice-subconscious" class="section">
+            <div class="section-header">
+                <h2 class="section-title">
+                    <i class="fas fa-microphone"></i>
+                    Голос, Говорящий с Подсознанием
+                </h2>
+                <div class="decorative-line"></div>
+            </div>
+
+            <div class="feature-list">
+                <div class="feature-item">
+                    <h3 class="feature-title">🔊 Озвучка каждой карты</h3>
+                    <p class="feature-description">
+                        Каждая карта имеет <span class="accent">озвучку</span> — специально записанное аудио,
+                        которое создано так, чтобы <span class="highlight">воздействовать на подсознание</span>.
+                    </p>
+                </div>
+
+                <div class="feature-item">
+                    <h3 class="feature-title">💫 Рождение понимания</h3>
+                    <p class="feature-description">
+                        Слова подобраны таким образом, что у человека внутри <span class="accent">рождается понимание</span>,
+                        без прямых указаний — через <span class="highlight">ощущения и инсайты</span>.
+                    </p>
+                </div>
+
+                <div class="feature-item">
+                    <h3 class="feature-title">🌟 Опыт проживания</h3>
+                    <p class="feature-description">
+                        Это не просто послание, это <span class="highlight">опыт проживания смысла карты</span> 
+                        на уровне чувств.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 2: Structure Overview -->
+        <section id="structure" class="section">
+            <div class="section-header">
+                <h2 class="section-title">
+                    <i class="fas fa-puzzle-piece"></i>
+                    Структура Набора и Смысл Колод
+                </h2>
+                <div class="decorative-line"></div>
+                <p class="section-description">
+                    В наборе <span class="accent">132 карты</span>. Они делятся на <span class="highlight">3 самостоятельные колоды</span>,
+                    каждая из которых работает с разными уровнями человека.
+                </p>
+            </div>
+
+            <div class="content-grid">
+                <div class="content-card">
+                    <i class="fas fa-compass card-icon"></i>
+                    <h3 class="card-title">Направление</h3>
+                    <div class="card-content">
+                        Отвечает на вопрос: "Куда мне двигаться? Что сейчас важно?"
+                    </div>
+                </div>
+
+                <div class="content-card">
+                    <i class="fas fa-heart card-icon"></i>
+                    <h3 class="card-title">Состояние</h3>
+                    <div class="card-content">
+                        Помогает распознать внутренние чувства и настроения.
+                    </div>
+                </div>
+
+                <div class="content-card">
+                    <i class="fas fa-envelope card-icon"></i>
+                    <h3 class="card-title">Послание</h3>
+                    <div class="card-content">
+                        Передает послания от мира, от Высшего "Я", от Души.
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 2.1: Direction Deck -->
+        <section id="direction" class="section">
+            <div class="section-header">
+                <h2 class="section-title">
+                    <i class="fas fa-compass"></i>
+                    Колода «НАПРАВЛЕНИЕ»
+                </h2>
+                <div class="decorative-line"></div>
+            </div>
+
+            <div class="feature-list">
+                <div class="feature-item">
+                    <h3 class="feature-title">🧭 Ключевые вопросы</h3>
+                    <p class="feature-description">
+                        Эта колода отвечает на вопрос:<br>
+                        <span class="accent">«Куда мне двигаться? Что сейчас важно? В чем мой вектор?»</span>
+                    </p>
+                </div>
+
+                <div class="feature-item">
+                    <h3 class="feature-title">🎯 Работа с фокусом</h3>
+                    <p class="feature-description">
+                        Работает с <span class="highlight">фокусом, выбором, ценностями</span>.
+                        Помогает определить приоритеты и жизненные ориентиры.
+                    </p>
+                </div>
+
+                <div class="feature-item">
+                    <h3 class="feature-title">💫 Голос души</h3>
+                    <p class="feature-description">
+                        Помогает увидеть, в какую сторону <span class="accent">двигается душа</span>, 
+                        даже если разум сомневается.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 2.2: State Deck -->
+        <section id="state" class="section">
+            <div class="section-header">
+                <h2 class="section-title">
+                    <i class="fas fa-heart"></i>
+                    Колода «СОСТОЯНИЕ»
+                </h2>
+                <div class="decorative-line"></div>
+            </div>
+
+            <div class="feature-list">
+                <div class="feature-item">
+                    <h3 class="feature-title">💠 Понимание себя</h3>
+                    <p class="feature-description">
+                        Эта колода отвечает на вопрос:<br>
+                        <span class="accent">«Что я сейчас проживаю? Какое мое внутреннее состояние?»</span>
+                    </p>
+                </div>
+
+                <div class="feature-item">
+                    <h3 class="feature-title">🌊 Распознание чувств</h3>
+                    <p class="feature-description">
+                        Помогает распознать <span class="highlight">чувства, настроения, внутренние фазы</span>.
+                        Работает с осознанием и принятием себя в моменте.
+                    </p>
+                </div>
+
+                <div class="feature-item">
+                    <h3 class="feature-title">✨ Неожиданная точность</h3>
+                    <p class="feature-description">
+                        Часто даёт <span class="accent">неожиданный, но точный ответ</span>, 
+                        который трудно выразить словами.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 2.3: Message Deck -->
+        <section id="message" class="section">
+            <div class="section-header">
+                <h2 class="section-title">
+                    <i class="fas fa-envelope"></i>
+                    Колода «ПОСЛАНИЕ»
+                </h2>
+                <div class="decorative-line"></div>
+            </div>
+
+            <div class="feature-list">
+                <div class="feature-item">
+                    <h3 class="feature-title">💌 Послания пространства</h3>
+                    <p class="feature-description">
+                        Эта колода даёт ответы вроде:<br>
+                        <span class="accent">«Что хочет сказать мне пространство? Что мне важно услышать?»</span>
+                    </p>
+                </div>
+
+                <div class="feature-item">
+                    <h3 class="feature-title">📬 Письмо от мира</h3>
+                    <p class="feature-description">
+                        Это как получение <span class="highlight">письма от мира</span>, 
+                        от Высшего «Я», от Души.
+                    </p>
+                </div>
+
+                <div class="feature-item">
+                    <h3 class="feature-title">💝 Открытие сердца</h3>
+                    <p class="feature-description">
+                        Карты этой колоды передают послания, которые 
+                        <span class="accent">открывают сердце и дают смысл</span>.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 2.4: Question Card -->
+        <section id="question" class="section">
+            <div class="section-header">
+                <h2 class="section-title">
+                    <i class="fas fa-question"></i>
+                    Карта «ВОПРОС»
+                </h2>
+                <div class="decorative-line"></div>
+            </div>
+
+            <div class="feature-list">
+                <div class="feature-item">
+                    <h3 class="feature-title">❓ Особенная карта</h3>
+                    <p class="feature-description">
+                        В каждой колоде есть особенная карта <span class="accent">"Вопрос"</span>,
+                        внутри которой находится <span class="highlight">10 случайных карт</span>, 
+                        выпадающих как ответ на вопрос.
+                    </p>
+                </div>
+
+                <div class="feature-item">
+                    <h3 class="feature-title">⚡ Быстрая мини-сессия</h3>
+                    <p class="feature-description">
+                        Это удобный формат для <span class="accent">быстрой мини-сессии</span>.
+                        Позволяет получить мгновенный инсайт.
+                    </p>
+                </div>
+
+                <div class="feature-item">
+                    <h3 class="feature-title">💬 Живой диалог</h3>
+                    <p class="feature-description">
+                        Создает ощущение <span class="highlight">живого диалога с пространством</span> — 
+                        вопрос/ответ здесь и сейчас.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 2.5: Guidance Card -->
+        <section id="guidance" class="section">
+            <div class="section-header">
+                <h2 class="section-title">
+                    <i class="fas fa-feather"></i>
+                    Карта «НАПУТСТВИЕ»
+                </h2>
+                <div class="decorative-line"></div>
+            </div>
+
+            <div class="feature-list">
+                <div class="feature-item">
+                    <h3 class="feature-title">🪶 100 историй мудрости</h3>
+                    <p class="feature-description">
+                        Это особенная карта, внутри которой — <span class="accent">100 историй</span>,
+                        созданных для <span class="highlight">передачи мудрости и поддержки</span>.
+                    </p>
+                </div>
+
+                <div class="feature-item">
+                    <h3 class="feature-title">📚 Метафоры и уроки</h3>
+                    <p class="feature-description">
+                        Каждая история — это <span class="accent">метафора, урок, напоминание</span>.
+                        Глубокие послания в простой форме.
+                    </p>
+                </div>
+
+                <div class="feature-item">
+                    <h3 class="feature-title">🎁 Завершение сессии</h3>
+                    <p class="feature-description">
+                        Их можно использовать в конце сессии как 
+                        <span class="highlight">подарок, завершение, вдохновение</span>.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 2.6: Tutorial Card -->
+        <section id="tutorial" class="section">
+            <div class="section-header">
+                <h2 class="section-title">
+                    <i class="fas fa-book"></i>
+                    Обучающая Карта
+                </h2>
+                <div class="decorative-line"></div>
+            </div>
+
+            <div class="feature-list">
+                <div class="feature-item">
+                    <h3 class="feature-title">📘 Быстрое понимание</h3>
+                    <p class="feature-description">
+                        В набор входит <span class="accent">обучающая карта</span>, которая помогает быстро понять:
+                        как работает система, как выбирать карты, как начать даже без опыта.
+                    </p>
+                </div>
+
+                <div class="feature-item">
+                    <h3 class="feature-title">🔹 Для всех уровней</h3>
+                    <p class="feature-description">
+                        Подходит как для <span class="highlight">новичков</span>, 
+                        так и для <span class="accent">практиков с опытом</span>.
+                    </p>
+                </div>
+
+                <div class="feature-item">
+                    <h3 class="feature-title">🔮 Карты сами ведут</h3>
+                    <p class="feature-description">
+                        Главное преимущество — <span class="accent">карты сами ведут, подсказывают, направляют</span>.
+                        Тебе нужно просто следовать за ними.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 3: Session Format -->
+        <section id="session-format" class="section">
+            <div class="section-header">
+                <h2 class="section-title">
+                    <i class="fas fa-eye"></i>
+                    Формат Сессии SHAMBALA
+                </h2>
+                <div class="decorative-line"></div>
+                <p class="section-description">
+                    <span class="accent">Особый подход</span> к проведению сессий, 
+                    основанный на интуитивном взаимодействии с картами.
+                </p>
+            </div>
+
+            <div class="content-grid">
+                <div class="content-card">
+                    <i class="fas fa-crystal-ball card-icon"></i>
+                    <h3 class="card-title">Интуитивный Оракул</h3>
+                    <div class="card-content">
+                        Система сама показывает, из какой колоды взять карту - 
+                        следование подсказке пространства.
+                    </div>
+                </div>
+
+                <div class="content-card">
+                    <i class="fas fa-hands-helping card-icon"></i>
+                    <h3 class="card-title">Подход для всех</h3>
+                    <div class="card-content">
+                        Подходит и новичкам, и опытным мастерам, 
+                        и просто ищущим людям.
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 3.1: Intuitive Oracle -->
+        <section id="oracle" class="section">
+            <div class="section-header">
+                <h2 class="section-title">
+                    <i class="fas fa-crystal-ball"></i>
+                    Интуитивный Оракул SHAMBALA
+                </h2>
+                <div class="decorative-line"></div>
+            </div>
+
+            <div class="feature-list">
+                <div class="feature-item">
+                    <h3 class="feature-title">🔮 Активация Оракула</h3>
+                    <p class="feature-description">
+                        В каждой сессии активируется <span class="accent">Оракул SHAMBALA</span> —
+                        это система, которая <span class="highlight">сама показывает</span>, из какой колоды взять карту.
+                    </p>
+                </div>
+
+                <div class="feature-item">
+                    <h3 class="feature-title">⚖️ Позитивное и негативное</h3>
+                    <p class="feature-description">
+                        Это может быть «Направление», «Состояние» или «Послание» 
+                        в <span class="accent">позитивном или негативном значении</span>.
+                    </p>
+                </div>
+
+                <div class="feature-item">
+                    <h3 class="feature-title">🌌 Подсказка пространства</h3>
+                    <p class="feature-description">
+                        Таким образом, человек <span class="highlight">не выбирает умом</span>, 
+                        а следует за подсказкой пространства.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 3.2: Approach for All -->
+        <section id="approach" class="section">
+            <div class="section-header">
+                <h2 class="section-title">
+                    <i class="fas fa-hands-helping"></i>
+                    Подход для Всех
+                </h2>
+                <div class="decorative-line"></div>
+            </div>
+
+            <div class="feature-list">
+                <div class="feature-item">
+                    <h3 class="feature-title">🌱 Новичок?</h3>
+                    <p class="feature-description">
+                        <span class="accent">Тебе не нужно учиться месяцами</span>. 
+                        Карты сами покажут путь и дадут понимание с первого раза.
+                    </p>
+                </div>
+
+                <div class="feature-item">
+                    <h3 class="feature-title">🔬 Опытный мастер?</h3>
+                    <p class="feature-description">
+                        Ты получаешь <span class="highlight">мощный инструмент, углубляющий работу</span>.
+                        Новые возможности для практики.
+                    </p>
+                </div>
+
+                <div class="feature-item">
+                    <h3 class="feature-title">🔍 Просто ищущий?</h3>
+                    <p class="feature-description">
+                        Ты получишь <span class="accent">инсайт и ясность</span> уже с первой карты.
+                        Немедленное понимание и озарение.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Conclusion -->
+        <section id="conclusion" class="section cta-section">
+            <div class="section-header">
+                <h2 class="section-title">
+                    <i class="fas fa-shopping-cart"></i>
+                    Почему Это Важно Прямо Сейчас
+                </h2>
+                <div class="decorative-line"></div>
+                <p class="section-description">
+                    Карты SHAMBALA — это <span class="highlight">живой инструмент</span>,
+                    который соединяет тебя с <span class="accent">Истиной внутри себя</span>.
+                </p>
+                <br>
+                <p class="section-description">
+                    Это ключ, способный помочь тебе и другим, <span class="accent">увидеть то, что скрыто</span>.
+                </p>
+            </div>
+
+            <div style="margin-top: 50px;">
+                <a href="#" class="cta-button">
+                    <i class="fas fa-gem" style="margin-right: 10px;"></i>
+                    Открыть Путь к Истине
+                </a>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        function toggleNav() {
+            const nav = document.getElementById('navigation');
+            nav.classList.toggle('active');
+        }
+
+        function setActive(element) {
+            // Remove active class from all nav items
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            
+            // Add active class to clicked item
+            element.classList.add('active');
+            
+            // Close navigation on mobile after clicking
+            if (window.innerWidth <= 768) {
+                document.getElementById('navigation').classList.remove('active');
+            }
+        }
+
+        // Close navigation when clicking outside
+        document.addEventListener('click', function(event) {
+            const nav = document.getElementById('navigation');
+            const toggle = document.querySelector('.nav-toggle');
+            
+            if (!nav.contains(event.target) && !toggle.contains(event.target)) {
+                nav.classList.remove('active');
+            }
+        });
+
+        // Update active navigation item based on scroll position
+        window.addEventListener('scroll', function() {
+            const sections = document.querySelectorAll('section');
+            const navItems = document.querySelectorAll('.nav-item');
+            
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                const sectionHeight = section.clientHeight;
+                if (window.scrollY >= sectionTop - 200) {
+                    current = section.getAttribute('id');
+                }
+            });
+
+            navItems.forEach(item => {
+                item.classList.remove('active');
+                if (item.getAttribute('href') === '#' + current) {
+                    item.classList.add('active');
+                }
+            });
+        });
+
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>
