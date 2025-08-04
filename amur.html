@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>АМУР - Генератор романтических историй</title>
+    <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #1a0033, #330066, #4d0080);
+            min-height: 100vh;
+            color: #ffffff;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .title {
+            font-size: 4rem;
+            font-weight: bold;
+            color: #ff66cc;
+            text-shadow: 0 0 20px #ff66cc, 0 0 40px #ff33aa;
+            margin-bottom: 10px;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            color: #ccccff;
+            opacity: 0.8;
+        }
+
+        .main-content {
+            display: flex;
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+
+        .character-section {
+            flex: 1;
+            background: linear-gradient(145deg, #2d1b69, #4c2a85);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 
+                0 20px 60px rgba(0, 0, 0, 0.5),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 102, 204, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .character-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, transparent, rgba(255, 102, 204, 0.1), transparent);
+            pointer-events: none;
+        }
+
+        .section-title {
+            font-size: 2rem;
+            text-align: center;
+            margin-bottom: 30px;
+            color: #ff99dd;
+            text-shadow: 0 2px 10px rgba(255, 153, 221, 0.5);
+        }
+
+        .male-section .section-title {
+            color: #66ccff;
+            text-shadow: 0 2px 10px rgba(102, 204, 255, 0.5);
+        }
+
+        .character-info {
+            margin-bottom: 20px;
+        }
+
+        .info-group {
+            margin-bottom: 20px;
+            padding: 15px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+            border-left: 4px solid #ff66cc;
+        }
+
+        .male-section .info-group {
+            border-left-color: #66ccff;
+        }
+
+        .info-label {
+            font-weight: bold;
+            color: #ff99dd;
+            margin-bottom: 5px;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .male-section .info-label {
+            color: #99ddff;
+        }
+
+        .info-value {
+            font-size: 1.1rem;
+            line-height: 1.4;
+            min-height: 25px;
+            display: flex;
+            align-items: center;
+        }
+
+        .button-3d {
+            background: linear-gradient(145deg, #ff66cc, #cc3399);
+            border: none;
+            border-radius: 15px;
+            padding: 15px 30px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: white;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 
+                0 8px 16px rgba(0, 0, 0, 0.4),
+                0 4px 8px rgba(255, 102, 204, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .button-3d:hover {
+            transform: translateY(-2px);
+            box-shadow: 
+                0 12px 24px rgba(0, 0, 0, 0.4),
+                0 6px 12px rgba(255, 102, 204, 0.4),
+                inset 0 1px 0 rgba(255, 255, 255, 0.3);
+        }
+
+        .button-3d:active {
+            transform: translateY(0);
+            box-shadow: 
+                0 4px 8px rgba(0, 0, 0, 0.4),
+                0 2px 4px rgba(255, 102, 204, 0.2),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+        }
+
+        .male-section .button-3d {
+            background: linear-gradient(145deg, #66ccff, #3399cc);
+            box-shadow: 
+                0 8px 16px rgba(0, 0, 0, 0.4),
+                0 4px 8px rgba(102, 204, 255, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2);
+        }
+
+        .male-section .button-3d:hover {
+            box-shadow: 
+                0 12px 24px rgba(0, 0, 0, 0.4),
+                0 6px 12px rgba(102, 204, 255, 0.4),
+                inset 0 1px 0 rgba(255, 255, 255, 0.3);
+        }
+
+        .action-buttons {
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        .generate-button {
+            background: linear-gradient(145deg, #8a2be2, #9932cc);
+            font-size: 1.3rem;
+            padding: 20px 40px;
+            margin: 0 10px;
+        }
+
+        .searching {
+            color: #ffff99 !important;
+            animation: blink 1s infinite;
+        }
+
+        @keyframes blink {
+            0%, 50% { opacity: 1; }
+            51%, 100% { opacity: 0.3; }
+        }
+
+        .story-section {
+            background: linear-gradient(145deg, #1a0033, #330066);
+            border-radius: 20px;
+            padding: 30px;
+            margin-top: 40px;
+            box-shadow: 
+                0 20px 60px rgba(0, 0, 0, 0.5),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(138, 43, 226, 0.3);
+        }
+
+        .story-content {
+            font-size: 1.2rem;
+            line-height: 1.8;
+            color: #e6ccff;
+            text-align: justify;
+            min-height: 100px;
+        }
+
+        .loading {
+            text-align: center;
+            color: #ff99dd;
+            font-style: italic;
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                flex-direction: column;
+                gap: 20px;
+            }
+            
+            .title {
+                font-size: 2.5rem;
+            }
+            
+            .character-section {
+                padding: 20px;
+            }
+        }
+
+        .icon {
+            margin-right: 8px;
+            color: #ff66cc;
+        }
+
+        .male-section .icon {
+            color: #66ccff;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1 class="title"><i class="fas fa-heart"></i> АМУР <i class="fas fa-heart"></i></h1>
+            <p class="subtitle">Генератор романтических историй и судьбоносных встреч</p>
+        </div>
+
+        <div class="main-content">
+            <div class="character-section male-section">
+                <h2 class="section-title"><i class="fas fa-mars"></i> Мужской персонаж</h2>
+                
+                <div class="character-info">
+                    <div class="info-group">
+                        <div class="info-label"><i class="fas fa-user icon"></i>Имя</div>
+                        <div class="info-value" id="male-name">Нажмите "Подобрать образ"</div>
+                    </div>
+
+                    <div class="info-group">
+                        <div class="info-label"><i class="fas fa-id-card icon"></i>Характеристика</div>
+                        <div class="info-value" id="male-character">-</div>
+                    </div>
+
+                    <div class="info-group">
+                        <div class="info-label"><i class="fas fa-heart icon"></i>Предпочтения</div>
+                        <div class="info-value" id="male-preferences">-</div>
+                    </div>
+
+                    <div class="info-group">
+                        <div class="info-label"><i class="fas fa-kiss icon"></i>Интимные предпочтения</div>
+                        <div class="info-value" id="male-intimate">-</div>
+                    </div>
+                </div>
+
+                <button class="button-3d" onclick="generateMaleCharacter()">
+                    <i class="fas fa-dice"></i> Подобрать образ
+                </button>
+            </div>
+
+            <div class="character-section">
+                <h2 class="section-title"><i class="fas fa-venus"></i> Женский персонаж</h2>
+                
+                <div class="character-info">
+                    <div class="info-group">
+                        <div class="info-label"><i class="fas fa-user icon"></i>Имя</div>
+                        <div class="info-value" id="female-name">Автоматически подберется</div>
+                    </div>
+
+                    <div class="info-group">
+                        <div class="info-label"><i class="fas fa-id-card icon"></i>Характеристика</div>
+                        <div class="info-value" id="female-character">-</div>
+                    </div>
+
+                    <div class="info-group">
+                        <div class="info-label"><i class="fas fa-heart icon"></i>Предпочтения</div>
+                        <div class="info-value" id="female-preferences">-</div>
+                    </div>
+
+                    <div class="info-group">
+                        <div class="info-label"><i class="fas fa-kiss icon"></i>Интимные предпочтения</div>
+                        <div class="info-value" id="female-intimate">-</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="action-buttons">
+            <button class="button-3d generate-button" onclick="generateStory()">
+                <i class="fas fa-magic"></i> Создать ситуацию
+            </button>
+        </div>
+
+        <div class="story-section">
+            <h3 class="section-title"><i class="fas fa-book-open"></i> История знакомства</h3>
+            <div class="story-content" id="story-content">
+                Сначала подберите персонажей, а затем нажмите "Создать ситуацию" для генерации романтической истории их встречи.
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Базы данных
+        const databases = {
+            maleNames: [
+                'Александр', 'Дмитрий', 'Максим', 'Сергей', 'Андрей', 'Алексей', 'Артем', 'Владимир', 
+                'Михаил', 'Иван', 'Денис', 'Евгений', 'Никита', 'Илья', 'Кирилл', 'Антон', 'Егор', 
+                'Роман', 'Олег', 'Игорь', 'Павел', 'Николай', 'Тимур', 'Ростислав', 'Ярослав'
+            ],
+            
+            femaleNames: [
+                'Анна', 'Мария', 'Елена', 'Наталья', 'Ирина', 'Татьяна', 'Ольга', 'Юлия', 
+                'Екатерина', 'Светлана', 'Анастасия', 'Дарья', 'Алина', 'Виктория', 'Полина', 
+                'Кристина', 'Валерия', 'София', 'Алиса', 'Карина', 'Диана', 'Милана', 'Арина', 'Вероника'
+            ],
+            
+            maleCharacters: [
+                'Холерик из Москвы, работает программистом. Любит активный отдых и путешествия. Привлекают умные и независимые девушки.',
+                'Сангвиник из Санкт-Петербурга, врач по профессии. Увлекается спортом и кулинарией. Нравятся добрые и заботливые женщины.',
+                'Меланхолик из Екатеринбурга, художник. Любит читать и слушать классическую музыку. Привлекают творческие и чувственные натуры.',
+                'Флегматик из Новосибирска, инженер. Ценит стабильность и домашний уют. Нравятся спокойные и надежные девушки.',
+                'Холерик из Казани, бизнесмен. Любит риск и новые вызовы. Привлекают амбициозные и страстные женщины.',
+                'Сангвиник из Ростова-на-Дону, учитель. Обожает детей и животных. Нравятся терпеливые и понимающие девушки.',
+                'Меланхолик из Красноярска, музыкант. Пишет стихи и играет на гитаре. Привлекают романтичные и мечтательные натуры.',
+                'Флегматик из Воронежа, библиотекарь. Любит тишину и порядок. Нравятся интеллигентные и образованные женщины.'
+            ],
+            
+            femaleCharacters: [
+                'Холерик из Москвы, журналистка. Любит путешествия и новые впечатления. Привлекают уверенные и успешные мужчины.',
+                'Сангвиник из Санкт-Петербурга, дизайнер. Обожает искусство и моду. Нравятся творческие и стильные парни.',
+                'Меланхолик из Краснодара, психолог. Любит помогать людям и читать. Привлекают глубокие и понимающие мужчины.',
+                'Флегматик из Нижнего Новгорода, бухгалтер. Ценит стабильность и порядок. Нравятся надежные и ответственные парни.',
+                'Холерик из Самары, фитнес-тренер. Обожает спорт и здоровый образ жизни. Привлекают активные и целеустремленные мужчины.',
+                'Сангвиник из Уфы, воспитательница. Любит детей и веселье. Нравятся добрые и жизнерадостные парни.',
+                'Меланхолик из Омска, художница. Рисует пейзажи и портреты. Привлекают чувствительные и романтичные мужчины.',
+                'Флегматик из Челябинска, переводчица. Знает несколько языков. Нравятся умные и образованные парни.'
+            ],
+            
+            malePreferences: [
+                'Любит девушек с длинными волосами и выразительными глазами. Ценит в женщинах чувство юмора и способность поддержать любую беседу.',
+                'Привлекают спортивные девушки с подтянутой фигурой. Важна общность интересов и готовность к совместным приключениям.',
+                'Нравятся нежные и женственные девушки. Ценит в партнерше эмоциональную глубину и способность к эмпатии.',
+                'Привлекают надежные девушки с традиционными ценностями. Важна готовность к серьезным отношениям и созданию семьи.',
+                'Любит ярких и харизматичных девушек. Ценит в женщинах амбиции и стремление к самореализации.',
+                'Нравятся добрые и отзывчивые девушки. Привлекает материнский инстинкт и забота о близких.',
+                'Привлекают творческие и утонченные натуры. Ценит в партнерше художественный вкус и духовность.',
+                'Любит умных и образованных девушек. Важна способность к глубокому общению и интеллектуальная совместимость.'
+            ],
+            
+            femalePreferences: [
+                'Привлекают высокие мужчины с атлетическим телосложением. Ценит в парнях уверенность и лидерские качества.',
+                'Нравятся творческие и стильные мужчины. Важно чувство прекрасного и способность удивлять.',
+                'Привлекают чуткие и понимающие парни. Ценит эмоциональную зрелость и готовность выслушать.',
+                'Любит надежных мужчин с устойчивой психикой. Важна финансовая стабильность и серьезные намерения.',
+                'Нравятся энергичные и спортивные парни. Привлекает здоровый образ жизни и активная жизненная позиция.',
+                'Привлекают добрые и терпеливые мужчины. Ценит способность к компромиссам и любовь к детям.',
+                'Любит романтичных и чувствительных парней. Важна способность к глубоким переживаниям и творческий подход к жизни.',
+                'Нравятся умные и начитанные мужчины. Привлекает эрудиция и способность поддержать интеллектуальную беседу.'
+            ],
+            
+            maleIntimate: [
+                'Любит страстность и инициативу от партнерши. Возбуждают поцелуи в шею и легкие укусы. Предпочитает активную близость.',
+                'Ценит нежность и ласку. Нравится, когда гладят по голове и целуют в лоб. Предпочитает романтичную атмосферу.',
+                'Любит медленные и чувственные прикосновения. Возбуждают шепот на ухо и легкие касания пальцев. Ценит эмоциональную близость.',
+                'Предпочитает традиционный подход к близости. Нравится, когда партнерша проявляет женственность и нежность.',
+                'Любит разнообразие и эксперименты. Возбуждает игривость и готовность к новому. Ценит раскрепощенность партнерши.',
+                'Предпочитает заботу и внимание к своим потребностям. Нравится массаж и долгие прелюдии. Ценит терпеливость партнерши.',
+                'Любит романтичную обстановку со свечами и музыкой. Возбуждают стихи и признания в любви. Ценит духовную близость.',
+                'Предпочитает интеллектуальное возбуждение. Нравятся глубокие разговоры перед близостью. Ценит ментальную связь с партнершей.'
+            ],
+            
+            femaleIntimate: [
+                'Любит доминирование и напористость от партнера. Возбуждают крепкие объятия и страстные поцелуи. Предпочитает активного мужчину.',
+                'Ценит нежность и романтику. Нравится, когда целуют руки и говорят комплименты. Предпочитает медленную близость.',
+                'Любит эмоциональную близость и понимание. Возбуждают долгие разговоры и душевная связь. Ценит чуткость партнера.',
+                'Предпочитает традиционные проявления мужественности. Нравится чувствовать себя защищенной и желанной.',
+                'Любит сюрпризы и спонтанность. Возбуждает непредсказуемость и готовность к приключениям. Ценит страсть партнера.',
+                'Предпочитает заботу и внимание к деталям. Нравится, когда запоминают ее предпочтения. Ценит терпеливость и доброту.',
+                'Любит романтичную атмосферу и красивые жесты. Возбуждают стихи и серенады. Ценит творческий подход к отношениям.',
+                'Предпочитает интеллектуальную близость. Нравятся умные мужчины с широким кругозором. Ценит глубокие беседы.'
+            ],
+            
+            stories: [
+                'Они встретились в университетской библиотеке, где {maleName} искал редкую книгу по своей специальности. {femaleName} работала там и помогла ему найти нужный том. Разговорившись, они обнаружили общие интересы. Через неделю {femaleName} позвонила {maleName} и попросила помочь передвинуть тяжелый шкаф в квартире, так как жила одна. Когда они двигали мебель, {maleName} неловко зацепился за угол и порвал рубашку. "{maleName}, снимай, я зашью", - предложила {femaleName}. В этот момент между ними пробежала искра взаимного притяжения.',
+                
+                'Случайная встреча произошла в кофейне, где {maleName} работал на ноутбуке. {femaleName} села за соседний столик, и они случайно заговорили о книге, которую она читала. Оказалось, что это любимое произведение {maleName}. Проговорив до закрытия кафе, {femaleName} пригласила {maleName} к себе выпить чая и продолжить беседу. Дома, помогая ей достать с высокой полки коробку с чаем, {maleName} потерял равновесие, и его рубашка зацепилась за крючок и порвалась. "Давай я зашью", - сказала {femaleName}, и в воздухе повисло напряжение.',
+                
+                'Знакомство состоялось в фитнес-клубе, где {maleName} и {femaleName} оказались соседями по тренажерам. После тренировки они вместе пошли в кафе. {femaleName} пожаловалась, что дома сломался кран, и сантехник придет только завтра. {maleName} вызвался помочь. Починив кран, он случайно облился водой, и рубашка стала прозрачной. "Снимай быстрее, простудишься", - заботливо сказала {femaleName}, "я высушу и заодно зашью эту дырочку". Их взгляды встретились, и воздух наполнился электричеством.',
+                
+                'Встреча произошла в книжном магазине, где оба тянулись к одной и той же книге. Засмеявшись над совпадением, они решили выпить кофе и обсудить литературные предпочтения. {femaleName} рассказала, что переезжает в новую квартиру и не может справиться с тяжелой мебелью одна. {maleName} предложил помощь. На следующий день, передвигая диван, {maleName} неосторожно задел острый угол комода рубашкой. "Ой, как жаль! Но это легко исправить", - воскликнула {femaleName}, "раздевайся, я мастерица по части шитья". Между ними вспыхнуло взаимное влечение.',
+                
+                'Они познакомились в парке, где выгуливали собак. Питомцы подрались, и хозяевам пришлось их разнимать. Смеясь над происшествием, {maleName} и {femaleName} разговорились. Через несколько дней {femaleName} написала {maleName}, что не может дотянуться до верхней полки, чтобы достать корм для собаки, и попросила помочь. Приехав к ней, {maleName} полез на стул, но тот качнулся, и рукав рубашки зацепился за крючок. "Какой ужас! Но не переживай", - сказала {femaleName}, "давай я зашью, а ты пока посиди без рубашки". Воздух между ними наэлектризовался.',
+                
+                'Встретились они в театре во время антракта. {maleName} случайно наступил {femaleName} на ногу, извинился, и завязалась беседа о спектакле. После представления она пригласила его на чай, сказав, что живет рядом. Дома {femaleName} попросила помочь починить зависший ящик комода. Когда {maleName} с силой дернул ящик, тот резко выдвинулся, и острый угол порвал его рубашку. "Ой, прости! Но я это быстро исправлю", - сказала {femaleName}, "снимай, я зашью". В этот момент между ними возникла неожиданная близость.',
+                
+                'Знакомство произошло в супермаркете у полки с продуктами. {maleName} не мог выбрать между двумя видами сыра, и {femaleName} поделилась своим мнением. Разговорившись в очереди, они обменялись номерами. Вечером {femaleName} позвонила и попросила помочь занести покупки на четвертый этаж - лифт не работал. Поднимая тяжелые сумки, {maleName} зацепился рукавом за перила, и рубашка порвалась. "Какая досада! Но это не проблема", - успокоила его {femaleName}, "у меня есть иголка с ниткой, раздевайся". Взаимное притяжение стало очевидным.',
+                
+                'Встреча состоялась на автобусной остановке под дождем. У {femaleName} сломался зонт, и {maleName} поделился своим. Доехав до нужной остановки, {femaleName} пригласила {maleName} зайти обсохнуть и выпить горячего чая. Дома она попросила помочь передвинуть стиральную машину, чтобы достать закатившуюся сережку. При перемещении техники {maleName} неловко повернулся, и рубашка зацепилась за острый край. "Ой, какая неприятность! Но не расстраивайся", - сказала {femaleName}, "снимай, я умею шить". Атмосfera наполнилась романтическим напряжением.'
+            ]
+        };
+
+        let currentMale = null;
+        let currentFemale = null;
+
+        function getRandomItem(array) {
+            return array[Math.floor(Math.random() * array.length)];
+        }
+
+        function animateTyping(element, text, delay = 100) {
+            element.innerHTML = '';
+            element.classList.add('searching');
+            
+            return new Promise((resolve) => {
+                let index = 0;
+                const timer = setInterval(() => {
+                    if (index < text.length) {
+                        element.innerHTML += text[index];
+                        index++;
+                    } else {
+                        clearInterval(timer);
+                        element.classList.remove('searching');
+                        resolve();
+                    }
+                }, delay);
+            });
+        }
+
+        async function generateMaleCharacter() {
+            const maleName = getRandomItem(databases.maleNames);
+            const maleCharacter = getRandomItem(databases.maleCharacters);
+            const malePreference = getRandomItem(databases.malePreferences);
+            const maleIntimate = getRandomItem(databases.maleIntimate);
+
+            currentMale = {
+                name: maleName,
+                character: maleCharacter,
+                preferences: malePreference,
+                intimate: maleIntimate
+            };
+
+            // Анимированное появление информации с задержками
+            await animateTyping(document.getElementById('male-name'), maleName, 80);
+            await new Promise(resolve => setTimeout(resolve, 300));
+            
+            await animateTyping(document.getElementById('male-character'), maleCharacter, 30);
+            await new Promise(resolve => setTimeout(resolve, 300));
+            
+            await animateTyping(document.getElementById('male-preferences'), malePreference, 30);
+            await new Promise(resolve => setTimeout(resolve, 300));
+            
+            await animateTyping(document.getElementById('male-intimate'), maleIntimate, 30);
+
+            // Автоматически генерируем женский персонаж
+            generateFemaleCharacter();
+        }
+
+        async function generateFemaleCharacter() {
+            const femaleName = getRandomItem(databases.femaleNames);
+            const femaleCharacter = getRandomItem(databases.femaleCharacters);
+            const femalePreference = getRandomItem(databases.femalePreferences);
+            const femaleIntimate = getRandomItem(databases.femaleIntimate);
+
+            currentFemale = {
+                name: femaleName,
+                character: femaleCharacter,
+                preferences: femalePreference,
+                intimate: femaleIntimate
+            };
+
+            await new Promise(resolve => setTimeout(resolve, 200));
+            await animateTyping(document.getElementById('female-name'), femaleName, 80);
+            await new Promise(resolve => setTimeout(resolve, 300));
+            
+            await animateTyping(document.getElementById('female-character'), femaleCharacter, 30);
+            await new Promise(resolve => setTimeout(resolve, 300));
+            
+            await animateTyping(document.getElementById('female-preferences'), femalePreference, 30);
+            await new Promise(resolve => setTimeout(resolve, 300));
+            
+            await animateTyping(document.getElementById('female-intimate'), femaleIntimate, 30);
+        }
+
+        async function generateStory() {
+            if (!currentMale || !currentFemale) {
+                alert('Сначала подберите персонажей!');
+                return;
+            }
+
+            const storyTemplate = getRandomItem(databases.stories);
+            const story = storyTemplate
+                .replace(/{maleName}/g, currentMale.name)
+                .replace(/{femaleName}/g, currentFemale.name);
+
+            const storyElement = document.getElementById('story-content');
+            storyElement.innerHTML = '<div class="loading"><i class="fas fa-heart fa-spin"></i> Создается романтическая история...</div>';
+            
+            await new Promise(resolve => setTimeout(resolve, 1500));
+            await animateTyping(storyElement, story, 50);
+        }
+
+        // Инициализация
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('АМУР - Генератор романтических историй загружен!');
+        });
+    </script>
+</body>
+</html>
