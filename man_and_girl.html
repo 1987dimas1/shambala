@@ -1,0 +1,879 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Романтический Конструктор</title>
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Oswald', sans-serif;
+            background: linear-gradient(135deg, #1a1a1a 0%, #2d1b1b 50%, #1a1a1a 100%);
+            color: #ffffff;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 100vw;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .screen {
+            display: none;
+            width: 100%;
+            max-width: 500px;
+            text-align: center;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        .screen.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h1 {
+            font-size: 2.5em;
+            margin-bottom: 20px;
+            background: linear-gradient(45deg, #ff4444, #cc0000);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 2px 2px 4px rgba(255, 68, 68, 0.3);
+        }
+
+        h2 {
+            font-size: 1.8em;
+            margin-bottom: 20px;
+            color: #ff6666;
+        }
+
+        .fullscreen-prompt {
+            background: rgba(20, 20, 20, 0.9);
+            border: 2px solid #ff4444;
+            border-radius: 20px;
+            padding: 30px;
+            backdrop-filter: blur(10px);
+        }
+
+        .checkbox-container {
+            margin: 20px 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            accent-color: #ff4444;
+        }
+
+        input[type="radio"] {
+            width: 20px;
+            height: 20px;
+            accent-color: #ff4444;
+        }
+
+        .btn {
+            background: linear-gradient(45deg, #ff4444, #cc0000);
+            border: none;
+            color: white;
+            padding: 15px 30px;
+            font-size: 1.2em;
+            font-family: 'Oswald', sans-serif;
+            border-radius: 25px;
+            cursor: pointer;
+            margin: 10px;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(255, 68, 68, 0.3);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 7px 20px rgba(255, 68, 68, 0.4);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .btn-secondary {
+            background: linear-gradient(45deg, #666, #333);
+            box-shadow: 0 5px 15px rgba(102, 102, 102, 0.3);
+        }
+
+        .btn-complete {
+            background: linear-gradient(45deg, #28a745, #20c997);
+            box-shadow: 0 5px 15px rgba(40, 167, 69, 0.3);
+        }
+
+        .btn-complete:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 7px 20px rgba(40, 167, 69, 0.4);
+        }
+
+        .btn-skip {
+            background: linear-gradient(45deg, #dc3545, #c82333);
+            box-shadow: 0 5px 15px rgba(220, 53, 69, 0.3);
+        }
+
+        .btn-skip:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 7px 20px rgba(220, 53, 69, 0.4);
+        }
+
+        .input-container {
+            margin: 20px 0;
+        }
+
+        input[type="text"], input[type="number"] {
+            width: 100%;
+            padding: 15px;
+            font-size: 1.1em;
+            font-family: 'Oswald', sans-serif;
+            background: rgba(40, 40, 40, 0.8);
+            border: 2px solid #ff4444;
+            border-radius: 15px;
+            color: white;
+            text-align: center;
+        }
+
+        input[type="text"]:focus, input[type="number"]:focus {
+            outline: none;
+            border-color: #ff6666;
+            box-shadow: 0 0 10px rgba(255, 68, 68, 0.5);
+        }
+
+        .contract {
+            background: rgba(20, 20, 20, 0.95);
+            border: 2px solid #ff4444;
+            border-radius: 20px;
+            padding: 25px;
+            margin: 20px 0;
+        }
+
+        .contract-text {
+            font-size: 1.1em;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .player-checkboxes {
+            display: flex;
+            justify-content: space-around;
+            margin: 20px 0;
+        }
+
+        .player-checkbox {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .skip-options {
+            margin: 20px 0;
+            padding: 15px;
+            background: rgba(40, 40, 40, 0.8);
+            border-radius: 15px;
+            border: 1px solid #ff4444;
+        }
+
+        .skip-choice {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 10px 0;
+            justify-content: center;
+        }
+
+        .coin-container {
+            margin: 30px 0;
+        }
+
+        .coin {
+            width: 120px;
+            height: 120px;
+            background: linear-gradient(45deg, #ff4444, #cc0000);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 0 auto;
+            box-shadow: 0 10px 20px rgba(255, 68, 68, 0.4);
+        }
+
+        .coin:hover {
+            transform: scale(1.1);
+        }
+
+        .coin.flipping {
+            animation: coinFlip 2s ease-in-out;
+        }
+
+        @keyframes coinFlip {
+            0% { transform: rotateY(0deg); }
+            50% { transform: rotateY(1800deg); }
+            100% { transform: rotateY(1800deg); }
+        }
+
+        .task-card {
+            background: rgba(20, 20, 20, 0.95);
+            border-radius: 25px;
+            padding: 30px;
+            margin: 20px 0;
+            position: relative;
+            overflow: hidden;
+            border: 2px solid transparent;
+            background-clip: padding-box;
+        }
+
+        .task-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, #ff4444, #cc0000, #ff6666, #ff4444);
+            background-size: 300% 300%;
+            animation: gradientShift 3s ease infinite;
+            border-radius: 25px;
+            z-index: -2;
+        }
+
+        .task-card::after {
+            content: '';
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            right: 2px;
+            bottom: 2px;
+            background: rgba(20, 20, 20, 0.95);
+            border-radius: 23px;
+            z-index: -1;
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .glowing-border {
+            position: absolute;
+            top: 5px;
+            left: 5px;
+            right: 5px;
+            bottom: 5px;
+            border: 1px solid #ff4444;
+            border-radius: 20px;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .glowing-border::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            width: 4px;
+            height: 4px;
+            background: #ff4444;
+            border-radius: 50%;
+            box-shadow: 0 0 10px #ff4444;
+            animation: borderGlow 3s linear infinite;
+        }
+
+        @keyframes borderGlow {
+            0% {
+                transform: translate(0, 0);
+            }
+            25% {
+                transform: translate(calc(100vw - 50px), 0);
+            }
+            50% {
+                transform: translate(calc(100vw - 50px), calc(100% + 4px));
+            }
+            75% {
+                transform: translate(0, calc(100% + 4px));
+            }
+            100% {
+                transform: translate(0, 0);
+            }
+        }
+
+        .task-text {
+            font-size: 1.3em;
+            line-height: 1.6;
+            min-height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .task-points {
+            color: #ff6666;
+            font-size: 1.2em;
+            font-weight: 600;
+            margin-top: 15px;
+        }
+
+        .score-board {
+            display: flex;
+            justify-content: space-around;
+            margin: 20px 0;
+            padding: 20px;
+            background: rgba(40, 40, 40, 0.8);
+            border-radius: 15px;
+            border: 1px solid #ff4444;
+        }
+
+        .score {
+            text-align: center;
+        }
+
+        .score-label {
+            font-size: 0.9em;
+            color: #ff6666;
+            margin-bottom: 5px;
+        }
+
+        .score-value {
+            font-size: 2em;
+            font-weight: 600;
+        }
+
+        .task-buttons {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+            justify-content: center;
+        }
+
+        .winner-screen {
+            text-align: center;
+            padding: 30px;
+            background: rgba(20, 20, 20, 0.95);
+            border: 3px solid #ff4444;
+            border-radius: 25px;
+            animation: celebration 1s ease-in-out;
+        }
+
+        @keyframes celebration {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .winner-wish {
+            font-size: 1.4em;
+            color: #ff6666;
+            margin-top: 20px;
+            padding: 20px;
+            background: rgba(40, 40, 40, 0.8);
+            border-radius: 15px;
+            border: 1px solid #ff4444;
+        }
+
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #ff6666;
+            border-top: 3px solid transparent;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 20px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .typewriter {
+            overflow: hidden;
+            white-space: nowrap;
+            animation: typing 2s steps(40, end);
+        }
+
+        @keyframes typing {
+            from { width: 0; }
+            to { width: 100%; }
+        }
+
+        @media (max-width: 768px) {
+            h1 { font-size: 2em; }
+            .container { padding: 10px; }
+            .coin { width: 100px; height: 100px; font-size: 2.5em; }
+            .task-card { padding: 20px; }
+            .task-buttons { flex-direction: column; }
+            .btn { width: 100%; margin: 5px 0; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Экран запроса полноэкранного режима -->
+        <div id="fullscreen-screen" class="screen active">
+            <div class="fullscreen-prompt">
+                <h1><i class="fas fa-heart"></i> Романтический Конструктор</h1>
+                <p style="font-size: 1.2em; margin-bottom: 20px;">
+                    Для лучшего игрового опыта откройте приложение на полный экран
+                </p>
+                <div class="checkbox-container">
+                    <input type="checkbox" id="fullscreen-agree" required>
+                    <label for="fullscreen-agree">Я согласен открыть на полный экран</label>
+                </div>
+                <button class="btn" onclick="enterFullscreen()">
+                    <i class="fas fa-expand"></i> НАЧАТЬ ИГРУ
+                </button>
+            </div>
+        </div>
+
+        <!-- Экран ввода желания мужчины -->
+        <div id="man-wish-screen" class="screen">
+            <h2><i class="fas fa-mars"></i> Ход мужчины</h2>
+            <p style="margin-bottom: 20px;">Введите ваше желание, которое исполнится при победе:</p>
+            <div class="input-container">
+                <input type="text" id="man-wish" placeholder="Введите ваше желание..." maxlength="200">
+            </div>
+            <button class="btn" onclick="saveManWish()">
+                <i class="fas fa-check"></i> ПОДТВЕРДИТЬ
+            </button>
+        </div>
+
+        <!-- Экран ввода желания женщины -->
+        <div id="woman-wish-screen" class="screen">
+            <h2><i class="fas fa-venus"></i> Ход женщины</h2>
+            <p style="margin-bottom: 20px;">Введите ваше желание, которое исполнится при победе:</p>
+            <div class="input-container">
+                <input type="text" id="woman-wish" placeholder="Введите ваше желание..." maxlength="200">
+            </div>
+            <button class="btn" onclick="saveWomanWish()">
+                <i class="fas fa-check"></i> ПОДТВЕРДИТЬ
+            </button>
+        </div>
+
+        <!-- Экран контракта -->
+        <div id="contract-screen" class="screen">
+            <div class="contract">
+                <h2><i class="fas fa-file-contract"></i> КОНТРАКТ</h2>
+                <div class="contract-text">
+                    Я соглашаюсь играть в каждую игру. Отказ от выполнения задания ведет к тому, 
+                    что желание партнера будет исполнено немедленно, либо можно пропустить задание 
+                    (баллы не начисляются, ход переходит к следующему игроку).
+                </div>
+
+                <div class="skip-options">
+                    <h3 style="margin-bottom: 15px; color: #ff6666;">Правила пропуска заданий:</h3>
+                    <div class="skip-choice">
+                        <input type="radio" id="skip-allowed" name="skip-rule" value="allowed">
+                        <label for="skip-allowed">Да, разрешен пропуск</label>
+                    </div>
+                    <div class="skip-choice">
+                        <input type="radio" id="skip-forbidden" name="skip-rule" value="forbidden">
+                        <label for="skip-forbidden">Нет, не разрешен (проигрыш)</label>
+                    </div>
+                </div>
+                
+                <div class="player-checkboxes">
+                    <div class="player-checkbox">
+                        <label><i class="fas fa-mars"></i> Мужчина</label>
+                        <input type="checkbox" id="man-agree">
+                    </div>
+                    <div class="player-checkbox">
+                        <label><i class="fas fa-venus"></i> Женщина</label>
+                        <input type="checkbox" id="woman-agree">
+                    </div>
+                </div>
+
+                <div style="margin-top: 20px;">
+                    <label style="display: block; margin-bottom: 10px;">Укажите количество баллов для победы:</label>
+                    <input type="number" id="target-points" value="100" min="50" max="500" step="10">
+                </div>
+
+                <button class="btn" onclick="startGame()">
+                    <i class="fas fa-play"></i> ПРИСТУПИТЬ К ИГРЕ
+                </button>
+            </div>
+        </div>
+
+        <!-- Игровой экран -->
+        <div id="game-screen" class="screen">
+            <div class="score-board">
+                <div class="score">
+                    <div class="score-label"><i class="fas fa-mars"></i> Мужчина</div>
+                    <div class="score-value" id="man-score">0</div>
+                </div>
+                <div class="score">
+                    <div class="score-label">Цель</div>
+                    <div class="score-value" id="target-display">100</div>
+                </div>
+                <div class="score">
+                    <div class="score-label"><i class="fas fa-venus"></i> Женщина</div>
+                    <div class="score-value" id="woman-score">0</div>
+                </div>
+            </div>
+
+            <div id="coin-section" class="coin-container">
+                <h3 style="margin-bottom: 20px;">Кто будет выполнять задание?</h3>
+                <div class="coin" onclick="flipCoin()">
+                    <i class="fas fa-dice"></i>
+                </div>
+                <p style="margin-top: 15px; color: #ff6666;">Нажмите для определения игрока</p>
+            </div>
+
+            <div id="task-section" style="display: none;">
+                <div class="task-card">
+                    <div class="glowing-border"></div>
+                    <div id="current-player" style="font-size: 1.4em; margin-bottom: 15px; color: #ff6666;"></div>
+                    <div id="loading-section" style="display: none;">
+                        <div class="loading"></div>
+                        <p>Поиск задания...</p>
+                    </div>
+                    <div class="task-text" id="task-text"></div>
+                    <div class="task-points" id="task-points"></div>
+                </div>
+                <div class="task-buttons">
+                    <button class="btn btn-complete" onclick="completeTask()">
+                        <i class="fas fa-check-circle"></i> ВЫПОЛНЕНО
+                    </button>
+                    <button class="btn btn-skip" onclick="skipTask()">
+                        <i class="fas fa-times-circle"></i> НЕ БУДУ ВЫПОЛНЯТЬ
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Экран победителя -->
+        <div id="winner-screen" class="screen">
+            <div class="winner-screen">
+                <h1><i class="fas fa-trophy"></i> ПОБЕДА!</h1>
+                <div id="winner-name" style="font-size: 2em; margin: 20px 0; color: #ff6666;"></div>
+                <div id="winner-wish" class="winner-wish">
+                    <strong>Ваше желание:</strong><br>
+                    <span id="winner-wish-text"></span>
+                </div>
+                <button class="btn" onclick="restartGame()" style="margin-top: 30px;">
+                    <i class="fas fa-redo"></i> НОВАЯ ИГРА
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Игровые данные
+        let gameData = {
+            manWish: '',
+            womanWish: '',
+            targetPoints: 100,
+            manScore: 0,
+            womanScore: 0,
+            currentPlayer: null, // 'man' или 'woman'
+            lastPlayer: null,
+            skipAllowed: true // новое поле для правил пропуска
+        };
+
+        // База заданий
+        const tasks = {
+            man: [
+                { text: "Сделай партнерше комплимент о её внешности", points: 5 },
+                { text: "Приготовь для неё любимый напиток", points: 10 },
+                { text: "Расскажи, за что ты её благодарен", points: 8 },
+                { text: "Сделай ей массаж плеч (2 минуты)", points: 12 },
+                { text: "Напиши ей милое сообщение", points: 6 },
+                { text: "Спой ей песню или прочитай стихи", points: 15 },
+                { text: "Обними её и скажи три причины, почему ты её любишь", points: 10 },
+                { text: "Приготовь для неё небольшой сюрприз", points: 20 },
+                { text: "Устрой ей романтический ужин при свечах", points: 25 },
+                { text: "Подари ей цветок или напиши записку", points: 8 },
+                { text: "Сделай ей комплимент о её характере", points: 7 },
+                { text: "Расскажи о своих планах на будущее с ней", points: 12 },
+                { text: "Поцелуй её в лоб и скажи, как она важна для тебя", points: 10 },
+                { text: "Предложи ей станцевать под любимую песню", points: 15 },
+                { text: "Приготовь завтрак в постель", points: 18 }
+            ],
+            woman: [
+                { text: "Сделай ему комплимент о его качествах", points: 5 },
+                { text: "Приготовь его любимое блюдо", points: 12 },
+                { text: "Расскажи, что тебе больше всего в нём нравится", points: 8 },
+                { text: "Сделай ему массаж головы", points: 10 },
+                { text: "Напиши ему мотивирующее сообщение", points: 6 },
+                { text: "Спой ему или включи его любимую песню", points: 12 },
+                { text: "Обними его и расскажи о своих чувствах", points: 10 },
+                { text: "Организуй для него приятный сюрприз", points: 18 },
+                { text: "Устрой романтический вечер дома", points: 22 },
+                { text: "Подари ему что-то символичное", points: 9 },
+                { text: "Похвали его за последние достижения", points: 7 },
+                { text: "Поделись планами о совместном будущем", points: 11 },
+                { text: "Поцелуй его и скажи, как гордишься им", points: 9 },
+                { text: "Предложи посмотреть вместе его любимый фильм", points: 13 },
+                { text: "Сделай ему приятный сюрприз на работе", points: 16 }
+            ]
+        };
+
+        // Полноэкранный режим
+        function enterFullscreen() {
+            const checkbox = document.getElementById('fullscreen-agree');
+            if (!checkbox.checked) {
+                alert('Пожалуйста, поставьте галочку для продолжения');
+                return;
+            }
+
+            if (document.documentElement.requestFullscreen) {
+                document.documentElement.requestFullscreen();
+            } else if (document.documentElement.webkitRequestFullscreen) {
+                document.documentElement.webkitRequestFullscreen();
+            } else if (document.documentElement.mozRequestFullScreen) {
+                document.documentElement.mozRequestFullScreen();
+            }
+
+            showScreen('man-wish-screen');
+        }
+
+        // Переключение экранов
+        function showScreen(screenId) {
+            document.querySelectorAll('.screen').forEach(screen => {
+                screen.classList.remove('active');
+            });
+            document.getElementById(screenId).classList.add('active');
+        }
+
+        // Сохранение желания мужчины
+        function saveManWish() {
+            const wish = document.getElementById('man-wish').value.trim();
+            if (!wish) {
+                alert('Пожалуйста, введите ваше желание');
+                return;
+            }
+            gameData.manWish = wish;
+            showScreen('woman-wish-screen');
+        }
+
+        // Сохранение желания женщины
+        function saveWomanWish() {
+            const wish = document.getElementById('woman-wish').value.trim();
+            if (!wish) {
+                alert('Пожалуйста, введите ваше желание');
+                return;
+            }
+            gameData.womanWish = wish;
+            showScreen('contract-screen');
+        }
+
+        // Начало игры
+        function startGame() {
+            const manAgree = document.getElementById('man-agree').checked;
+            const womanAgree = document.getElementById('woman-agree').checked;
+            const targetPoints = parseInt(document.getElementById('target-points').value);
+            const skipRule = document.querySelector('input[name="skip-rule"]:checked');
+
+            if (!manAgree || !womanAgree) {
+                alert('Оба игрока должны согласиться с условиями');
+                return;
+            }
+
+            if (!skipRule) {
+                alert('Пожалуйста, выберите правила пропуска заданий');
+                return;
+            }
+
+            if (targetPoints < 50 || targetPoints > 500) {
+                alert('Количество баллов должно быть от 50 до 500');
+                return;
+            }
+
+            gameData.targetPoints = targetPoints;
+            gameData.skipAllowed = skipRule.value === 'allowed';
+            document.getElementById('target-display').textContent = targetPoints;
+            
+            showScreen('game-screen');
+        }
+
+        // Бросок монетки
+        function flipCoin() {
+            const coin = document.querySelector('.coin');
+            coin.classList.add('flipping');
+            
+            setTimeout(() => {
+                coin.classList.remove('flipping');
+                
+                // Определяем игрока (избегаем повторения)
+                let players = ['man', 'woman'];
+                if (gameData.lastPlayer) {
+                    players = players.filter(p => p !== gameData.lastPlayer);
+                }
+                
+                gameData.currentPlayer = players[Math.floor(Math.random() * players.length)];
+                gameData.lastPlayer = gameData.currentPlayer;
+                
+                document.getElementById('coin-section').style.display = 'none';
+                document.getElementById('task-section').style.display = 'block';
+                
+                showTask();
+            }, 2000);
+        }
+
+        // Показ задания
+        function showTask() {
+            const currentPlayerEl = document.getElementById('current-player');
+            const taskTextEl = document.getElementById('task-text');
+            const taskPointsEl = document.getElementById('task-points');
+            const loadingEl = document.getElementById('loading-section');
+
+            currentPlayerEl.innerHTML = gameData.currentPlayer === 'man' 
+                ? '<i class="fas fa-mars"></i> Ход мужчины'
+                : '<i class="fas fa-venus"></i> Ход женщины';
+
+            loadingEl.style.display = 'block';
+            taskTextEl.textContent = '';
+            taskPointsEl.textContent = '';
+
+            setTimeout(() => {
+                loadingEl.style.display = 'none';
+                
+                const playerTasks = tasks[gameData.currentPlayer];
+                const randomTask = playerTasks[Math.floor(Math.random() * playerTasks.length)];
+                
+                // Эффект печатания
+                typeWriter(taskTextEl, randomTask.text, 50);
+                taskPointsEl.textContent = `Баллы за выполнение: ${randomTask.points}`;
+                taskPointsEl.dataset.points = randomTask.points;
+            }, 1500);
+        }
+
+        // Эффект печатания текста
+        function typeWriter(element, text, speed) {
+            let i = 0;
+            element.textContent = '';
+            
+            function type() {
+                if (i < text.length) {
+                    element.textContent += text.charAt(i);
+                    i++;
+                    setTimeout(type, speed);
+                }
+            }
+            type();
+        }
+
+        // Выполнение задания
+        function completeTask() {
+            const points = parseInt(document.getElementById('task-points').dataset.points);
+            
+            if (gameData.currentPlayer === 'man') {
+                gameData.manScore += points;
+                document.getElementById('man-score').textContent = gameData.manScore;
+                
+                if (gameData.manScore >= gameData.targetPoints) {
+                    endGame('man');
+                    return;
+                }
+            } else {
+                gameData.womanScore += points;
+                document.getElementById('woman-score').textContent = gameData.womanScore;
+                
+                if (gameData.womanScore >= gameData.targetPoints) {
+                    endGame('woman');
+                    return;
+                }
+            }
+            
+            nextTurn();
+        }
+
+        // Пропуск задания
+        function skipTask() {
+            if (!gameData.skipAllowed) {
+                // Если пропуск запрещен - противник побеждает
+                const winner = gameData.currentPlayer === 'man' ? 'woman' : 'man';
+                endGame(winner);
+                return;
+            }
+            
+            // Если пропуск разрешен - просто переходим к следующему ходу
+            nextTurn();
+        }
+
+        // Следующий ход
+        function nextTurn() {
+            document.getElementById('task-section').style.display = 'none';
+            document.getElementById('coin-section').style.display = 'block';
+        }
+
+        // Окончание игры
+        function endGame(winner) {
+            const winnerNameEl = document.getElementById('winner-name');
+            const winnerWishTextEl = document.getElementById('winner-wish-text');
+            
+            if (winner === 'man') {
+                winnerNameEl.innerHTML = '<i class="fas fa-mars"></i> Мужчина победил!';
+                winnerWishTextEl.textContent = gameData.manWish;
+            } else {
+                winnerNameEl.innerHTML = '<i class="fas fa-venus"></i> Женщина победила!';
+                winnerWishTextEl.textContent = gameData.womanWish;
+            }
+            
+            showScreen('winner-screen');
+        }
+
+        // Перезапуск игры
+        function restartGame() {
+            gameData = {
+                manWish: '',
+                womanWish: '',
+                targetPoints: 100,
+                manScore: 0,
+                womanScore: 0,
+                currentPlayer: null,
+                lastPlayer: null,
+                skipAllowed: true
+            };
+            
+            // Сброс всех полей
+            document.getElementById('man-wish').value = '';
+            document.getElementById('woman-wish').value = '';
+            document.getElementById('man-agree').checked = false;
+            document.getElementById('woman-agree').checked = false;
+            document.getElementById('target-points').value = 100;
+            document.getElementById('man-score').textContent = '0';
+            document.getElementById('woman-score').textContent = '0';
+            document.getElementById('target-display').textContent = '100';
+            document.querySelectorAll('input[name="skip-rule"]').forEach(radio => radio.checked = false);
+            
+            document.getElementById('task-section').style.display = 'none';
+            document.getElementById('coin-section').style.display = 'block';
+            
+            showScreen('man-wish-screen');
+        }
+
+        // Обработка выхода из полноэкранного режима
+        document.addEventListener('fullscreenchange', function() {
+            if (!document.fullscreenElement) {
+                // Можно добавить уведомление о выходе из полноэкранного режима
+            }
+        });
+    </script>
+</body>
+</html>
